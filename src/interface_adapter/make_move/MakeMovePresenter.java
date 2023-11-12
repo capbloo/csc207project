@@ -11,6 +11,6 @@ public class MakeMovePresenter implements MakeMoveOutputBoundary {
     }
 
     public void prepareView(MakeMoveOutputData makeMoveOutputData) {
-        // Can't finish until view is made
+        // TODO Can't finish until view is made
     }
 }
