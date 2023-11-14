@@ -20,6 +20,10 @@ public class MakeMoveInteractor implements MakeMoveInputBoundary {
         public void execute(MakeMoveInputData makeMoveInputData) {
             Move move = makeMoveInputData.getMove();
             board.makeMove(move);
+
+            // pushing the move to the API
+            makeMoveDataAccessObject.pushMove(move);
+
             MakeMoveOutputData makeMoveOutputData = new MakeMoveOutputData(move);
             makeMovePresenter.prepareView(makeMoveOutputData);
 
