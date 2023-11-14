@@ -9,7 +9,7 @@ public class Pawn extends Piece {
 
     @Override
     public Move[] getValidMoves(ArrayList<Integer> position, HashMap<ArrayList<Integer>, Piece> boardState, Move lastMove) {
-        Set<Move> validMoves = new HashSet<>();
+        Set<Move> possibleMoves = new HashSet<>();
 
         int moveDirection;
 
@@ -29,35 +29,41 @@ public class Pawn extends Piece {
                 && (Math.abs(lastMove.getDestination().get(0) - position.get(0)) == 1)) { // and it's right next to our pawn
 
             Move enPassant = makeEnPassant(position, lastMove, moveDirection);
-            validMoves.add(enPassant);
+            possibleMoves.add(enPassant);
         }
 
         // check if our pawn can move 1 square forward
         if (checkSquare(position.get(0), position.get(1) + moveDirection, boardState).equals("empty")) {
             Move pawnPush = makePawnPush(position, moveDirection);
-            validMoves.add(pawnPush);
+            possibleMoves.add(pawnPush);
 
             // if 1 was possible and pawn hasn't moved yet, then check if moving 2 squares forward would be legal
             if (!hasMoved && checkSquare(position.get(0), position.get(1) + 2 * moveDirection, boardState).equals("empty")) {
                 Move doublePawnPush = makeDoublePawnPush(position, moveDirection);
-                validMoves.add(doublePawnPush);
+                possibleMoves.add(doublePawnPush);
             }
         }
 
         // finally, check the possible captures
         if (checkSquare(position.get(0) + 1, position.get(1) + moveDirection, boardState).equals("enemy")) {
             Move rightCapture = makeCapture(position, 1, moveDirection);
-            validMoves.add(rightCapture);
+            possibleMoves.add(rightCapture);
         }
 
         if (checkSquare(position.get(0) - 1, position.get(1) + moveDirection, boardState).equals("enemy")) {
             Move leftCapture = makeCapture(position, -1, moveDirection);
-            validMoves.add(leftCapture);
+            possibleMoves.add(leftCapture);
         }
 
-        // TODO: prune moves that leave king in check
+        Set<Move> checkedMoves = new HashSet<>(possibleMoves.size());
 
-        return validMoves.toArray(new Move[0]); // turn our set into an array and return it
+        for (Move move : possibleMoves) {
+            if (validMove(boardState, move)) {
+                checkedMoves.add(move);
+            }
+        }
+
+        return checkedMoves.toArray(new Move[0]); // turn our set into an array and return it
     }
 
     private Move makeCapture(ArrayList<Integer> position, int captureDirection, int moveDirection) {

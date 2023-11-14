@@ -80,4 +80,22 @@ public class Move {
     public ArrayList<Integer> getDestination() {
         return destination;
     }
+
+    @Override
+    public String toString() {
+        return algebraicNotation();
+    }
+
+    public String algebraicNotation() {
+        String startingSquare = (char)(96 + origin.get(0)) + origin.get(1).toString();
+        String endingSquare = (char)(96 + destination.get(0)) + destination.get(1).toString();
+
+        String move = startingSquare + endingSquare;
+
+        if (isPromotion) {
+            return move + "q";
+        }
+
+        return move;
+    }
 }

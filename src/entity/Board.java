@@ -72,11 +72,14 @@ public class Board {
     public void makeMove(Move move){
         ArrayList<Integer> org = move.getOrigin();
         ArrayList<Integer> des = move.getDestination();
+        if (move.getIsPieceCaptured()){
+            ArrayList<Integer> capture = move.getPieceCaptureLocation();
+            boardstate.remove(capture);
+        }
         Piece piece = move.getPieceMoving();
         boardstate.remove(org);
         boardstate.put(des, piece);
         lastmove = move;
-
     }
 
     private Board cloneBoard(){
@@ -92,7 +95,7 @@ public class Board {
         ArrayList<Move> legalmoves = new ArrayList<>();
         for (ArrayList<Integer> kys : boardstate.keySet()){
             if (boardstate.get(kys) != null){
-                if (boardstate.get(kys).color == colorToPlay){
+                if (Objects.equals(boardstate.get(kys).getColor(), colorToPlay)){
                     Move[] moves = boardstate.get(kys).getValidMoves(kys, boardstate, lastmove);
                     legalmoves.addAll(Arrays.asList(moves));
                 }
@@ -107,7 +110,7 @@ public class Board {
         ArrayList<Move> legalmoves = new ArrayList<>();
         for (ArrayList<Integer> kys : boardstate.keySet()){
             if (boardstate.get(kys) != null) {
-                if (boardstate.get(kys).color.equals(colorToPlay)) {
+                if (boardstate.get(kys).getColor().equals(colorToPlay)) {
                     if (boardstate.get(kys) instanceof King) {
                         posofking = kys;
                     }
@@ -129,7 +132,7 @@ public class Board {
         ArrayList<Move> legalmoves = new ArrayList<>();
         for (ArrayList<Integer> kys : boardstate.keySet()) {
             if (boardstate.get(kys) != null){
-                if (boardstate.get(kys).color.equals(colorToPlay)){
+                if (boardstate.get(kys).getColor().equals(colorToPlay)){
                     Move[] moves = boardstate.get(kys).getValidMoves(kys, boardstate, lastmove);
                     legalmoves.addAll(Arrays.asList(moves));
                 }

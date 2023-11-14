@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-public class RayPiece extends Piece {
+abstract class RayPiece extends Piece {
     protected int[] rayDirectionsX;
     protected int[] rayDirectionsY;
     protected RayPiece(String color, int[] rayDirectionsX, int[] rayDirectionsY) {
@@ -16,7 +16,7 @@ public class RayPiece extends Piece {
 
     @Override
     public Move[] getValidMoves(ArrayList<Integer> position, HashMap<ArrayList<Integer>, Piece> boardState, Move lastMove) {
-        Set<Move> validMoves = new HashSet<>();
+        Set<Move> possibleMoves = new HashSet<>();
 
         // method: draw "rays" in all legal movement directions and add possible moves
 
@@ -40,19 +40,25 @@ public class RayPiece extends Piece {
                     case "enemy" -> {  // capture but don't continue
                         continueRay = false;
                         Move capture = makeCapture(position, coordinateBuilder(x, y));
-                        validMoves.add(capture);
+                        possibleMoves.add(capture);
                     }
                     case "empty" -> {  // make the square a valid move and continue casting ray
                         Move move = makeMove(position, coordinateBuilder(x, y));
-                        validMoves.add(move);
+                        possibleMoves.add(move);
                     }
                 }
             }
         }
 
-        // TODO: prune moves that leave king in check
+        Set<Move> checkedMoves = new HashSet<>(possibleMoves.size());
 
-        return validMoves.toArray(new Move[0]);
+        for (Move move : possibleMoves) {
+            if (validMove(boardState, move)) {
+                checkedMoves.add(move);
+            }
+        }
+
+        return checkedMoves.toArray(new Move[0]);
     }
 
     private Move makeCapture(ArrayList<Integer> position, ArrayList<Integer> destination) {

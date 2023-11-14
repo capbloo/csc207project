@@ -2,6 +2,7 @@ package entity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 public abstract class Piece {
     protected boolean hasMoved = false;
@@ -57,5 +58,19 @@ public abstract class Piece {
         } else { // otherwise it is an opposing piece
             return "enemy";
         }
+    }
+
+    protected boolean validMove(HashMap<ArrayList<Integer>, Piece> boardState, Move move) {
+        Set<ArrayList<Integer>> keys = boardState.keySet();
+
+        for (ArrayList<Integer> key : keys) { // find friendly king and see if move would put/leave king in check
+            Piece pieceAtSquare = boardState.get(key);
+            if (pieceAtSquare instanceof King && pieceAtSquare.getColor().equals(color)) {
+                return !((King) pieceAtSquare).checkHelper(key, boardState, move);
+            }
+        }
+
+        // if the method gets here no friendly king was found, so throw exception.
+        throw new RuntimeException("No "  + color + " king on board.");
     }
 }

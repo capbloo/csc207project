@@ -12,7 +12,7 @@ public class Knight extends Piece {
 
     @Override
     public Move[] getValidMoves(ArrayList<Integer> position, HashMap<ArrayList<Integer>, Piece> boardState, Move lastMove) {
-        Set<Move> validMoves = new HashSet<>();
+        Set<Move> possibleMoves = new HashSet<>();
 
         int[] xDisplacements = {-2, -2, -1, -1, 1, 1, 2, 2};
         int[] yDisplacements = {-1, 1, -2, 2, -2, 2, -1, 1};
@@ -25,16 +25,22 @@ public class Knight extends Piece {
 
             if (targetSquareType.equals("enemy")) { // if enemy, add valid capture
                 ArrayList<Integer> destination = coordinateBuilder(targetX, targetY);
-                validMoves.add(makeCapture(position, destination));
+                possibleMoves.add(makeCapture(position, destination));
             } else if (targetSquareType.equals("empty")) { // if empty square, add valid move
                 ArrayList<Integer> destination = coordinateBuilder(targetX, targetY);
-                validMoves.add(makeMove(position, destination));
+                possibleMoves.add(makeMove(position, destination));
             } // otherwise square is friendly or out of bounds, so invalid move
         }
 
-        // TODO: prune moves that leave king in check
+        Set<Move> checkedMoves = new HashSet<>(possibleMoves.size());
 
-        return validMoves.toArray(new Move[0]);
+        for (Move move : possibleMoves) {
+            if (validMove(boardState, move)) {
+                checkedMoves.add(move);
+            }
+        }
+
+        return checkedMoves.toArray(new Move[0]);
     }
 
     private Move makeCapture(ArrayList<Integer> position, ArrayList<Integer> destination) {
