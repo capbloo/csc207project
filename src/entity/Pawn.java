@@ -8,6 +8,14 @@ public class Pawn extends Piece {
     }
 
     @Override
+    public String toString() {
+        if (color.equals("white")) {
+            return "♙";
+        }
+        return "♟";
+    }
+
+    @Override
     public Move[] getValidMoves(ArrayList<Integer> position, HashMap<ArrayList<Integer>, Piece> boardState, Move lastMove) {
         Set<Move> possibleMoves = new HashSet<>();
 
