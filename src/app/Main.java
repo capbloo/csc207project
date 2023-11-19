@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.Scanner;
 import java.io.*;
 import javax.swing.*;
-import view.BoradView;
+import view.BoardView;
 
 public class Main {
     public static void main(String[] args) {
@@ -22,7 +22,7 @@ public class Main {
         Board board = new Board();
 
 
-        BoradView boradview = new BoradView(application, board);
+        BoardView boardView = new BoardView(application, board);
 
 //        String API_URL = "https://lichess.org/api";
 //        String API_TOKEN = "";
