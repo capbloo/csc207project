@@ -6,9 +6,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Boradview extends JPanel {
+public class BoradView extends JPanel {
 
-    public Boradview(JFrame application, Board board){
+    public BoradView(JFrame application, Board board){
         JPanel pn = new JPanel();
         boolean iswhite = true;
         for (int x = 0; x<8; x++){
