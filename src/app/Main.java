@@ -1,4 +1,5 @@
 package app;
+
 import entity.Board;
 
 import java.awt.*;
