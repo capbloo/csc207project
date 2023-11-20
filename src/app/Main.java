@@ -10,9 +10,11 @@ import java.util.Scanner;
 import java.io.*;
 import javax.swing.*;
 import view.BoardView;
+import view.MainMenuView;
 
 public class Main {
     public static void main(String[] args) {
+        // Display the chess board
         JFrame application = new JFrame("Chess game");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         application.setVisible(true);
@@ -21,8 +23,10 @@ public class Main {
         CardLayout cardLayout = new CardLayout();
         Board board = new Board();
 
-
         BoardView boardView = new BoardView(application, board);
+
+        // Display the main menu
+        new MainMenuView().show();
 
 //        String API_URL = "https://lichess.org/api";
 //        String API_TOKEN = "";
