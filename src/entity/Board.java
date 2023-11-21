@@ -6,11 +6,14 @@ import java.util.*;
 public class Board {
     private HashMap<ArrayList<Integer>, Piece> boardstate;
 
+    private HashMap<ArrayList<Integer>, Boolean> highLights;
+
     private Move lastmove;
 
     public Board(){
         this.lastmove = null;
         this.boardstate = new HashMap<>();
+        this.highLights = new HashMap<>();
         PieceBuilder builder = new PieceBuilder();
         ArrayList<String> pieces = new ArrayList<String>();
         pieces.add("Rook");
@@ -55,6 +58,14 @@ public class Board {
 
     public Move getLastmove() {
         return lastmove;
+    }
+
+    public HashMap<ArrayList<Integer>, Boolean> getHighLights() {
+        return highLights;
+    }
+
+    public void setHighLights(ArrayList<Integer> pos, boolean ishigh) {
+        this.highLights.put(pos, ishigh);
     }
 
     public void setLastmove(Move lastmove) {

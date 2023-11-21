@@ -6,6 +6,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.*;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.*;
 import javax.swing.*;
@@ -16,10 +17,21 @@ public class Main {
         JFrame application = new JFrame("Chess game");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         application.setVisible(true);
-        application.setBounds(100,100,600,600);
+        application.setBounds(100,100,654,678);
         application.setLayout(null);
         CardLayout cardLayout = new CardLayout();
         Board board = new Board();
+
+        //show highlight by making 66, 65 into highlight (which should be deleted later)
+        ArrayList<Integer> pos1 = new ArrayList<Integer>();
+        pos1.add(6);
+        pos1.add(6);
+        board.setHighLights(pos1, true);
+        ArrayList<Integer> pos2 = new ArrayList<Integer>();
+        pos2.add(6);
+        pos2.add(5);
+        board.setHighLights(pos2, true);
+
 
 
         BoardView boardView = new BoardView(application, board);

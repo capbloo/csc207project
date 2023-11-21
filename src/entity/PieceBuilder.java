@@ -16,6 +16,10 @@ public class PieceBuilder {
         else if (type == "Queen") {
             return  new Queen(color);
         }
+        else if (type == "Bishop") {
+            return  new Bishop(color);
+        }
+
         else {
             return new Rook(color);
         }
