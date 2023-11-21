@@ -111,4 +111,48 @@ public class KingMoveTest {
 
         assertEquals(0, moves.length);
     }
+
+    @org.junit.Test
+    public void testWhiteKingSideCastle() {
+        HashMap<ArrayList<Integer>, Piece> board = emptyBoard();
+
+        board.put(coords(5, 8), new King("black"));
+
+        board.put(coords(1, 2), new Rook("black"));
+
+        board.put(coords(8, 1), new Rook("white"));
+        board.put(coords(5, 1), new King("white"));
+
+        Move[] moves = board.get(coords(5, 1)).getValidMoves(coords(5, 1), board, null);
+
+        assertEquals(3, moves.length);
+
+        assertTrue(moves[0].getDestination().equals(coords(7, 1)) ||
+                moves[1].getDestination().equals(coords(7, 1)) ||
+                moves[2].getDestination().equals(coords(7, 1)));
+
+        assertTrue(moves[0].getIsCastle() || moves[1].getIsCastle() || moves[2].getIsCastle());
+    }
+
+    @org.junit.Test
+    public void testWhiteQueenSideCastle() {
+        HashMap<ArrayList<Integer>, Piece> board = emptyBoard();
+
+        board.put(coords(5, 8), new King("black"));
+
+        board.put(coords(1, 2), new Rook("black"));
+
+        board.put(coords(1, 1), new Rook("white"));
+        board.put(coords(5, 1), new King("white"));
+
+        Move[] moves = board.get(coords(5, 1)).getValidMoves(coords(5, 1), board, null);
+
+        assertEquals(3, moves.length);
+
+        assertTrue(moves[0].getDestination().equals(coords(3, 1)) ||
+                moves[1].getDestination().equals(coords(3, 1)) ||
+                moves[2].getDestination().equals(coords(3, 1)));
+
+        assertTrue(moves[0].getIsCastle() || moves[1].getIsCastle() || moves[2].getIsCastle());
+    }
 }

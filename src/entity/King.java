@@ -47,8 +47,8 @@ public class King extends Piece {
         if (!hasMoved && !isInCheck(position, boardState)) { // king has not moved yet and is not in check
             int y = position.get(1);
 
-            Piece potentialRightRook = boardState.get(coordinateBuilder(1, y));
-            Piece potentialLeftRook = boardState.get(coordinateBuilder(8, y));
+            Piece potentialRightRook = boardState.get(coordinateBuilder(8, y));
+            Piece potentialLeftRook = boardState.get(coordinateBuilder(1, y));
 
             if (potentialRightRook instanceof Rook && !potentialRightRook.hasMoved // rook at a1/a8 that has not moved
                     && boardState.get(coordinateBuilder(6, y)) == null // no pieces in between king and rook
