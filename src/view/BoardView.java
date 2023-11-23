@@ -52,6 +52,7 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                     Font f = new Font("serif", Font.PLAIN, 40);
                     block.setFont(f);
                     block.setPiece(board.getBoardstate().get(pos1).symbolToString());
+                    block.setPieceColour(board.getBoardstate().get(pos1).getColor());
                 }
                 if (iswhite){
                     block.setBackground(new Color(69, 75, 27));
@@ -101,19 +102,25 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
             System.out.println("selection reset");
         }
         else {
-            Piece piece = pieceBuilder.create(previousMove.getPiece(), "white");
+            Piece piece = pieceBuilder.create(previousMove.getPiece(), previousMove.pieceColour);
             ArrayList<Integer> origin = new ArrayList<>();
             origin.add(previousMove.getRow());
             origin.add(previousMove.getCol());
+            String pieceSymbol = piece.toString();
 
             ArrayList<Integer> destination = new ArrayList<>();
             destination.add(x);
             destination.add(y);
             Move move = new Move(piece, origin, destination);
-            this.previousMove = null;
-            System.out.println("pieced move");
 
             makeMoveController.execute(move);
+
+            Font f = new Font("serif", Font.PLAIN, 40);
+            clickedButton.setText(pieceSymbol);
+            clickedButton.setFont(f);
+            previousMove.setText("");
+
+            this.previousMove = null;
         }
 
     }
@@ -121,8 +128,8 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
     class ChessButton extends JButton {
         private Integer row;
         private Integer col;
-        private boolean hasPiece;
         private String piece;
+        private String pieceColour;
 
         public ChessButton() {}
 
@@ -139,8 +146,11 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
         }
 
         public void setPiece(String piece) {
-            this.hasPiece = true;
             this.piece = piece;
+        }
+
+        public void setPieceColour(String colour) {
+            this.pieceColour = colour;
         }
 
         public String getPiece() {
@@ -150,7 +160,7 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
 
     public void propertyChange(PropertyChangeEvent e) {
         if (e.getPropertyName().equals("MakeMove")) {
-            JOptionPane.showMessageDialog(this, "piece moved!");
+
 
         }
     }

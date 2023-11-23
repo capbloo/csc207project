@@ -7,14 +7,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MakeMoveState {
-    private Board board;
+    private HashMap<ArrayList<Integer>, Piece> boardState;
     public MakeMoveState(MakeMoveState copy) {
-        this.board = copy.board;
+        this.boardState = copy.boardState;
     }
     public MakeMoveState() {};
 
     public HashMap<ArrayList<Integer>, Piece> getBoardstate() {
-        return board.getBoardstate();
+        return boardState;
     }
 
 }
