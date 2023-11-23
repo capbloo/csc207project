@@ -15,6 +15,8 @@ public abstract class Piece {
         return color;
     }
 
+    public abstract String symbolToString();
+
     public void pieceMove() {
         hasMoved = true;
     }

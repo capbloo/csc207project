@@ -12,4 +12,8 @@ public class Rook extends RayPiece {
         }
         return "♜";
     }
+
+    public String symbolToString() {
+        return "Rook";
+    }
 }

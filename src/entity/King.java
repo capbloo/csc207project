@@ -18,6 +18,10 @@ public class King extends Piece {
         return "♚";
     }
 
+    public String symbolToString() {
+        return "King";
+    }
+
     @Override
     public Move[] getValidMoves(ArrayList<Integer> position, HashMap<ArrayList<Integer>, Piece> boardState, Move lastMove) {
         Set<Move> validMoves = new HashSet<>();

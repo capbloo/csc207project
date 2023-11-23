@@ -15,6 +15,10 @@ public class Pawn extends Piece {
         return "♟";
     }
 
+    public String symbolToString() {
+        return "Pawn";
+    }
+
     @Override
     public Move[] getValidMoves(ArrayList<Integer> position, HashMap<ArrayList<Integer>, Piece> boardState, Move lastMove) {
         Set<Move> possibleMoves = new HashSet<>();

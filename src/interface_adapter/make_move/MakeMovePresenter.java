@@ -11,6 +11,9 @@ public class MakeMovePresenter implements MakeMoveOutputBoundary {
     }
 
     public void prepareView(MakeMoveOutputData makeMoveOutputData) {
-        // TODO Can't finish until view is made
+        MakeMoveState makeMoveState = makeMoveViewModel.getState();
+        this.makeMoveViewModel.setState(makeMoveState);
+        makeMoveViewModel.firePropertyChanged();
+
     }
 }

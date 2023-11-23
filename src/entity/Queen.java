@@ -12,4 +12,8 @@ public class Queen extends RayPiece {
         }
         return "♛";
     }
+
+    public String symbolToString() {
+        return "Queen";
+    }
 }

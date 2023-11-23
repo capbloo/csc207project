@@ -13,7 +13,7 @@ public class Move {
     private ArrayList<Integer> origin;
     private ArrayList<Integer> destination;
 
-    Move(Piece pieceMoving, ArrayList<Integer> origin, ArrayList<Integer> destination) {
+    public Move(Piece pieceMoving, ArrayList<Integer> origin, ArrayList<Integer> destination) {
         this.pieceMoving = pieceMoving;
         this.origin = origin;
         this.destination = destination;
