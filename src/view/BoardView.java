@@ -4,6 +4,7 @@ import entity.Board;
 import entity.Move;
 import entity.Piece;
 import entity.PieceBuilder;
+import entity.ChessButton;
 import interface_adapter.make_move.MakeMoveController;
 import interface_adapter.make_move.MakeMoveState;
 import interface_adapter.make_move.MakeMoveViewModel;
@@ -90,22 +91,22 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
     @Override
     public void actionPerformed(ActionEvent e) {
         ChessButton clickedButton = (ChessButton) e.getSource();
-        Integer x = clickedButton.col;
-        Integer y = clickedButton.row;
+        Integer x = clickedButton.getCol();
+        Integer y = clickedButton.getRow();
 
         if (this.previousMove == null) {
             this.previousMove = clickedButton;
             System.out.println("button clicked");
         }
-        else if (this.previousMove.row.equals(y) && this.previousMove.col.equals(x)) {
+        else if (this.previousMove.getRow().equals(y) && this.previousMove.getCol().equals(x)) {
             this.previousMove = null;
             System.out.println("selection reset");
         }
         else {
-            Piece piece = pieceBuilder.create(previousMove.piece, previousMove.pieceColour);
+            Piece piece = pieceBuilder.create(previousMove.getPiece(), previousMove.getPieceColour());
             ArrayList<Integer> origin = new ArrayList<>();
-            origin.add(previousMove.row);
-            origin.add(previousMove.col);
+            origin.add(previousMove.getRow());
+            origin.add(previousMove.getCol());
             String pieceSymbol = piece.toString();
 
             ArrayList<Integer> destination = new ArrayList<>();
@@ -127,35 +128,35 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
 
     }
 
-    class ChessButton extends JButton {
-        private Integer row;
-        private Integer col;
-        private String piece;
-        private String pieceColour;
-
-        public ChessButton() {}
-
-        public void setCoord(int x, int y) {
-            this.row = x;
-            this.col = y;
-        }
-
-        public void clear() {
-            this.pieceColour = null;
-            this.piece = null;
-            this.setText("");
-        }
-
-        public void setPiece(String piece) {
-            this.piece = piece;
-        }
-
-        public void setPieceColour(String colour) {
-            this.pieceColour = colour;
-        }
-
-
-    }
+//    class ChessButton extends JButton {
+//        private Integer row;
+//        private Integer col;
+//        private String piece;
+//        private String pieceColour;
+//
+//        public ChessButton() {}
+//
+//        public void setCoord(int x, int y) {
+//            this.row = x;
+//            this.col = y;
+//        }
+//
+//        public void clear() {
+//            this.pieceColour = null;
+//            this.piece = null;
+//            this.setText("");
+//        }
+//
+//        public void setPiece(String piece) {
+//            this.piece = piece;
+//        }
+//
+//        public void setPieceColour(String colour) {
+//            this.pieceColour = colour;
+//        }
+//
+//
+//    }
 
     public void propertyChange(PropertyChangeEvent e) {
         if (e.getPropertyName().equals("MakeMove")) {
