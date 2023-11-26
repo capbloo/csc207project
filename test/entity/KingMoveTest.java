@@ -3,8 +3,7 @@ package entity;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class KingMoveTest {
     public HashMap<ArrayList<Integer>, Piece> defaultBoardState() {
@@ -154,5 +153,49 @@ public class KingMoveTest {
                 moves[2].getDestination().equals(coords(3, 1)));
 
         assertTrue(moves[0].getIsCastle() || moves[1].getIsCastle() || moves[2].getIsCastle());
+    }
+
+    @org.junit.Test
+    public void testBlackKingSideCastle() {
+        HashMap<ArrayList<Integer>, Piece> board = emptyBoard();
+
+        board.put(coords(5, 8), new King("black"));
+        board.put(coords(1, 8), new Rook("black"));
+
+        board.put(coords(1, 7), new Rook("white"));
+
+        board.put(coords(5, 1), new King("white"));
+
+        Move[] moves = board.get(coords(5, 8)).getValidMoves(coords(5, 8), board, null);
+
+        assertEquals(3, moves.length);
+
+        assertTrue(moves[0].getDestination().equals(coords(3, 8)) ||
+                moves[1].getDestination().equals(coords(3, 8)) ||
+                moves[2].getDestination().equals(coords(3, 8)));
+
+        assertTrue(moves[0].getIsCastle() || moves[1].getIsCastle() || moves[2].getIsCastle());
+    }
+
+    @org.junit.Test
+    public void testIllegalKingColor() {
+        HashMap<ArrayList<Integer>, Piece> board = emptyBoard();
+
+        board.put(coords(5, 8), new King("purple"));
+        board.put(coords(5, 1), new King("white"));
+
+        assertThrows(RuntimeException.class, () -> board.get(coords(5, 8)).getValidMoves(coords(5, 8), board, null));
+    }
+
+    @org.junit.Test
+    public void testPawnsBlockMovement() {
+        HashMap<ArrayList<Integer>, Piece> board = defaultBoardState();
+
+        board.put(coords(5, 1), null);
+        board.put(coords(5, 5), new King("white"));
+
+        Move[] moves = board.get(coords(5, 5)).getValidMoves(coords(5, 5), board, null);
+
+        assertEquals(5, moves.length);
     }
 }

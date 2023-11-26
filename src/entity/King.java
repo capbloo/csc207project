@@ -172,6 +172,7 @@ public class King extends Piece {
                         if (enemyPiece instanceof Bishop || enemyPiece instanceof Queen) {
                             return true;
                         }
+                        continueRay = false;
                     }
                 }
             }
@@ -197,6 +198,7 @@ public class King extends Piece {
                         if (enemyPiece instanceof Rook || enemyPiece instanceof Queen) {
                             return true;
                         }
+                        continueRay = false;
                     }
                 }
             }
