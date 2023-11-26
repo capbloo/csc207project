@@ -80,7 +80,7 @@ public class Board {
         return boardstate;
     }
 
-    public void makemove(Move move){
+    public void makeMove(Move move){
         ArrayList<Integer> org = move.getOrigin();
         ArrayList<Integer> des = move.getDestination();
         if (move.getIsPieceCaptured()){
