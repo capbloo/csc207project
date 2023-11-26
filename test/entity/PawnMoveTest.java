@@ -204,4 +204,42 @@ public class PawnMoveTest {
         // pawn's only valid move is to go to b3 to block the rook attacking the king
         assertEquals(moves[0].getDestination(), coords(2, 3));
     }
+
+    @org.junit.Test
+    public void testEnPassant() {
+        HashMap<ArrayList<Integer>, Piece> boardState = defaultBoardState();
+
+        Pawn whitePawn = new Pawn("white");
+        whitePawn.pieceMove();
+
+        boardState.put(coords(5, 2), null);
+        boardState.put(coords(5, 5), whitePawn);
+
+        Pawn blackPawn = new Pawn("black");
+        blackPawn.pieceMove();
+
+        boardState.put(coords(4, 7), null);
+        boardState.put(coords(4, 5), blackPawn);
+
+        Move lastMovePawnPush = new Move(blackPawn, coords(4, 7), coords(4, 5));
+
+        Move[] moves = whitePawn.getValidMoves(coords(5, 5), boardState, lastMovePawnPush);
+
+        assertEquals(2, moves.length);
+
+        assertTrue(moves[0].getIsEnPassant() || moves[1].getIsEnPassant());
+    }
+
+    @org.junit.Test
+    public void testInvalidBoard() {
+        HashMap<ArrayList<Integer>, Piece> boardState = emptyBoard();
+
+        Pawn pawn = new Pawn("white");
+
+        boardState.put(coords(2, 5), pawn);
+
+        assertThrows(RuntimeException.class, () -> {
+            pawn.getValidMoves(coords(2, 5), boardState, null);
+        });
+    }
 }

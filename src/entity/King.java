@@ -37,7 +37,7 @@ public class King extends Piece {
                 Move potentialMove = makeMove(position, target);
 
                 // check that king is not in check
-                if (!wouldBeCheck(position, boardState, target)) {
+                if (wouldBeValid(position, boardState, target)) {
                     validMoves.add(potentialMove);
                 }
 
@@ -45,7 +45,7 @@ public class King extends Piece {
                 Move potentialMove = makeCapture(position, target);
 
                 // check that king is not in check
-                if (!wouldBeCheck(position, boardState, target)) {
+                if (wouldBeValid(position, boardState, target)) {
                     validMoves.add(potentialMove);
                 }
             }
@@ -55,15 +55,15 @@ public class King extends Piece {
         if (!hasMoved && !isInCheck(position, boardState)) { // king has not moved yet and is not in check
             int y = position.get(1);
 
-            Piece potentialRightRook = boardState.get(coordinateBuilder(1, y));
-            Piece potentialLeftRook = boardState.get(coordinateBuilder(8, y));
+            Piece potentialRightRook = boardState.get(coordinateBuilder(8, y));
+            Piece potentialLeftRook = boardState.get(coordinateBuilder(1, y));
 
             if (potentialRightRook instanceof Rook && !potentialRightRook.hasMoved // rook at a1/a8 that has not moved
                     && boardState.get(coordinateBuilder(6, y)) == null // no pieces in between king and rook
                     && boardState.get(coordinateBuilder(7, y)) == null) {
 
-                if (!wouldBeCheck(position, boardState, coordinateBuilder(6, y)) // does not castle through or into check
-                        && !wouldBeCheck(position, boardState, coordinateBuilder(7, y))) {
+                if (wouldBeValid(position, boardState, coordinateBuilder(6, y)) // does not castle through or into check
+                        && wouldBeValid(position, boardState, coordinateBuilder(7, y))) {
 
                     Move castleRight = new Move(this, position, coordinateBuilder(7, y));
                     castleRight.setIsCastle();
@@ -77,8 +77,8 @@ public class King extends Piece {
                     && boardState.get(coordinateBuilder(3, y)) == null
                     && boardState.get(coordinateBuilder(4, y)) == null) {
 
-                if (!wouldBeCheck(position, boardState, coordinateBuilder(3, y)) // does not castle through or into check
-                        && !wouldBeCheck(position, boardState, coordinateBuilder(4, y))) {
+                if (wouldBeValid(position, boardState, coordinateBuilder(3, y)) // does not castle through or into check
+                        && wouldBeValid(position, boardState, coordinateBuilder(4, y))) {
 
                     Move castleLeft = new Move(this, position, coordinateBuilder(3, y));
                     castleLeft.setIsCastle();
@@ -90,16 +90,33 @@ public class King extends Piece {
         return validMoves.toArray(new Move[0]);
     }
 
-    private boolean wouldBeCheck(ArrayList<Integer> position, HashMap<ArrayList<Integer>, Piece> boardState,
+    private boolean wouldBeValid(ArrayList<Integer> position, HashMap<ArrayList<Integer>, Piece> boardState,
                                  ArrayList<Integer> newPos) {
         // check if a hypothetical move by the king would result in check
 
         HashMap<ArrayList<Integer>, Piece> tempBoardState = new HashMap<>(boardState);
 
+        // check to see if enemy king is present on any adjacent squares
+        int[] xDisplacements = {-1, -1, -1, 0, 1, 1, 1, 0};
+        int[] yDisplacements = {-1, 0, 1, 1, 1, 0, -1, -1};
+
+        for (int i = 0; i < xDisplacements.length; i++) {
+            int x = newPos.get(0) + xDisplacements[i];
+            int y = newPos.get(1) + yDisplacements[i];
+
+            ArrayList<Integer> target = coordinateBuilder(x, y);
+
+            String square = checkSquare(x, y, boardState);
+
+            if (square.equals("enemy") && boardState.get(target) instanceof King) {
+                return false;
+            }
+        }
+
         tempBoardState.put(newPos, this);
         tempBoardState.put(position, null);
 
-        return isInCheck(newPos, tempBoardState);
+        return !isInCheck(newPos, tempBoardState);
     }
 
     protected boolean checkHelper(ArrayList<Integer> kingPosition, HashMap<ArrayList<Integer>, Piece> boardState, Move move) {
