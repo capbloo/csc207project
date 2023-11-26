@@ -16,16 +16,16 @@ import view.MainMenuView;
 
 public class Main {
     public static void main(String[] args) {
-        // Display the chess board
-        JFrame application = new JFrame("Chess game");
-        application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        application.setVisible(true);
-        application.setBounds(100,100,654,678);
-        application.setLayout(null);
-        CardLayout cardLayout = new CardLayout();
-        Board board = new Board();
-
-        BoardView boardView = new BoardView(application, board);
+//        // Display the chess board
+//        JFrame application = new JFrame("Chess game");
+//        application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+//        application.setVisible(true);
+//        application.setBounds(100,100,654,678);
+//        application.setLayout(null);
+//        CardLayout cardLayout = new CardLayout();
+//        Board board = new Board();
+//
+//        BoardView boardView = new BoardView(application, board);
 
         // Display the main menu
         new MainMenuView().show();
