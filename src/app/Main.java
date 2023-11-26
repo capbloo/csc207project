@@ -7,6 +7,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.*;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.*;
 import javax.swing.*;
@@ -19,7 +20,7 @@ public class Main {
         JFrame application = new JFrame("Chess game");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         application.setVisible(true);
-        application.setBounds(100,100,600,600);
+        application.setBounds(100,100,654,678);
         application.setLayout(null);
         CardLayout cardLayout = new CardLayout();
         Board board = new Board();
