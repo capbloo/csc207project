@@ -172,6 +172,18 @@ public class Board {
         }
         return ischeck;
     }
+
+    public boolean isValidMove(Move move){
+        ArrayList<Integer> org = move.getOrigin();
+        Move[] legalmoves = boardstate.get(org).getValidMoves(org, boardstate, lastmove);
+        for (Move m : legalmoves){
+            if (m.equals(move)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean isStaleMate(String colorToPlay){
         boolean stalemate = false;
         ArrayList<Move> legalmoves = new ArrayList<>();
