@@ -198,4 +198,24 @@ public class KingMoveTest {
 
         assertEquals(5, moves.length);
     }
+
+    @org.junit.Test
+    public void testRightPawnsBlockMovement() {
+        HashMap<ArrayList<Integer>, Piece> board = emptyBoard();
+
+        board.put(coords(5, 4), new King("white"));
+
+        board.put(coords(7, 6), new Pawn("black"));
+        board.put(coords(6, 6), new Pawn("black"));
+
+        Move[] moves = board.get(coords(5, 4)).getValidMoves(coords(5, 4), board, null);
+
+        for (Move move : moves) {
+            System.out.println(move.getDestination());
+        }
+
+        assertEquals(6, moves.length);
+    }
+
+
 }
