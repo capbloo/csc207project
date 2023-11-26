@@ -81,16 +81,50 @@ public class Board {
     }
 
     public void makeMove(Move move){
-        ArrayList<Integer> org = move.getOrigin();
-        ArrayList<Integer> des = move.getDestination();
-        if (move.getIsPieceCaptured()){
-            ArrayList<Integer> capture = move.getPieceCaptureLocation();
-            boardstate.remove(capture);
+        if (move.getIsCastle()){
+            ArrayList<Integer> org = move.getOrigin();
+            ArrayList<Integer> des = move.getDestination();
+            Piece piece = move.getPieceMoving();
+            boardstate.remove(org);
+            boardstate.put(des, piece);
+            if (des.equals(coor(7,1))){
+                boardstate.put(coor(6,1),boardstate.get(coor(8,1)));
+                boardstate.remove(coor(8,1));
+            } else if (des.equals(coor(3,1))) {
+                boardstate.put(coor(4,1),boardstate.get(coor(1,1)));
+                boardstate.remove(coor(1,1));
+            } else if (des.equals(coor(7,8))) {
+                boardstate.put(coor(6,8),boardstate.get(coor(8,8)));
+                boardstate.remove(coor(8,8));
+            } else {
+                boardstate.put(coor(4,8),boardstate.get(coor(1,8)));
+                boardstate.remove(coor(1,8));
+            }
+            lastmove = move;
+        } else {
+            ArrayList<Integer> org = move.getOrigin();
+            ArrayList<Integer> des = move.getDestination();
+            if (move.getIsPieceCaptured()){
+                ArrayList<Integer> capture = move.getPieceCaptureLocation();
+                boardstate.remove(capture);
+            }
+            Piece piece = move.getPieceMoving();
+            boardstate.remove(org);
+            boardstate.put(des, piece);
+            lastmove = move;
+            if (move.getIsPromotion()){
+                boardstate.remove(des);
+                boardstate.put(des, new PieceBuilder().create("Queen", piece.getColor()));
+            }
         }
-        Piece piece = move.getPieceMoving();
-        boardstate.remove(org);
-        boardstate.put(des, piece);
-        lastmove = move;
+
+    }
+
+    public ArrayList<Integer> coor(int x, int y){
+        ArrayList<Integer> co = new ArrayList<Integer>();
+        co.add(x);
+        co.add(y);
+        return co;
     }
 
     private Board cloneBoard(){
