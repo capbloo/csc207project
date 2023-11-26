@@ -25,7 +25,6 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
     private ChessButton previousMove;
     private PieceBuilder pieceBuilder;
 
-
     public BoardView(Board board, MakeMoveController makeMoveController, MakeMoveViewModel makeMoveViewModel) {
         this.makeMoveController = makeMoveController;
         this.makeMoveViewModel = makeMoveViewModel;
@@ -37,29 +36,29 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
         JPanel pn = new JPanel(new GridLayout(8, 8));
         setBounds(800, 800, 800, 800);
         boolean iswhite = true;
-        for (int y = 0; y<8; y++){
-            for(int x = 0; x<8; x++) {
+        for (int y = 0; y < 8; y++) {
+            for (int x = 0; x < 8; x++) {
 
                 ChessButton block = new ChessButton();
                 pn.add(block);
-                block.setBounds(x*64,y*64,64,64);
+                block.setBounds(x * 64, y * 64, 64, 64);
                 ArrayList<Integer> pos1 = new ArrayList<Integer>();
-                pos1.add(x+1);
-                pos1.add(y+1);
-                block.setCoord(x+1, 8-y);
+                pos1.add(x + 1);
+                pos1.add(y + 1);
+                block.setCoord(x + 1, 8 - y);
                 block.addActionListener(this);
-                if (!(board.getBoardstate().get(pos1) == null)){
+                if (!(board.getBoardstate().get(pos1) == null)) {
                     block.setText(board.getBoardstate().get(pos1).toString());
-                    Font f = new Font("serif", Font.PLAIN, 40);
+                    Font f = new Font("serif", Font.PLAIN, 75);
                     block.setFont(f);
                     block.setPiece(board.getBoardstate().get(pos1).symbolToString());
                     block.setPieceColour(board.getBoardstate().get(pos1).getColor());
                 }
-                if (iswhite){
+                if (iswhite) {
                     block.setBackground(new Color(69, 75, 27));
                     block.setOpaque(true);
                     block.setBorderPainted(false);
-                }else {
+                } else {
                     block.setBackground(Color.lightGray);
                     block.setOpaque(true);
                     block.setBorderPainted(false);
@@ -76,8 +75,8 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
         bottomPanel.setBounds(800, 800, 800, 800);
         leftPanel.setBounds(800, 800, 800, 800);
         int[] numSideBar = {0, 1, 2, 3, 4, 5, 6, 7, 8};
-        String[] letterSideBar = {"x","h", "g", "f", "e", "d", "c", "b", "a"};
-        int i = numSideBar.length-1;
+        String[] letterSideBar = {"x", "h", "g", "f", "e", "d", "c", "b", "a"};
+        int i = numSideBar.length - 1;
 
         while (i > 0) {
             bottomPanel.add(new JLabel(letterSideBar[i]));
@@ -88,21 +87,20 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
         add(leftPanel, BorderLayout.WEST);
 
     }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         ChessButton clickedButton = (ChessButton) e.getSource();
         Integer x = clickedButton.getCol();
         Integer y = clickedButton.getRow();
-
-        if (this.previousMove == null) {
+        if (clickedButton.isEmpty() && previousMove == null) {
+        } else if (this.previousMove == null) {
             this.previousMove = clickedButton;
             System.out.println("button clicked");
-        }
-        else if (this.previousMove.getRow().equals(y) && this.previousMove.getCol().equals(x)) {
+        } else if (this.previousMove.getRow().equals(y) && this.previousMove.getCol().equals(x)) {
             this.previousMove = null;
             System.out.println("selection reset");
-        }
-        else {
+        } else {
             Piece piece = pieceBuilder.create(previousMove.getPiece(), previousMove.getPieceColour());
             ArrayList<Integer> origin = new ArrayList<>();
             origin.add(previousMove.getRow());
@@ -114,55 +112,31 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
             destination.add(y);
             Move move = new Move(piece, origin, destination);
 
-            makeMoveController.execute(move);
-
-            Font f = new Font("serif", Font.PLAIN, 40);
-            clickedButton.setText(pieceSymbol);
-            clickedButton.setFont(f);
-            clickedButton.setPieceColour(piece.getColor());
-            previousMove.clear();
-
+            makeMoveController.execute(move, clickedButton);
+//
+//            Font f = new Font("serif", Font.PLAIN, 75);
+//            clickedButton.setText(pieceSymbol);
+//            clickedButton.setFont(f);
+//            clickedButton.setPieceColour(piece.getColor());
+//            clickedButton.setPiece(piece.symbolToString());
+//            previousMove.clear();
 
             this.previousMove = null;
         }
 
     }
 
-//    class ChessButton extends JButton {
-//        private Integer row;
-//        private Integer col;
-//        private String piece;
-//        private String pieceColour;
-//
-//        public ChessButton() {}
-//
-//        public void setCoord(int x, int y) {
-//            this.row = x;
-//            this.col = y;
-//        }
-//
-//        public void clear() {
-//            this.pieceColour = null;
-//            this.piece = null;
-//            this.setText("");
-//        }
-//
-//        public void setPiece(String piece) {
-//            this.piece = piece;
-//        }
-//
-//        public void setPieceColour(String colour) {
-//            this.pieceColour = colour;
-//        }
-//
-//
-//    }
 
     public void propertyChange(PropertyChangeEvent e) {
-        if (e.getPropertyName().equals("MakeMove")) {
-
-
-        }
+        MakeMoveState state = (MakeMoveState) e.getNewValue();
+        if (state.isMoveError()) {
+            JOptionPane.showMessageDialog(this, "illegal move");
+        } else {
+            previousMove.clear();
+            this.previousMove = null;
+            }
     }
 }
+
+
 

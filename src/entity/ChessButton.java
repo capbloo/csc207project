@@ -30,6 +30,10 @@ public class ChessButton extends JButton {
         this.setText("");
     }
 
+    public boolean isEmpty() {
+        return piece == null;
+    }
+
     public void setPiece(String piece) {
         this.piece = piece;
     }

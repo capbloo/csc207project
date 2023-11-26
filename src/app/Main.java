@@ -15,6 +15,7 @@ import javax.swing.*;
 import interface_adapter.make_move.MakeMoveController;
 import interface_adapter.make_move.MakeMovePresenter;
 import interface_adapter.make_move.MakeMoveViewModel;
+import interface_adapter.make_move.MakeMoveState;
 import use_case.make_move.MakeMoveInteractor;
 import view.BoardView;
 import view.MainMenuView;

@@ -1,5 +1,7 @@
 package interface_adapter.make_move;
 
+import entity.ChessButton;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
