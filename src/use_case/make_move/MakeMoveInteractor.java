@@ -23,8 +23,8 @@ public class MakeMoveInteractor implements MakeMoveInputBoundary {
         Piece piece = move.getPieceMoving();
         Move[] validMoves = piece.getValidMoves(move.getOrigin(), board.getBoardstate(), board.getLastmove());
         // iterating through valid moves to see if the move the user made is in there
-        for (Move validMove : validMoves) {
-            if (move.equals(validMove)) {
+//        for (Move validMove : validMoves) {
+//            if (move.equals(validMove)) {
                 board.makeMove(move);
                 // push move to API if its valid
                 makeMoveDataAccessObject.pushMove(move);
@@ -33,9 +33,9 @@ public class MakeMoveInteractor implements MakeMoveInputBoundary {
                 return;
             }
         }
-        makeMovePresenter.prepareFailView();
-    }
-}
+//        makeMovePresenter.prepareFailView();
+
+
 
 
 

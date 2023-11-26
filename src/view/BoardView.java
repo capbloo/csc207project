@@ -105,7 +105,6 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
             ArrayList<Integer> origin = new ArrayList<>();
             origin.add(previousMove.getRow());
             origin.add(previousMove.getCol());
-            String pieceSymbol = piece.toString();
 
             ArrayList<Integer> destination = new ArrayList<>();
             destination.add(x);
@@ -113,19 +112,8 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
             Move move = new Move(piece, origin, destination);
 
             makeMoveController.execute(move, clickedButton);
-//
-//            Font f = new Font("serif", Font.PLAIN, 75);
-//            clickedButton.setText(pieceSymbol);
-//            clickedButton.setFont(f);
-//            clickedButton.setPieceColour(piece.getColor());
-//            clickedButton.setPiece(piece.symbolToString());
-//            previousMove.clear();
-
-            this.previousMove = null;
         }
-
     }
-
 
     public void propertyChange(PropertyChangeEvent e) {
         MakeMoveState state = (MakeMoveState) e.getNewValue();
