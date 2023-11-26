@@ -37,11 +37,11 @@ public class APIChallengeDataAccessObject implements ChallengeAIDataAccessInterf
      * @throws RuntimeException if an exception occurs while making the HttpRequest or if response code is not 201 Created
      */
     public String challengeAI(String color, int difficulty) {
-        HttpResponse<String> response = null;
+        HttpResponse<String> response;
 
         try {
             // format the parameters of the challenge
-            String jsonBody = "{\"level\":" + Integer.toString(difficulty) + ",\"color\":" + color + "}";
+            String jsonBody = "{\"level\":" + difficulty + ",\"color\":" + color + "}";
 
             // create the challenge, send it, and save the response
             HttpRequest request = HttpRequest.newBuilder()
@@ -70,7 +70,7 @@ public class APIChallengeDataAccessObject implements ChallengeAIDataAccessInterf
      * @throws RuntimeException if an exception occurs while making the HttpRequest or if response code is not 200 OK
      */
     public String challengePlayer(String color, String name) {
-        HttpResponse<String> response = null;
+        HttpResponse<String> response;
 
         try {
             // format the parameters of the challenge
