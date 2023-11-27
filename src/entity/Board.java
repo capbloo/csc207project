@@ -85,20 +85,17 @@ public class Board {
             ArrayList<Integer> org = move.getOrigin();
             ArrayList<Integer> des = move.getDestination();
             Piece piece = move.getPieceMoving();
-            boardstate.remove(org);
+            boardstate.put(org,null);
             boardstate.put(des, piece);
             if (des.equals(coor(7,1))){
                 boardstate.put(coor(6,1),boardstate.get(coor(8,1)));
-                boardstate.remove(coor(8,1));
-            } else if (des.equals(coor(3,1))) {
-                boardstate.put(coor(4,1),boardstate.get(coor(1,1)));
-                boardstate.remove(coor(1,1));
+                boardstate.put(coor(8,1),null);
             } else if (des.equals(coor(7,8))) {
                 boardstate.put(coor(6,8),boardstate.get(coor(8,8)));
-                boardstate.remove(coor(8,8));
+                boardstate.put(coor(8,8),null);
             } else {
                 boardstate.put(coor(4,8),boardstate.get(coor(1,8)));
-                boardstate.remove(coor(1,8));
+                boardstate.put(coor(1,8),null);
             }
             lastmove = move;
         } else {
@@ -106,10 +103,10 @@ public class Board {
             ArrayList<Integer> des = move.getDestination();
             if (move.getIsPieceCaptured()){
                 ArrayList<Integer> capture = move.getPieceCaptureLocation();
-                boardstate.remove(capture);
+                boardstate.put(capture,null);
             }
             Piece piece = move.getPieceMoving();
-            boardstate.remove(org);
+            boardstate.put(org,null);
             boardstate.put(des, piece);
             lastmove = move;
             if (move.getIsPromotion()){
