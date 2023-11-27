@@ -18,7 +18,7 @@ public class MakeMovePresenter implements MakeMoveOutputBoundary {
 
         ChessButton clickedButton = makeMoveOutputData.getClickedButton();
         Piece piece = makeMoveOutputData.getMove().getPieceMoving();
-        Font f = new Font("serif", Font.PLAIN, 75);
+        Font f = new Font("serif", Font.PLAIN, 60);
         String pieceSymbol = piece.toString();
 
         clickedButton.setText(pieceSymbol);
