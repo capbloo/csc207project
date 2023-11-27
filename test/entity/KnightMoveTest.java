@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 
 public class KnightMoveTest {
     public HashMap<ArrayList<Integer>, Piece> defaultBoardState() {
@@ -66,5 +67,16 @@ public class KnightMoveTest {
         Move[] moves = board.get(coords(1, 5)).getValidMoves(coords(1, 5), board, new Move(null, null, null));
 
         assertEquals(0, moves.length);
+    }
+
+    @org.junit.Test
+    public void testNoFriendlyKing() {
+        HashMap<ArrayList<Integer>, Piece> board = emptyBoard();
+
+        board.put(coords(1, 5), new Knight("black"));
+
+        board.put(coords(8, 8), new King("white"));
+
+        assertThrows(RuntimeException.class, () -> board.get(coords(1, 5)).getValidMoves(coords(1, 5), board, null));
     }
 }

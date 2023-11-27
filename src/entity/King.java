@@ -184,6 +184,7 @@ public class King extends Piece {
                         if (enemyPiece instanceof Bishop || enemyPiece instanceof Queen) {
                             return true;
                         }
+                        continueRay = false;
                     }
                 }
             }
@@ -209,6 +210,7 @@ public class King extends Piece {
                         if (enemyPiece instanceof Rook || enemyPiece instanceof Queen) {
                             return true;
                         }
+                        continueRay = false;
                     }
                 }
             }
@@ -228,12 +230,12 @@ public class King extends Piece {
         ArrayList<Integer> leftPawnPos = coordinateBuilder(position.get(0) - 1, position.get(1) + moveDirection);
         ArrayList<Integer> rightPawnPos = coordinateBuilder(position.get(0) + 1, position.get(1) + moveDirection);
 
-        // check that the squares in question are valid squares, if they contain enemies, and then, if those enemies are pawns
-        // if all are true, king is in check, otherwise, no pawn is checking the king
+        // Check that the squares in question are valid squares, if they contain enemies, and then, if those enemies are pawns. If so, king in check.
         if (checkSquare(leftPawnPos.get(0), leftPawnPos.get(1), boardState).equals("enemy")
                 && boardState.get(leftPawnPos) instanceof Pawn) {
             return true;
         }
+
         if (checkSquare(rightPawnPos.get(0), rightPawnPos.get(1), boardState).equals("enemy")
                 && boardState.get(rightPawnPos) instanceof Pawn) {
             return true;
