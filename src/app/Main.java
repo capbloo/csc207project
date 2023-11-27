@@ -20,6 +20,11 @@ import use_case.make_move.MakeMoveInteractor;
 import view.BoardView;
 import view.MainMenuView;
 
+import interface_adapter.HighlightSquare.HighlightController;
+import interface_adapter.HighlightSquare.HighlightPresenter;
+import interface_adapter.HighlightSquare.HighlightViewModel;
+import use_case.HighlightSquare.HighlightInteractor;
+
 public class Main {
     public static void main(String[] args) {
         // Display the chess board
@@ -32,7 +37,13 @@ public class Main {
         MakeMoveInteractor makeMoveInteractor = new MakeMoveInteractor(makeMoveDataAccessObject, makeMovePresenter, board);
         MakeMoveController makeMoveController = new MakeMoveController(makeMoveInteractor);
 
-        BoardView boardView = new BoardView(board, makeMoveController, makeMoveViewModel);
+        HighlightViewModel highlightViewModel = new HighlightViewModel();
+        HighlightPresenter highlightPresenter = new HighlightPresenter(highlightViewModel);
+        HighlightInteractor highlightInteractor = new HighlightInteractor(highlightPresenter, board);
+        HighlightController highlightController = new HighlightController(highlightInteractor);
+
+        BoardView boardView = new BoardView(board, makeMoveController, makeMoveViewModel, highlightController,
+                highlightViewModel);
 
         boardView.setVisible(true);
 
