@@ -1,6 +1,8 @@
 package entity;
 
 import java.util.ArrayList;
+import java.util.Collections;
+
 
 public class Move {
     private boolean isEnPassant;
@@ -13,7 +15,7 @@ public class Move {
     private ArrayList<Integer> origin;
     private ArrayList<Integer> destination;
 
-    Move(Piece pieceMoving, ArrayList<Integer> origin, ArrayList<Integer> destination) {
+    public Move(Piece pieceMoving, ArrayList<Integer> origin, ArrayList<Integer> destination) {
         this.pieceMoving = pieceMoving;
         this.origin = origin;
         this.destination = destination;
@@ -84,6 +86,17 @@ public class Move {
     @Override
     public String toString() {
         return algebraicNotation();
+    }
+
+    public boolean equals(Move move) {
+        int count = 0;
+        if (this.origin.equals(move.getOrigin())){
+            count++;
+        }
+        if (this.destination.equals(move.getDestination())) {
+            count++;
+        }
+        return count >= 2;
     }
 
     public String algebraicNotation() {

@@ -12,4 +12,9 @@ public class Bishop extends RayPiece {
         }
         return "♝";
     }
+
+    public String symbolToString() {
+        return "Bishop";
+    }
 }
+

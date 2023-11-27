@@ -1,6 +1,7 @@
 // PracticeWithAIView.java
 package view;
 
+import entity.Board;
 import view.MenuView;
 
 import javax.swing.*;

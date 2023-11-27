@@ -1,4 +1,5 @@
 package interface_adapter.make_move;
+import entity.ChessButton;
 import entity.Move;
 import use_case.make_move.MakeMoveInputBoundary;
 import use_case.make_move.MakeMoveInputData;
@@ -11,8 +12,8 @@ public class MakeMoveController {
         this.makeMoveInteractor = makeMoveInteractor;
     }
 
-    public void execute(Move move) {
-        MakeMoveInputData makeMoveInputData = new MakeMoveInputData(move);
+    public void execute(Move move, ChessButton clickedButton) {
+        MakeMoveInputData makeMoveInputData = new MakeMoveInputData(move, clickedButton);
         makeMoveInteractor.execute(makeMoveInputData);
     }
 
