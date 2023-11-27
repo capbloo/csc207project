@@ -35,6 +35,7 @@ public class Main {
         BoardView boardView = new BoardView(board, makeMoveController, makeMoveViewModel);
 
         boardView.setVisible(true);
+        boardView.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Display the main menu
         //new MainMenuView().show();

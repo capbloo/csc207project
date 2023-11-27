@@ -36,7 +36,7 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
         JPanel pn = new JPanel(new GridLayout(8, 8));
         setBounds(800, 800, 800, 800);
         boolean iswhite = true;
-        for (int y = 0; y < 8; y++) {
+        for (int y = 8; y > 0; y--) {
             for (int x = 0; x < 8; x++) {
 
                 ChessButton block = new ChessButton();
@@ -44,11 +44,12 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                 block.setBounds(x * 64, y * 64, 64, 64);
                 ArrayList<Integer> pos1 = new ArrayList<Integer>();
                 pos1.add(x + 1);
-                pos1.add(y + 1);
-                block.setCoord(x + 1, 8 - y);
+                pos1.add(y);
+                block.setCoord(x + 1, y);
                 block.addActionListener(this);
                 if (!(board.getBoardstate().get(pos1) == null)) {
                     block.setText(board.getBoardstate().get(pos1).toString());
+                    block.setHorizontalAlignment(SwingConstants.CENTER);
                     Font f = new Font("serif", Font.PLAIN, 75);
                     block.setFont(f);
                     block.setPiece(board.getBoardstate().get(pos1).symbolToString());
@@ -91,13 +92,14 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
     @Override
     public void actionPerformed(ActionEvent e) {
         ChessButton clickedButton = (ChessButton) e.getSource();
-        Integer x = clickedButton.getCol();
-        Integer y = clickedButton.getRow();
+        Integer x = clickedButton.getRow();
+        Integer y = clickedButton.getCol();
+        System.out.println(x.toString() + ", " + y.toString());
         if (clickedButton.isEmpty() && previousMove == null) {
         } else if (this.previousMove == null) {
             this.previousMove = clickedButton;
             System.out.println("button clicked");
-        } else if (this.previousMove.getRow().equals(y) && this.previousMove.getCol().equals(x)) {
+        } else if (this.previousMove.getRow().equals(x) && this.previousMove.getCol().equals(y)) {
             this.previousMove = null;
             System.out.println("selection reset");
         } else {
@@ -119,6 +121,7 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
         MakeMoveState state = (MakeMoveState) e.getNewValue();
         if (state.isMoveError()) {
             JOptionPane.showMessageDialog(this, "illegal move");
+
         } else {
             previousMove.clear();
             this.previousMove = null;
