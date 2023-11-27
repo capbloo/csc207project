@@ -11,6 +11,7 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -41,7 +42,12 @@ public class APIChallengeDataAccessObject implements ChallengeAIDataAccessInterf
 
         try {
             // format the parameters of the challenge
-            String jsonBody = "{\"level\":" + difficulty + ",\"color\":" + color + "}";
+            Map<String, Object> parameters = new HashMap<>();
+
+            parameters.put("level", difficulty);
+            parameters.put("color", color);
+
+            String jsonBody = new ObjectMapper().writeValueAsString(parameters);
 
             // create the challenge, send it, and save the response
             HttpRequest request = HttpRequest.newBuilder()
@@ -74,7 +80,11 @@ public class APIChallengeDataAccessObject implements ChallengeAIDataAccessInterf
 
         try {
             // format the parameters of the challenge
-            String jsonBody = "{\"color\":" + color + "}";
+            Map<String, Object> parameters = new HashMap<>();
+
+            parameters.put("color", color);
+
+            String jsonBody = new ObjectMapper().writeValueAsString(parameters);
 
             // create the challenge, send it, and save the response
             HttpRequest request = HttpRequest.newBuilder()
