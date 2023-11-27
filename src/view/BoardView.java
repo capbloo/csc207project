@@ -49,7 +49,7 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                 block.addActionListener(this);
                 if (!(board.getBoardstate().get(pos1) == null)) {
                     block.setText(board.getBoardstate().get(pos1).toString());
-                    Font f = new Font("serif", Font.PLAIN, 75);
+                    Font f = new Font("serif", Font.PLAIN, 60);
                     block.setFont(f);
                     block.setPiece(board.getBoardstate().get(pos1).symbolToString());
                     block.setPieceColour(board.getBoardstate().get(pos1).getColor());
