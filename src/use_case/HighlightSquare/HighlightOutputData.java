@@ -1,13 +1,26 @@
 package use_case.HighlightSquare;
 
-import entity.Move;
+import entity.ChessButton;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class HighlightOutputData {
 
-    private Move[] validMoves = new Move[0];
+    ArrayList<ArrayList<Integer>> moveCoordinates;
+    HashMap<ArrayList<Integer>, ChessButton> buttonList;
 
-    public HighlightOutputData(Move[] validMoves) {
-        this.validMoves = validMoves;
+    public HighlightOutputData(ArrayList<ArrayList<Integer>> moveCoordinates, HashMap<ArrayList<Integer>, ChessButton>
+            buttonList) {
+        this.moveCoordinates = moveCoordinates;
+        this.buttonList = buttonList;
     }
-    public Move[] getValidMoves(){ return validMoves;}
+
+    public ArrayList<ArrayList<Integer>> getValidMoves() {
+        return moveCoordinates;
+    }
+
+    public HashMap<ArrayList<Integer>, ChessButton> getButtonList() {
+        return buttonList;
+    }
 }
