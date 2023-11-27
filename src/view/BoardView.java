@@ -121,11 +121,10 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
         MakeMoveState state = (MakeMoveState) e.getNewValue();
         if (state.isMoveError()) {
             JOptionPane.showMessageDialog(this, "illegal move");
-
         } else {
             previousMove.clear();
-            this.previousMove = null;
             }
+        this.previousMove = null;
     }
 }
 
