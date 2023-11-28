@@ -16,7 +16,9 @@ public class ChallengeAIInteractor implements ChallengeAIInputBoundary {
 
         String gameID = challengeAIDataAccessInterface.challengeAI(color, difficulty);
 
-        ChallengeAIOutputData challengeAIOutputData = new ChallengeAIOutputData(gameID);
+        // TODO color
+
+        ChallengeAIOutputData challengeAIOutputData = new ChallengeAIOutputData(gameID, color);
 
         challengeAIOutputBoundary.prepareGame(challengeAIOutputData);
     }

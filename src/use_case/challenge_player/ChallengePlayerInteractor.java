@@ -16,7 +16,9 @@ public class ChallengePlayerInteractor implements ChallengePlayerInputBoundary {
 
         String gameID = challengePlayerDataAccessInterface.challengePlayer(color, name);
 
-        ChallengePlayerOutputData challengePlayerOutputData = new ChallengePlayerOutputData(gameID);
+        // TODO figure out how to get the correct color in if "random" chosen
+
+        ChallengePlayerOutputData challengePlayerOutputData = new ChallengePlayerOutputData(gameID, color);
 
         challengePlayerOutputBoundary.prepareGame(challengePlayerOutputData);
     }
