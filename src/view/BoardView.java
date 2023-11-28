@@ -5,9 +5,11 @@ import entity.Move;
 import entity.Piece;
 import entity.PieceBuilder;
 import entity.ChessButton;
+import interface_adapter.HighlightSquare.HighlightViewModel;
 import interface_adapter.make_move.MakeMoveController;
 import interface_adapter.make_move.MakeMoveState;
 import interface_adapter.make_move.MakeMoveViewModel;
+import interface_adapter.HighlightSquare.HighlightController;
 import use_case.make_move.MakeMoveInputData;
 
 import javax.swing.*;
@@ -17,18 +19,26 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class BoardView extends JFrame implements ActionListener, PropertyChangeListener {
 
     private MakeMoveController makeMoveController;
     private MakeMoveViewModel makeMoveViewModel;
+    private HighlightController highlightController;
+    private HighlightViewModel highlightViewModel;
     private ChessButton previousMove;
     private PieceBuilder pieceBuilder;
+    private static HashMap<ArrayList<Integer>, ChessButton> buttonList = new HashMap<>();
 
-    public BoardView(Board board, MakeMoveController makeMoveController, MakeMoveViewModel makeMoveViewModel) {
+    public BoardView(Board board, MakeMoveController makeMoveController, MakeMoveViewModel makeMoveViewModel,
+                     HighlightController highlightController, HighlightViewModel highlightViewModel) {
         this.makeMoveController = makeMoveController;
         this.makeMoveViewModel = makeMoveViewModel;
+        this.highlightController = highlightController;
+        this.highlightViewModel = highlightViewModel;
         makeMoveViewModel.addPropertyChangeListener(this);
+        //highlightViewModel.addPropertyChangeListener(this);
         pieceBuilder = new PieceBuilder();
 
         setBounds(1000, 1000, 1000, 1000);
@@ -44,8 +54,16 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                 block.setBounds(x * 64, y * 64, 64, 64);
                 ArrayList<Integer> pos1 = new ArrayList<Integer>();
                 pos1.add(x + 1);
+
+              
+                ArrayList<Integer> coord = new ArrayList<>();
+                coord.add(x + 1);
+                coord.add(y + 1);
+                buttonList.put(coord, block);
+
                 pos1.add(y);
                 block.setCoord(x + 1, y);
+
                 block.addActionListener(this);
                 if (!(board.getBoardstate().get(pos1) == null)) {
                     block.setText(board.getBoardstate().get(pos1).toString());
@@ -55,16 +73,19 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                     block.setPiece(board.getBoardstate().get(pos1).symbolToString());
                     block.setPieceColour(board.getBoardstate().get(pos1).getColor());
                 }
+
                 if (iswhite) {
                     block.setBackground(new Color(69, 75, 27));
                     block.setOpaque(true);
                     block.setBorderPainted(false);
+                    block.setSquareColour("green");
                 } else {
                     block.setBackground(Color.lightGray);
                     block.setOpaque(true);
                     block.setBorderPainted(false);
-
+                    block.setSquareColour("white");
                 }
+
                 iswhite = !iswhite;
             }
             iswhite = !iswhite;
@@ -97,26 +118,46 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
         ChessButton clickedButton = (ChessButton) e.getSource();
         Integer x = clickedButton.getRow();
         Integer y = clickedButton.getCol();
-        System.out.println(x.toString() + ", " + y.toString());
+
+/*        System.out.println(buttonList.keySet());
+        for (ChessButton button : buttonList.values()) {
+            System.out.println(button.isHighlighted());
+        }*/
+    
         if (clickedButton.isEmpty() && previousMove == null) {
+            unhighlight(buttonList);
         } else if (this.previousMove == null) {
+            if (!clickedButton.isEmpty()) {
+                highlightController.execute(clickedButton, buttonList);
+                highlight(buttonList);
+            } else {
+                unhighlight(buttonList);
+            }
             this.previousMove = clickedButton;
             System.out.println("button clicked");
+
         } else if (this.previousMove.getRow().equals(x) && this.previousMove.getCol().equals(y)) {
             this.previousMove = null;
             System.out.println("selection reset");
+            unhighlight(buttonList);
         } else {
-            Piece piece = pieceBuilder.create(previousMove.getPiece(), previousMove.getPieceColour());
-            ArrayList<Integer> origin = new ArrayList<>();
-            origin.add(previousMove.getRow());
-            origin.add(previousMove.getCol());
+            if (clickedButton.isHighlighted()) {
+                Piece piece = pieceBuilder.create(previousMove.getPiece(), previousMove.getPieceColour());
+                ArrayList<Integer> origin = new ArrayList<>();
+                origin.add(previousMove.getRow());
+                origin.add(previousMove.getCol());
 
-            ArrayList<Integer> destination = new ArrayList<>();
-            destination.add(x);
-            destination.add(y);
-            Move move = new Move(piece, origin, destination);
+                ArrayList<Integer> destination = new ArrayList<>();
+                destination.add(x);
+                destination.add(y);
+                Move move = new Move(piece, origin, destination);
 
-            makeMoveController.execute(move, clickedButton);
+                makeMoveController.execute(move, clickedButton);
+                unhighlight(buttonList);
+            } else {
+                unhighlight(buttonList);
+                this.previousMove = null;
+            }
         }
     }
 
@@ -126,9 +167,42 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
             JOptionPane.showMessageDialog(this, "illegal move");
         } else {
             previousMove.clear();
+
+            this.previousMove = null;
+        }
+    }
+
+    public void highlight(HashMap<ArrayList<Integer>, ChessButton> buttonsList) {
+        for (ChessButton button : buttonsList.values()) {
+            if (button.isHighlighted()) {
+                button.setBackground(Color.yellow);
+                button.setOpaque(true);
+                button.setBorderPainted(false);
+            }
+        }
+
             }
         this.previousMove = null;
     }
+
+    public void unhighlight(HashMap<ArrayList<Integer>, ChessButton> buttonsList) {
+        for (ChessButton button : buttonsList.values()) {
+            button.cancelHighlight();
+
+            if (button.getSquareColor().equals("green")) {
+                button.setBackground(new Color(69, 75, 27));
+                button.setOpaque(true);
+                button.setBorderPainted(false);
+            } else if (button.getSquareColor().equals("white")) {
+                button.setBackground(Color.lightGray);
+                button.setOpaque(true);
+                button.setBorderPainted(false);
+            }
+
+        }
+
+    }
+
 }
 
 

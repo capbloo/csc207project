@@ -14,8 +14,33 @@ import javax.swing.*;
 import view.BoardView;
 import view.MainMenuView;
 
+import interface_adapter.HighlightSquare.HighlightController;
+import interface_adapter.HighlightSquare.HighlightPresenter;
+import interface_adapter.HighlightSquare.HighlightViewModel;
+import use_case.HighlightSquare.HighlightInteractor;
+
 public class Main {
     public static void main(String[] args) {
+        // Display the chess board
+        Board board = new Board();
+
+        // creating the items needed for the make move use case, may want to turn this into a factory?
+        MakeMoveViewModel makeMoveViewModel = new MakeMoveViewModel();
+        MakeMovePresenter makeMovePresenter = new MakeMovePresenter(makeMoveViewModel);
+        MakeMoveDataAccessObject makeMoveDataAccessObject = new MakeMoveDataAccessObject("abcd");
+        MakeMoveInteractor makeMoveInteractor = new MakeMoveInteractor(makeMoveDataAccessObject, makeMovePresenter, board);
+        MakeMoveController makeMoveController = new MakeMoveController(makeMoveInteractor);
+
+        HighlightViewModel highlightViewModel = new HighlightViewModel();
+        HighlightPresenter highlightPresenter = new HighlightPresenter(highlightViewModel);
+        HighlightInteractor highlightInteractor = new HighlightInteractor(highlightPresenter, board);
+        HighlightController highlightController = new HighlightController(highlightInteractor);
+
+        BoardView boardView = new BoardView(board, makeMoveController, makeMoveViewModel, highlightController,
+                highlightViewModel);
+
+        boardView.setVisible(true);
+
 //        // Display the chess board
 //        JFrame application = new JFrame("Chess game");
 //        application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -26,6 +51,7 @@ public class Main {
 //        Board board = new Board();
 //
 //        BoardView boardView = new BoardView(application, board);
+
 
         // Display the main menu
         new MainMenuView().show();
