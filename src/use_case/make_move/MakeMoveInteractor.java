@@ -5,6 +5,7 @@ import entity.Move;
 import entity.Piece;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MakeMoveInteractor implements MakeMoveInputBoundary {
     final MakeMoveDataAccessInterface makeMoveDataAccessObject;
@@ -22,22 +23,22 @@ public class MakeMoveInteractor implements MakeMoveInputBoundary {
         Move move = makeMoveInputData.getMove();
         Piece piece = move.getPieceMoving();
         Move[] validMoves = piece.getValidMoves(move.getOrigin(), board.getBoardstate(), board.getLastmove());
-        // iterating through valid moves to see if the move the user made is in there
-//        for (Move validMove : validMoves) {
-//            if (move.equals(validMove)) {
-        System.out.println(board.getBoardstate().get(move.getOrigin()).symbolToString());
-        System.out.println(move.getOrigin());
-        System.out.println(move.getDestination());
+        // iterating through valid moves to see if the move the user made is in there     
+        for (Move validMove : validMoves) {
+            if (move.equals(validMove)) {
                 board.makeMove(move);
                 // push move to API if its valid
-        System.out.println(board.getBoardstate().get(move.getDestination()).symbolToString());
-                //makeMoveDataAccessObject.pushMove(move);
+//                makeMoveDataAccessObject.pushMove(move);
+
                 MakeMoveOutputData makeMoveOutputData = new MakeMoveOutputData(move, makeMoveInputData.getClickedButton());
                 makeMovePresenter.prepareSuccessView(makeMoveOutputData);
                 return;
             }
         }
-//        makeMovePresenter.prepareFailView();
+        makeMovePresenter.prepareFailView();
+
+    }
+}
 
 
 

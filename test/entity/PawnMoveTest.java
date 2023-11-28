@@ -238,8 +238,17 @@ public class PawnMoveTest {
 
         boardState.put(coords(2, 5), pawn);
 
-        assertThrows(RuntimeException.class, () -> {
-            pawn.getValidMoves(coords(2, 5), boardState, null);
-        });
+        assertThrows(RuntimeException.class, () -> pawn.getValidMoves(coords(2, 5), boardState, null));
+    }
+
+    @org.junit.Test
+    public void testInvalidColor() {
+        HashMap<ArrayList<Integer>, Piece> boardState = emptyBoard();
+
+        Pawn invalidPawn = new Pawn("green");
+
+        boardState.put(coords(2, 5), invalidPawn);
+
+        assertThrows(RuntimeException.class, () -> invalidPawn.getValidMoves(coords(2, 5), boardState, null));
     }
 }

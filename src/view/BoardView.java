@@ -46,7 +46,7 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
         JPanel pn = new JPanel(new GridLayout(8, 8));
         setBounds(800, 800, 800, 800);
         boolean iswhite = true;
-        for (int y = 0; y < 8; y++) {
+        for (int y = 8; y > 0; y--) {
             for (int x = 0; x < 8; x++) {
 
                 ChessButton block = new ChessButton();
@@ -54,15 +54,20 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                 block.setBounds(x * 64, y * 64, 64, 64);
                 ArrayList<Integer> pos1 = new ArrayList<Integer>();
                 pos1.add(x + 1);
-                pos1.add(y + 1);
-                block.setCoord(x + 1, y + 1);
+
+              
                 ArrayList<Integer> coord = new ArrayList<>();
                 coord.add(x + 1);
                 coord.add(y + 1);
                 buttonList.put(coord, block);
+
+                pos1.add(y);
+                block.setCoord(x + 1, y);
+
                 block.addActionListener(this);
                 if (!(board.getBoardstate().get(pos1) == null)) {
                     block.setText(board.getBoardstate().get(pos1).toString());
+                    block.setHorizontalAlignment(SwingConstants.CENTER);
                     Font f = new Font("serif", Font.PLAIN, 75);
                     block.setFont(f);
                     block.setPiece(board.getBoardstate().get(pos1).symbolToString());
@@ -89,21 +94,23 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
 
         JPanel bottomPanel = new JPanel(new GridLayout(1, 8));
         JPanel leftPanel = new JPanel(new GridLayout(8, 1));
-        bottomPanel.setBounds(800, 800, 800, 800);
-        leftPanel.setBounds(800, 800, 800, 800);
+        bottomPanel.setBounds(1000, 800, 800, 800);
+        leftPanel.setBounds(1000, 800, 800, 800);
         int[] numSideBar = {0, 1, 2, 3, 4, 5, 6, 7, 8};
         String[] letterSideBar = {"x", "h", "g", "f", "e", "d", "c", "b", "a"};
         int i = numSideBar.length - 1;
 
         while (i > 0) {
-            bottomPanel.add(new JLabel(letterSideBar[i]));
-            leftPanel.add(new JLabel(String.valueOf(numSideBar[i])));
+            JLabel bottomLabel = new JLabel(letterSideBar[i]);
+            JLabel leftLabel = new JLabel(String.valueOf(numSideBar[i]));
+            bottomLabel.setHorizontalAlignment(JLabel.CENTER);
+            bottomPanel.add(bottomLabel);
+            leftPanel.add(leftLabel);
             i--;
         }
-        add(bottomPanel, BorderLayout.SOUTH);
         add(leftPanel, BorderLayout.WEST);
-        System.out.println(board.getBoardstate().keySet());
-        System.out.println(board.getBoardstate().size());
+        add(bottomPanel, BorderLayout.SOUTH);
+
     }
 
     @Override
@@ -111,13 +118,12 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
         ChessButton clickedButton = (ChessButton) e.getSource();
         Integer x = clickedButton.getRow();
         Integer y = clickedButton.getCol();
+
 /*        System.out.println(buttonList.keySet());
         for (ChessButton button : buttonList.values()) {
             System.out.println(button.isHighlighted());
         }*/
-        System.out.println(buttonList.keySet());
-        System.out.println(buttonList.size());
-
+    
         if (clickedButton.isEmpty() && previousMove == null) {
             unhighlight(buttonList);
         } else if (this.previousMove == null) {
@@ -129,7 +135,6 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
             }
             this.previousMove = clickedButton;
             System.out.println("button clicked");
-
 
         } else if (this.previousMove.getRow().equals(x) && this.previousMove.getCol().equals(y)) {
             this.previousMove = null;
@@ -162,6 +167,7 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
             JOptionPane.showMessageDialog(this, "illegal move");
         } else {
             previousMove.clear();
+
             this.previousMove = null;
         }
     }
@@ -174,6 +180,9 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                 button.setBorderPainted(false);
             }
         }
+
+            }
+        this.previousMove = null;
     }
 
     public void unhighlight(HashMap<ArrayList<Integer>, ChessButton> buttonsList) {

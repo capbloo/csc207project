@@ -96,7 +96,7 @@ public class Move {
         if (this.destination.equals(move.getDestination())) {
             count++;
         }
-        return count >= 2;
+        return count == 2;
     }
 
     public String algebraicNotation() {
