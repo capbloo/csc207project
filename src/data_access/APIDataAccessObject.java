@@ -17,11 +17,11 @@ import java.util.Scanner;
 
 import com.fasterxml.jackson.databind.*;
 
-public class APIChallengeDataAccessObject implements ChallengeAIDataAccessInterface, ChallengePlayerDataAccessInterface {
+public class APIDataAccessObject implements ChallengeAIDataAccessInterface, ChallengePlayerDataAccessInterface {
     private String API_TOKEN = null;
     private final String LICHESS = "https://lichess.org";
 
-    public APIChallengeDataAccessObject() { // when instantiated, read in API token from LOCAL text file
+    public APIDataAccessObject() { // when instantiated, read in API token from LOCAL text file
         try {
             Scanner reader = new Scanner(new File("token.txt"));
             API_TOKEN = reader.nextLine();

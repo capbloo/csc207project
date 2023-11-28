@@ -251,4 +251,29 @@ public class PawnMoveTest {
 
         assertThrows(RuntimeException.class, () -> invalidPawn.getValidMoves(coords(2, 5), boardState, null));
     }
+
+    @org.junit.Test
+    public void testBlackEnPassant() {
+        HashMap<ArrayList<Integer>, Piece> boardState = defaultBoardState();
+
+        Pawn whitePawn = new Pawn("white");
+        whitePawn.pieceMove();
+
+        boardState.put(coords(5, 2), null);
+        boardState.put(coords(5, 4), whitePawn);
+
+        Pawn blackPawn = new Pawn("black");
+        blackPawn.pieceMove();
+
+        boardState.put(coords(4, 7), null);
+        boardState.put(coords(4, 4), blackPawn);
+
+        Move lastMovePawnPush = new Move(whitePawn, coords(5, 2), coords(5, 4));
+
+        Move[] moves = blackPawn.getValidMoves(coords(4, 4), boardState, lastMovePawnPush);
+
+        assertEquals(2, moves.length);
+
+        assertTrue(moves[0].getIsEnPassant() || moves[1].getIsEnPassant());
+    }
 }
