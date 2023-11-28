@@ -73,19 +73,22 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
 
         JPanel bottomPanel = new JPanel(new GridLayout(1, 8));
         JPanel leftPanel = new JPanel(new GridLayout(8, 1));
-        bottomPanel.setBounds(800, 800, 800, 800);
-        leftPanel.setBounds(800, 800, 800, 800);
+        bottomPanel.setBounds(1000, 800, 800, 800);
+        leftPanel.setBounds(1000, 800, 800, 800);
         int[] numSideBar = {0, 1, 2, 3, 4, 5, 6, 7, 8};
         String[] letterSideBar = {"x", "h", "g", "f", "e", "d", "c", "b", "a"};
         int i = numSideBar.length - 1;
 
         while (i > 0) {
-            bottomPanel.add(new JLabel(letterSideBar[i]));
-            leftPanel.add(new JLabel(String.valueOf(numSideBar[i])));
+            JLabel bottomLabel = new JLabel(letterSideBar[i]);
+            JLabel leftLabel = new JLabel(String.valueOf(numSideBar[i]));
+            bottomLabel.setHorizontalAlignment(JLabel.CENTER);
+            bottomPanel.add(bottomLabel);
+            leftPanel.add(leftLabel);
             i--;
         }
-        add(bottomPanel, BorderLayout.SOUTH);
         add(leftPanel, BorderLayout.WEST);
+        add(bottomPanel, BorderLayout.SOUTH);
 
     }
 
