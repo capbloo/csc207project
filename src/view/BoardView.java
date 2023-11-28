@@ -30,11 +30,11 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
     private ChessButton previousMove;
     private PieceBuilder pieceBuilder;
     private static HashMap<ArrayList<Integer>, ChessButton> buttonList = new HashMap<>();
-    private final String usersColour;
+//    private final String usersColour;
 
 
     public BoardView(Board board, MakeMoveController makeMoveController, MakeMoveViewModel makeMoveViewModel,
-                     HighlightController highlightController, HighlightViewModel highlightViewModel, String usersColour) {
+                     HighlightController highlightController, HighlightViewModel highlightViewModel) {
         this.makeMoveController = makeMoveController;
         this.makeMoveViewModel = makeMoveViewModel;
         this.highlightController = highlightController;
@@ -42,7 +42,6 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
         makeMoveViewModel.addPropertyChangeListener(this);
         //highlightViewModel.addPropertyChangeListener(this);
         pieceBuilder = new PieceBuilder();
-        this.usersColour = usersColour;
 
         setBounds(1000, 1000, 1000, 1000);
         setLayout(new BorderLayout());
@@ -160,7 +159,7 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                     ArrayList<Integer> sqaureToClear = new ArrayList<>();
                     sqaureToClear.add(destination.get(0));
                     // if we are white, remove the square BELOW the one we're moving to, if black, remove square ABOVE the one we're moving to
-                    if (usersColour.equals("white")) {
+                    if (piece.getColor().equals("white")) {
                         sqaureToClear.add(destination.get(1) - 1);
                     }
                     else {
