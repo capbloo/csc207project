@@ -60,9 +60,10 @@ public class PracticeWithAIView implements MenuView {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     close();
-
+                    // This will be based on the api call now, setting it as white rn for testing
+                    String usersColour = "white";
                     // Create chess board
-                    Board board = new Board();
+                    Board board = new Board(usersColour);
                     MakeMoveViewModel makeMoveViewModel = new MakeMoveViewModel();
                     MakeMovePresenter makeMovePresenter = new MakeMovePresenter(makeMoveViewModel);
                     MakeMoveDataAccessObject makeMoveDataAccessObject = new MakeMoveDataAccessObject("abcd");
@@ -74,7 +75,7 @@ public class PracticeWithAIView implements MenuView {
                     HighlightInteractor highlightInteractor = new HighlightInteractor(highlightPresenter, board);
                     HighlightController highlightController = new HighlightController(highlightInteractor);
 
-                    BoardView boardview = new BoardView(board, makeMoveController, makeMoveViewModel, highlightController, highlightViewModel);
+                    BoardView boardview = new BoardView(board, makeMoveController, makeMoveViewModel, highlightController, highlightViewModel, usersColour);
                     boardview.setVisible(true);
                 }
             });

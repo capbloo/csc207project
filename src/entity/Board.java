@@ -10,10 +10,13 @@ public class Board {
 
     private Move lastmove;
 
-    public Board(){
+    private final String usersColour;
+
+    public Board(String usersColour){
         this.lastmove = null;
         this.boardstate = new HashMap<>();
         this.highlights = new HashMap<>();
+        this.usersColour = usersColour;
         PieceBuilder builder = new PieceBuilder();
         ArrayList<String> pieces = new ArrayList<String>();
         pieces.add("Rook");
@@ -87,14 +90,27 @@ public class Board {
             ArrayList<Integer> capture = move.getPieceCaptureLocation();
             boardstate.remove(capture);
         }
+        else if (move.getIsEnPassant()) {
+            Piece piece = move.getPieceMoving();
+            boardstate.remove(org);
+            boardstate.put(des, piece);
+            ArrayList<Integer> coordToRemove = new ArrayList<>();
+            coordToRemove.add(des.get(0));
+            if (usersColour.equals("white")) {
+                coordToRemove.add(des.get(1) - 1);
+            } else {
+                coordToRemove.add(des.get(1) + 1);
+            }
+            boardstate.remove(coordToRemove);
+        }
         Piece piece = move.getPieceMoving();
         boardstate.remove(org);
         boardstate.put(des, piece);
         lastmove = move;
     }
 
-    private Board cloneBoard(){
-        Board newb = new Board();
+    private Board cloneBoard(String usersColour){
+        Board newb = new Board(usersColour);
         newb.setLastmove(lastmove);
         newb.setBoardstate((HashMap<ArrayList<Integer>, Piece>)boardstate.clone());
         return newb;
