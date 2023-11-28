@@ -178,7 +178,12 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
     }
 
     public boolean isEnPassent(ChessButton clickedButton) {
-        return clickedButton.getPiece() == null && !clickedButton.getRow().equals(previousMove.getRow());
+        System.out.println(previousMove.getPiece());
+        if (previousMove.getPiece().equals("Pawn")) {
+            // return true if the pawn is moving diagonally and not taking over a piece, ie en passent
+            return clickedButton.getPiece() == null && !clickedButton.getRow().equals(previousMove.getRow());
+        }
+        return false;
     }
 
     public void propertyChange(PropertyChangeEvent e) {
