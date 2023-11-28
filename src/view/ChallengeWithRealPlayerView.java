@@ -3,9 +3,13 @@ package view;
 
 import data_access.MakeMoveDataAccessObject;
 import entity.Board;
+import interface_adapter.HighlightSquare.HighlightController;
+import interface_adapter.HighlightSquare.HighlightPresenter;
+import interface_adapter.HighlightSquare.HighlightViewModel;
 import interface_adapter.make_move.MakeMoveController;
 import interface_adapter.make_move.MakeMovePresenter;
 import interface_adapter.make_move.MakeMoveViewModel;
+import use_case.HighlightSquare.HighlightInteractor;
 import use_case.make_move.MakeMoveInteractor;
 
 import javax.swing.*;
@@ -65,7 +69,12 @@ public class ChallengeWithRealPlayerView implements MenuView {
                         MakeMoveInteractor makeMoveInteractor = new MakeMoveInteractor(makeMoveDataAccessObject, makeMovePresenter, board);
                         MakeMoveController makeMoveController = new MakeMoveController(makeMoveInteractor);
 
-                        BoardView boardview = new BoardView(board, makeMoveController, makeMoveViewModel);
+                        HighlightViewModel highlightViewModel = new HighlightViewModel();
+                        HighlightPresenter highlightPresenter = new HighlightPresenter(highlightViewModel);
+                        HighlightInteractor highlightInteractor = new HighlightInteractor(highlightPresenter, board);
+                        HighlightController highlightController = new HighlightController(highlightInteractor);
+
+                        BoardView boardview = new BoardView(board, makeMoveController, makeMoveViewModel, highlightController, highlightViewModel);
                         boardview.setVisible(true);
 
                     } else {
