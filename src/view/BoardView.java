@@ -58,7 +58,7 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
               
                 ArrayList<Integer> coord = new ArrayList<>();
                 coord.add(x + 1);
-                coord.add(y + 1);
+                coord.add(y);
                 buttonList.put(coord, block);
 
                 pos1.add(y);
@@ -68,7 +68,7 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                 if (!(board.getBoardstate().get(pos1) == null)) {
                     block.setText(board.getBoardstate().get(pos1).toString());
                     block.setHorizontalAlignment(SwingConstants.CENTER);
-                    Font f = new Font("serif", Font.PLAIN, 75);
+                    Font f = new Font("serif", Font.PLAIN, 60);
                     block.setFont(f);
                     block.setPiece(board.getBoardstate().get(pos1).symbolToString());
                     block.setPieceColour(board.getBoardstate().get(pos1).getColor());
@@ -182,8 +182,7 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
         }
 
             }
-        this.previousMove = null;
-    }
+
 
     public void unhighlight(HashMap<ArrayList<Integer>, ChessButton> buttonsList) {
         for (ChessButton button : buttonsList.values()) {

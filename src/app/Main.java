@@ -1,5 +1,6 @@
 package app;
 
+import data_access.MakeMoveDataAccessObject;
 import entity.Board;
 
 import java.awt.*;
@@ -11,6 +12,11 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.*;
 import javax.swing.*;
+
+import interface_adapter.make_move.MakeMoveController;
+import interface_adapter.make_move.MakeMovePresenter;
+import interface_adapter.make_move.MakeMoveViewModel;
+import use_case.make_move.MakeMoveInteractor;
 import view.BoardView;
 import view.MainMenuView;
 
@@ -22,24 +28,24 @@ import use_case.HighlightSquare.HighlightInteractor;
 public class Main {
     public static void main(String[] args) {
         // Display the chess board
-        Board board = new Board();
-
-        // creating the items needed for the make move use case, may want to turn this into a factory?
-        MakeMoveViewModel makeMoveViewModel = new MakeMoveViewModel();
-        MakeMovePresenter makeMovePresenter = new MakeMovePresenter(makeMoveViewModel);
-        MakeMoveDataAccessObject makeMoveDataAccessObject = new MakeMoveDataAccessObject("abcd");
-        MakeMoveInteractor makeMoveInteractor = new MakeMoveInteractor(makeMoveDataAccessObject, makeMovePresenter, board);
-        MakeMoveController makeMoveController = new MakeMoveController(makeMoveInteractor);
-
-        HighlightViewModel highlightViewModel = new HighlightViewModel();
-        HighlightPresenter highlightPresenter = new HighlightPresenter(highlightViewModel);
-        HighlightInteractor highlightInteractor = new HighlightInteractor(highlightPresenter, board);
-        HighlightController highlightController = new HighlightController(highlightInteractor);
-
-        BoardView boardView = new BoardView(board, makeMoveController, makeMoveViewModel, highlightController,
-                highlightViewModel);
-
-        boardView.setVisible(true);
+//        Board board = new Board();
+//
+//        // creating the items needed for the make move use case, may want to turn this into a factory?
+//        MakeMoveViewModel makeMoveViewModel = new MakeMoveViewModel();
+//        MakeMovePresenter makeMovePresenter = new MakeMovePresenter(makeMoveViewModel);
+//        MakeMoveDataAccessObject makeMoveDataAccessObject = new MakeMoveDataAccessObject("abcd");
+//        MakeMoveInteractor makeMoveInteractor = new MakeMoveInteractor(makeMoveDataAccessObject, makeMovePresenter, board);
+//        MakeMoveController makeMoveController = new MakeMoveController(makeMoveInteractor);
+//
+//        HighlightViewModel highlightViewModel = new HighlightViewModel();
+//        HighlightPresenter highlightPresenter = new HighlightPresenter(highlightViewModel);
+//        HighlightInteractor highlightInteractor = new HighlightInteractor(highlightPresenter, board);
+//        HighlightController highlightController = new HighlightController(highlightInteractor);
+//
+//        BoardView boardView = new BoardView(board, makeMoveController, makeMoveViewModel, highlightController,
+//                highlightViewModel);
+//
+//        boardView.setVisible(true);
 
 //        // Display the chess board
 //        JFrame application = new JFrame("Chess game");
