@@ -26,6 +26,8 @@ public class HighlightInteractor implements HighlightInputBoundary {
         position.add(clickedButton.getRow());
         position.add(clickedButton.getCol());
         Piece piece = board.getBoardstate().get(position);
+        System.out.println(position);
+        System.out.println(piece.symbolToString());
         HashMap<ArrayList<Integer>, Piece> boardState = board.getBoardstate();
         Move lastMove = board.getLastmove();
 
