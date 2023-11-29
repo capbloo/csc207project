@@ -70,18 +70,6 @@ public class Board {
         this.highlights.put(pos, ishigh);
     }
 
-    public void setLastmove(Move lastmove) {
-        this.lastmove = lastmove;
-    }
-
-    public void setBoardstate(HashMap<ArrayList<Integer>, Piece> boardstates){
-        this.boardstate = boardstates;
-    }
-
-    public HashMap<ArrayList<Integer>, Piece> getBoardstate() {
-        return boardstate;
-    }
-
     public void makeMove(Move move){
         PieceBuilder builder = new PieceBuilder();
         ArrayList<Integer> org = move.getOrigin();
@@ -134,6 +122,15 @@ public class Board {
         boardstate.remove(org);
         lastmove = move;
     }
+        
+  
+  
+  
+    public ArrayList<Integer> coor(int x, int y){
+        ArrayList<Integer> co = new ArrayList<Integer>();
+        co.add(x);
+        co.add(y);
+        return co;
 
     private Board cloneBoard(String usersColour){
         Board newb = new Board();
@@ -180,6 +177,18 @@ public class Board {
         }
         return ischeck;
     }
+
+    public boolean isValidMove(Move move){
+        ArrayList<Integer> org = move.getOrigin();
+        Move[] legalmoves = boardstate.get(org).getValidMoves(org, boardstate, lastmove);
+        for (Move m : legalmoves){
+            if (m.equals(move)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean isStaleMate(String colorToPlay){
         boolean stalemate = false;
         ArrayList<Move> legalmoves = new ArrayList<>();
