@@ -57,7 +57,17 @@ public class Board {
 
 
     }
+    public void setLastmove(Move lastmove) {
+        this.lastmove = lastmove;
+    }
 
+    public void setBoardstate(HashMap<ArrayList<Integer>, Piece> boardstates){
+        this.boardstate = boardstates;
+    }
+
+    public HashMap<ArrayList<Integer>, Piece> getBoardstate() {
+        return boardstate;
+    }
     public Move getLastmove() {
         return lastmove;
     }
@@ -126,13 +136,14 @@ public class Board {
   
   
   
-    public ArrayList<Integer> coor(int x, int y){
+    public ArrayList<Integer> coor(int x, int y) {
         ArrayList<Integer> co = new ArrayList<Integer>();
         co.add(x);
         co.add(y);
         return co;
+    }
 
-    private Board cloneBoard(String usersColour){
+    private Board cloneBoard() {
         Board newb = new Board();
         newb.setLastmove(lastmove);
         newb.setBoardstate((HashMap<ArrayList<Integer>, Piece>)boardstate.clone());
