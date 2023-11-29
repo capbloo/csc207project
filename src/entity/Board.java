@@ -6,14 +6,16 @@ import java.util.*;
 public class Board {
     private HashMap<ArrayList<Integer>, Piece> boardstate;
 
-    private HashMap<ArrayList<Integer>, Boolean> highLights;
+    private HashMap<ArrayList<Integer>, Boolean> highlights;
 
     private Move lastmove;
+
+//    private final String usersColour;
 
     public Board(){
         this.lastmove = null;
         this.boardstate = new HashMap<>();
-        this.highLights = new HashMap<>();
+        this.highlights = new HashMap<>();
         PieceBuilder builder = new PieceBuilder();
         ArrayList<String> pieces = new ArrayList<String>();
         pieces.add("Rook");
@@ -61,11 +63,11 @@ public class Board {
     }
 
     public HashMap<ArrayList<Integer>, Boolean> getHighLights() {
-        return highLights;
+        return highlights;
     }
 
     public void setHighLights(ArrayList<Integer> pos, boolean ishigh) {
-        this.highLights.put(pos, ishigh);
+        this.highlights.put(pos, ishigh);
     }
 
     public void setLastmove(Move lastmove) {
@@ -98,6 +100,22 @@ public class Board {
                 boardstate.put(coor(1,8),null);
             }
             lastmove = move;
+         else if (move.getIsEnPassant()) {
+            Piece piece = move.getPieceMoving();
+            boardstate.remove(org);
+            boardstate.put(des, piece);
+            ArrayList<Integer> coordToRemove = new ArrayList<>();
+            coordToRemove.add(des.get(0));
+            if (piece.getColor().equals("white")) {
+                coordToRemove.add(des.get(1) - 1);
+            } else {
+                coordToRemove.add(des.get(1) + 1);
+            }
+            boardstate.remove(coordToRemove);
+        
+            Piece piece = move.getPieceMoving();
+            boardstate.remove(org);
+            boardstate.put(des, piece);
         } else {
             ArrayList<Integer> org = move.getOrigin();
             ArrayList<Integer> des = move.getDestination();
@@ -116,15 +134,17 @@ public class Board {
         }
 
     }
-
+        
+  
+  
+  
     public ArrayList<Integer> coor(int x, int y){
         ArrayList<Integer> co = new ArrayList<Integer>();
         co.add(x);
         co.add(y);
         return co;
-    }
 
-    private Board cloneBoard(){
+    private Board cloneBoard(String usersColour){
         Board newb = new Board();
         newb.setLastmove(lastmove);
         newb.setBoardstate((HashMap<ArrayList<Integer>, Piece>)boardstate.clone());

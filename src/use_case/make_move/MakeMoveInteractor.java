@@ -2,31 +2,50 @@ package use_case.make_move;
 
 import entity.Board;
 import entity.Move;
+import entity.Piece;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MakeMoveInteractor implements MakeMoveInputBoundary {
-        final MakeMoveDataAccessInterface makeMoveDataAccessObject;
-        final MakeMoveOutputBoundary makeMovePresenter;
+    final MakeMoveDataAccessInterface makeMoveDataAccessObject;
+    final MakeMoveOutputBoundary makeMovePresenter;
 
-        final Board board;
+    final Board board;
 
-        public MakeMoveInteractor(MakeMoveDataAccessInterface makeMoveDataAccessObject, MakeMoveOutputBoundary makeMovePresenter, Board board) {
-            this.makeMoveDataAccessObject = makeMoveDataAccessObject;
-            this.makeMovePresenter = makeMovePresenter;
-            this.board = board;
+    public MakeMoveInteractor(MakeMoveDataAccessInterface makeMoveDataAccessObject, MakeMoveOutputBoundary makeMovePresenter, Board board) {
+        this.makeMoveDataAccessObject = makeMoveDataAccessObject;
+        this.makeMovePresenter = makeMovePresenter;
+        this.board = board;
+    }
+
+    public void execute(MakeMoveInputData makeMoveInputData) {
+        Move move = makeMoveInputData.getMove();
+        Piece piece = move.getPieceMoving();
+        Move[] validMoves = piece.getValidMoves(move.getOrigin(), board.getBoardstate(), board.getLastmove());
+        // iterating through valid moves to see if the move the user made is in there     
+
+        board.makeMove(move);
+
+        // testing en passent
+        if (move.getIsEnPassant()) {
+            ArrayList<Integer> coordToRemove = new ArrayList<>();
+            coordToRemove.add(move.getDestination().get(0));
+            coordToRemove.add(move.getDestination().get(1)-1);
+
+            HashMap<ArrayList<Integer>, Piece> bs = board.getBoardstate();
+            System.out.println(bs.get(coordToRemove) == null);
         }
+        // push move to API if its valid
+        // makeMoveDataAccessObject.pushMove(move);
 
-        public void execute(MakeMoveInputData makeMoveInputData) {
-            Move move = makeMoveInputData.getMove();
-            board.makeMove(move);
+        MakeMoveOutputData makeMoveOutputData = new MakeMoveOutputData(move, makeMoveInputData.getClickedButton());
+        makeMovePresenter.prepareSuccessView(makeMoveOutputData);
 
-            // pushing the move to the API
-            makeMoveDataAccessObject.pushMove(move);
-
-            MakeMoveOutputData makeMoveOutputData = new MakeMoveOutputData(move);
-            makeMovePresenter.prepareView(makeMoveOutputData);
-
-
-        }
+    }
 }
+
+
+
+
+

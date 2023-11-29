@@ -15,6 +15,10 @@ public class Pawn extends Piece {
         return "♟";
     }
 
+    public String symbolToString() {
+        return "Pawn";
+    }
+
     @Override
     public Move[] getValidMoves(ArrayList<Integer> position, HashMap<ArrayList<Integer>, Piece> boardState, Move lastMove) {
         Set<Move> possibleMoves = new HashSet<>();
@@ -31,8 +35,8 @@ public class Pawn extends Piece {
         }
 
         // check conditions for en passant
-        if ((lastMove.getPieceMoving() instanceof Pawn) // last move was made by a pawn
-                && ((lastMove.getOrigin().get(1) - lastMove.getDestination().get(1)) == 2) // and it moved 2 squares
+        if (lastMove != null && (lastMove.getPieceMoving() instanceof Pawn) // last move was made by a pawn
+                && (Math.abs(lastMove.getOrigin().get(1) - lastMove.getDestination().get(1)) == 2) // and it moved 2 squares
                 && (lastMove.getDestination().get(1).equals(position.get(1))) // and it ended in this pawn's row
                 && (Math.abs(lastMove.getDestination().get(0) - position.get(0)) == 1)) { // and it's right next to our pawn
 
