@@ -60,7 +60,8 @@ public class PracticeWithAIView implements MenuView {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     close();
-
+                    // This will be based on the api call now, setting it as white rn for testing
+                    String usersColour = "white";
                     // Create chess board
                     Board board = new Board();
                     MakeMoveViewModel makeMoveViewModel = new MakeMoveViewModel();

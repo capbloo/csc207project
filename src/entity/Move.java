@@ -15,6 +15,9 @@ public class Move {
     private ArrayList<Integer> origin;
     private ArrayList<Integer> destination;
 
+    private ChessButton rookRemoved;
+    private ChessButton rookAdded;
+
     public Move(Piece pieceMoving, ArrayList<Integer> origin, ArrayList<Integer> destination) {
         this.pieceMoving = pieceMoving;
         this.origin = origin;
@@ -45,6 +48,13 @@ public class Move {
 
     public void setPieceCaptureLocation(ArrayList<Integer> captureLocation) {
         pieceCaptureLocation = captureLocation;
+    }
+
+    public void setRookRemoved(ChessButton rook) {
+        rookRemoved = rook;
+    }
+    public void setRookAdded(ChessButton rook) {
+        rookAdded = rook;
     }
 
     public boolean getIsEnPassant() {
@@ -81,6 +91,14 @@ public class Move {
 
     public ArrayList<Integer> getDestination() {
         return destination;
+    }
+
+    public ChessButton getRookAdded() {
+        return rookAdded;
+    }
+
+    public ChessButton getRookRemoved() {
+        return rookRemoved;
     }
 
     @Override

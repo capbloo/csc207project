@@ -1,7 +1,9 @@
 package interface_adapter.make_move;
 
 import entity.ChessButton;
+import entity.Move;
 import entity.Piece;
+import entity.PieceBuilder;
 import use_case.make_move.MakeMoveOutputBoundary;
 import use_case.make_move.MakeMoveOutputData;
 
@@ -18,10 +20,43 @@ public class MakeMovePresenter implements MakeMoveOutputBoundary {
 
         ChessButton clickedButton = makeMoveOutputData.getClickedButton();
         Piece piece = makeMoveOutputData.getMove().getPieceMoving();
+        Move move = makeMoveOutputData.getMove();
         Font f = new Font("serif", Font.PLAIN, 60);
         String pieceSymbol = piece.toString();
 
-        clickedButton.setText(pieceSymbol);
+        if (move.getIsPromotion()) {
+            // if promotion, change the piece to a queen permanently
+            PieceBuilder builder = new PieceBuilder();
+            piece = builder.create("Queen", piece.getColor());
+            if (piece.getColor().equals("white")) {
+                clickedButton.setText("♕");
+            }
+            else {
+            clickedButton.setText("♛");
+            }
+
+ }
+        else if (move.getIsCastle()) {
+            // first, remove the current rook
+            ChessButton rookRemoved = move.getRookRemoved();
+            rookRemoved.clear();
+            // move the king
+            clickedButton.setText(pieceSymbol);
+            // adding the rook to the left/right of the king
+            ChessButton rookAdded = move.getRookAdded();
+            if (piece.getColor().equals("white")) {
+                rookAdded.setText("♖");
+            }
+            else {
+                rookAdded.setText("♜");
+            }
+            rookAdded.setFont(f);
+            rookAdded.setPieceColour(piece.getColor());
+            rookAdded.setPiece("Rook");
+        }
+        else {
+            clickedButton.setText(pieceSymbol);
+        }
         clickedButton.setFont(f);
         clickedButton.setPieceColour(piece.getColor());
         clickedButton.setPiece(piece.symbolToString());
@@ -29,11 +64,4 @@ public class MakeMovePresenter implements MakeMoveOutputBoundary {
         makeMoveViewModel.firePropertyChanged();
     }
 
-    public void prepareFailView() {
-        MakeMoveState makeMoveState = makeMoveViewModel.getState();
-        makeMoveState.setMoveError();
-        makeMoveViewModel.firePropertyChanged();
-        makeMoveViewModel.setState(new MakeMoveState());
-
-    }
 }

@@ -30,6 +30,8 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
     private ChessButton previousMove;
     private PieceBuilder pieceBuilder;
     private static HashMap<ArrayList<Integer>, ChessButton> buttonList = new HashMap<>();
+//    private final String usersColour;
+
 
     public BoardView(Board board, MakeMoveController makeMoveController, MakeMoveViewModel makeMoveViewModel,
                      HighlightController highlightController, HighlightViewModel highlightViewModel) {
@@ -119,11 +121,10 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
         Integer x = clickedButton.getRow();
         Integer y = clickedButton.getCol();
 
-/*        System.out.println(buttonList.keySet());
-        for (ChessButton button : buttonList.values()) {
-            System.out.println(button.isHighlighted());
-        }*/
-    
+        // first if condition ensures the player is only moving their own pieces
+//        if (clickedButton.getPieceColour() != null && (!clickedButton.getPieceColour().equals(usersColour)) && previousMove == null) {
+//        return;
+//        }
         if (clickedButton.isEmpty() && previousMove == null) {
             unhighlight(buttonList);
         } else if (this.previousMove == null) {
@@ -150,8 +151,54 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                 ArrayList<Integer> destination = new ArrayList<>();
                 destination.add(x);
                 destination.add(y);
+
                 Move move = new Move(piece, origin, destination);
 
+                if (isEnPassent(clickedButton)) {
+                    move.setIsEnPassant();
+                    ArrayList<Integer> sqaureToClear = new ArrayList<>();
+                    sqaureToClear.add(destination.get(0));
+                    // if we are white, remove the square BELOW the one we're moving to, if black, remove square ABOVE the one we're moving to
+                    if (piece.getColor().equals("white")) {
+                        sqaureToClear.add(destination.get(1) - 1);
+                    }
+                    else {
+                        sqaureToClear.add(destination.get(1) + 1);
+                    }
+                    ChessButton pieceToClear = buttonList.get(sqaureToClear);
+                    pieceToClear.clear();
+
+                } else if (isPromotion(clickedButton)) {
+                    move.setIsPromotion();
+
+                } else if (isCastle(clickedButton)) {
+                    move.setIsCastle();
+
+                    // getting coordinates of where the rooks should be moved to and from
+                    ArrayList<Integer> rookToClear = new ArrayList<>();
+                    ArrayList<Integer> rookToAdd = new ArrayList<>();
+
+                    // checking which direction castle is
+                    if (destination.get(0) > origin.get(0)) {
+                        // if it is a castle to the right, the rightmost rook is moved one space left of the king
+                        rookToAdd.add(destination.get(0) - 1);
+                        rookToClear.add(8);
+                    } else {
+                        // if it is a castle to the left, the leftmost rook is moved one space to the right of the king
+                        rookToAdd.add(destination.get(0) + 1);
+                        rookToClear.add(1);
+                    }
+                    // determining whether this is a white castle or black castle, depending on the y coordinate of the king
+                    rookToClear.add(destination.get(1));
+                    rookToAdd.add(destination.get(1));
+
+                    ChessButton rookRemoved = buttonList.get(rookToClear);
+                    ChessButton rookAdded = buttonList.get(rookToAdd);
+                    // adding buttons to move class so the presenter can update them
+                    move.setRookAdded(rookAdded);
+                    move.setRookRemoved(rookRemoved);
+
+                }
                 makeMoveController.execute(move, clickedButton);
                 unhighlight(buttonList);
             } else {
@@ -161,21 +208,38 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
         }
     }
 
-    public void propertyChange(PropertyChangeEvent e) {
-        MakeMoveState state = (MakeMoveState) e.getNewValue();
-        if (state.isMoveError()) {
-            JOptionPane.showMessageDialog(this, "illegal move");
-        } else {
-            previousMove.clear();
-
-            this.previousMove = null;
+    private boolean isEnPassent(ChessButton clickedButton) {
+        System.out.println(previousMove.getPiece());
+        if (previousMove.getPiece().equals("Pawn")) {
+            // return true if the pawn is moving diagonally and not taking over a piece, ie en passent
+            return clickedButton.getPiece() == null && !clickedButton.getRow().equals(previousMove.getRow());
         }
+        return false;
+    }
+
+    private boolean isPromotion(ChessButton clickedButton) {
+        if (previousMove.getPiece().equals("Pawn")) {
+            return clickedButton.getCol().equals(8) || clickedButton.getCol().equals(1);
+        }
+        return false;
+    }
+
+    public boolean isCastle(ChessButton clickedButton) {
+        if (previousMove.getPiece().equals("King")) {
+            return Math.abs(previousMove.getRow() - clickedButton.getRow()) > 1;
+        }
+        return false;
+    }
+
+    public void propertyChange(PropertyChangeEvent e) {
+        previousMove.clear();
+        this.previousMove = null;
     }
 
     public void highlight(HashMap<ArrayList<Integer>, ChessButton> buttonsList) {
         for (ChessButton button : buttonsList.values()) {
             if (button.isHighlighted()) {
-                button.setBackground(Color.yellow);
+                button.setBackground(new Color(240,226,182));
                 button.setOpaque(true);
                 button.setBorderPainted(false);
             }
