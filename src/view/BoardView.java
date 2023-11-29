@@ -214,9 +214,7 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                     unhighlight(buttonList);
                     makeMoveController.execute(move, clickedButton);
                 }finally {
-                    System.out.println("before");
                     checkGameEndsController.execute(move);
-                    System.out.println("after");
                 }
             } else {
                 unhighlight(buttonList);
@@ -249,24 +247,25 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
     }
 
     public void propertyChange(PropertyChangeEvent e) {
-            try {
+            if (e.getPropertyName().equals("CheckGameEnds")) {
                 CheckGameEndsState state = (CheckGameEndsState) e.getNewValue();
                 String color = "";
                 if (state.getiswhite()) {
-                    color = "white";
+                    color = "White";
                 } else {
-                    color = "black";
+                    color = "Black";
                 }
                 if (state.getwin()) {
-                    JOptionPane.showMessageDialog(this, color + "win!");
+                    JOptionPane.showMessageDialog(this, color + " win!");
                 } else if (state.getstale()) {
                     JOptionPane.showMessageDialog(this, "It's a tie");
                 }
                 System.out.println("not end");
-            }catch (ClassCastException er){
+            }else {
                 previousMove.clear();
                 this.previousMove = null;
             }
+
     }
 
     public void highlight(HashMap<ArrayList<Integer>, ChessButton> buttonsList) {
