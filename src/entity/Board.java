@@ -83,13 +83,14 @@ public class Board {
     }
 
     public void makeMove(Move move){
+        PieceBuilder builder = new PieceBuilder();
         ArrayList<Integer> org = move.getOrigin();
         ArrayList<Integer> des = move.getDestination();
         Piece piece = move.getPieceMoving();
         // checking if we need to mark a piece as "moved"
-        if (piece.symbolToString().equals("Pawn") || piece.symbolToString().equals("King") || piece.symbolToString().equals("Rook")) {
-            piece.pieceMove();
-        }
+
+        piece.pieceMove();
+
         // checking for en passant, promotion, or castle
         if (move.getIsPieceCaptured()){
             ArrayList<Integer> capture = move.getPieceCaptureLocation();
@@ -107,11 +108,22 @@ public class Board {
             }
             boardstate.remove(coordToRemove);
         } else if (move.getIsPromotion()) {
-            PieceBuilder builder = new PieceBuilder();
+
             Piece queen = builder.create("Queen", piece.getColor());
             boardstate.put(des, queen);
         } else if (move.getIsCastle()){
-
+            boardstate.put(des, piece);
+            // adding rook to left/right of king
+            ArrayList<Integer> coordOfRookAdded = new ArrayList<>();
+            coordOfRookAdded.add(move.getRookAdded().getRow());
+            coordOfRookAdded.add(move.getRookAdded().getCol());
+            Piece rook = builder.create("Rook", piece.getColor());
+            boardstate.put(coordOfRookAdded, rook);
+            // removing rook from its current position
+            ArrayList<Integer> coordOfRookRemoved = new ArrayList<>();
+            coordOfRookRemoved.add(move.getRookRemoved().getRow());
+            coordOfRookRemoved.add(move.getRookRemoved().getCol());
+            boardstate.remove(coordOfRookRemoved);
         }
         else {
             boardstate.put(des, piece);

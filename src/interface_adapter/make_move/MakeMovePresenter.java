@@ -35,6 +35,22 @@ public class MakeMovePresenter implements MakeMoveOutputBoundary {
             clickedButton.setText("♛");
             }
 
+ }
+        else if (move.getIsCastle()) {
+            ChessButton rookRemoved = move.getRookRemoved();
+            rookRemoved.clear();
+            clickedButton.setText(pieceSymbol);
+
+            ChessButton rookAdded = move.getRookAdded();
+            if (piece.getColor().equals("white")) {
+                rookAdded.setText("♖");
+            }
+            else {
+                rookAdded.setText("♜");
+            }
+            rookAdded.setFont(f);
+            rookAdded.setPieceColour(piece.getColor());
+            rookAdded.setPiece("Rook");
         }
         else {
             clickedButton.setText(pieceSymbol);
