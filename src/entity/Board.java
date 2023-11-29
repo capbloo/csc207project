@@ -83,13 +83,24 @@ public class Board {
     }
 
     public void makeMove(Move move){
-        ArrayList<Integer> org = move.getOrigin();
-        ArrayList<Integer> des = move.getDestination();
-        if (move.getIsPieceCaptured()){
-            ArrayList<Integer> capture = move.getPieceCaptureLocation();
-            boardstate.remove(capture);
-        }
-        else if (move.getIsEnPassant()) {
+        if (move.getIsCastle()){
+            ArrayList<Integer> org = move.getOrigin();
+            ArrayList<Integer> des = move.getDestination();
+            Piece piece = move.getPieceMoving();
+            boardstate.put(org,null);
+            boardstate.put(des, piece);
+            if (des.equals(coor(7,1))){
+                boardstate.put(coor(6,1),boardstate.get(coor(8,1)));
+                boardstate.put(coor(8,1),null);
+            } else if (des.equals(coor(7,8))) {
+                boardstate.put(coor(6,8),boardstate.get(coor(8,8)));
+                boardstate.put(coor(8,8),null);
+            } else {
+                boardstate.put(coor(4,8),boardstate.get(coor(1,8)));
+                boardstate.put(coor(1,8),null);
+            }
+            lastmove = move;
+         else if (move.getIsEnPassant()) {
             Piece piece = move.getPieceMoving();
             boardstate.remove(org);
             boardstate.put(des, piece);
@@ -101,12 +112,37 @@ public class Board {
                 coordToRemove.add(des.get(1) + 1);
             }
             boardstate.remove(coordToRemove);
+        
+            Piece piece = move.getPieceMoving();
+            boardstate.remove(org);
+            boardstate.put(des, piece);
+        } else {
+            ArrayList<Integer> org = move.getOrigin();
+            ArrayList<Integer> des = move.getDestination();
+            if (move.getIsPieceCaptured()){
+                ArrayList<Integer> capture = move.getPieceCaptureLocation();
+                boardstate.put(capture,null);
+            }
+            Piece piece = move.getPieceMoving();
+            boardstate.put(org,null);
+            boardstate.put(des, piece);
+            lastmove = move;
+            if (move.getIsPromotion()){
+                boardstate.remove(des);
+                boardstate.put(des, new PieceBuilder().create("Queen", piece.getColor()));
+            }
         }
-        Piece piece = move.getPieceMoving();
-        boardstate.remove(org);
-        boardstate.put(des, piece);
-        lastmove = move;
+
     }
+        
+  
+  
+  
+    public ArrayList<Integer> coor(int x, int y){
+        ArrayList<Integer> co = new ArrayList<Integer>();
+        co.add(x);
+        co.add(y);
+        return co;
 
     private Board cloneBoard(String usersColour){
         Board newb = new Board();
@@ -153,6 +189,18 @@ public class Board {
         }
         return ischeck;
     }
+
+    public boolean isValidMove(Move move){
+        ArrayList<Integer> org = move.getOrigin();
+        Move[] legalmoves = boardstate.get(org).getValidMoves(org, boardstate, lastmove);
+        for (Move m : legalmoves){
+            if (m.equals(move)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean isStaleMate(String colorToPlay){
         boolean stalemate = false;
         ArrayList<Move> legalmoves = new ArrayList<>();
