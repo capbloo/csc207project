@@ -60,7 +60,8 @@ public class ChallengeWithRealPlayerView implements MenuView {
                     if (!playerName.isEmpty()) {
                         JOptionPane.showMessageDialog(frame, "Starting challenge with player: " + playerName);
                         close();
-
+                        // This will be based on the api call now, setting it as white rn for testing
+                        String usersColour = "black";
                         // Create chess board
                         Board board = new Board();
                         MakeMoveViewModel makeMoveViewModel = new MakeMoveViewModel();

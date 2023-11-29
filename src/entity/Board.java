@@ -10,6 +10,8 @@ public class Board {
 
     private Move lastmove;
 
+//    private final String usersColour;
+
     public Board(){
         this.lastmove = null;
         this.boardstate = new HashMap<>();
@@ -87,13 +89,26 @@ public class Board {
             ArrayList<Integer> capture = move.getPieceCaptureLocation();
             boardstate.remove(capture);
         }
+        else if (move.getIsEnPassant()) {
+            Piece piece = move.getPieceMoving();
+            boardstate.remove(org);
+            boardstate.put(des, piece);
+            ArrayList<Integer> coordToRemove = new ArrayList<>();
+            coordToRemove.add(des.get(0));
+            if (piece.getColor().equals("white")) {
+                coordToRemove.add(des.get(1) - 1);
+            } else {
+                coordToRemove.add(des.get(1) + 1);
+            }
+            boardstate.remove(coordToRemove);
+        }
         Piece piece = move.getPieceMoving();
         boardstate.remove(org);
         boardstate.put(des, piece);
         lastmove = move;
     }
 
-    private Board cloneBoard(){
+    private Board cloneBoard(String usersColour){
         Board newb = new Board();
         newb.setLastmove(lastmove);
         newb.setBoardstate((HashMap<ArrayList<Integer>, Piece>)boardstate.clone());

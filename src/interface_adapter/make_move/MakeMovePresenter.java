@@ -29,11 +29,4 @@ public class MakeMovePresenter implements MakeMoveOutputBoundary {
         makeMoveViewModel.firePropertyChanged();
     }
 
-    public void prepareFailView() {
-        MakeMoveState makeMoveState = makeMoveViewModel.getState();
-        makeMoveState.setMoveError();
-        makeMoveViewModel.firePropertyChanged();
-        makeMoveViewModel.setState(new MakeMoveState());
-
-    }
 }

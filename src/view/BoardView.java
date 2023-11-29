@@ -30,6 +30,8 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
     private ChessButton previousMove;
     private PieceBuilder pieceBuilder;
     private static HashMap<ArrayList<Integer>, ChessButton> buttonList = new HashMap<>();
+//    private final String usersColour;
+
 
     public BoardView(Board board, MakeMoveController makeMoveController, MakeMoveViewModel makeMoveViewModel,
                      HighlightController highlightController, HighlightViewModel highlightViewModel) {
@@ -119,11 +121,10 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
         Integer x = clickedButton.getRow();
         Integer y = clickedButton.getCol();
 
-/*        System.out.println(buttonList.keySet());
-        for (ChessButton button : buttonList.values()) {
-            System.out.println(button.isHighlighted());
-        }*/
-    
+        // first if condition ensures the player is only moving their own pieces
+//        if (clickedButton.getPieceColour() != null && (!clickedButton.getPieceColour().equals(usersColour)) && previousMove == null) {
+//        return;
+//        }
         if (clickedButton.isEmpty() && previousMove == null) {
             unhighlight(buttonList);
         } else if (this.previousMove == null) {
@@ -150,8 +151,23 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                 ArrayList<Integer> destination = new ArrayList<>();
                 destination.add(x);
                 destination.add(y);
-                Move move = new Move(piece, origin, destination);
 
+
+                Move move = new Move(piece, origin, destination);
+                if (isEnPassent(clickedButton)) {
+                    move.setIsEnPassant();
+                    ArrayList<Integer> sqaureToClear = new ArrayList<>();
+                    sqaureToClear.add(destination.get(0));
+                    // if we are white, remove the square BELOW the one we're moving to, if black, remove square ABOVE the one we're moving to
+                    if (piece.getColor().equals("white")) {
+                        sqaureToClear.add(destination.get(1) - 1);
+                    }
+                    else {
+                        sqaureToClear.add(destination.get(1) + 1);
+                    }
+                    ChessButton pieceToClear = buttonList.get(sqaureToClear);
+                    pieceToClear.clear();
+                }
                 makeMoveController.execute(move, clickedButton);
                 unhighlight(buttonList);
             } else {
@@ -161,15 +177,18 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
         }
     }
 
-    public void propertyChange(PropertyChangeEvent e) {
-        MakeMoveState state = (MakeMoveState) e.getNewValue();
-        if (state.isMoveError()) {
-            JOptionPane.showMessageDialog(this, "illegal move");
-        } else {
-            previousMove.clear();
-
-            this.previousMove = null;
+    public boolean isEnPassent(ChessButton clickedButton) {
+        System.out.println(previousMove.getPiece());
+        if (previousMove.getPiece().equals("Pawn")) {
+            // return true if the pawn is moving diagonally and not taking over a piece, ie en passent
+            return clickedButton.getPiece() == null && !clickedButton.getRow().equals(previousMove.getRow());
         }
+        return false;
+    }
+
+    public void propertyChange(PropertyChangeEvent e) {
+        previousMove.clear();
+        this.previousMove = null;
     }
 
     public void highlight(HashMap<ArrayList<Integer>, ChessButton> buttonsList) {
