@@ -152,8 +152,8 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                 destination.add(x);
                 destination.add(y);
 
-
                 Move move = new Move(piece, origin, destination);
+
                 if (isEnPassent(clickedButton)) {
                     move.setIsEnPassant();
                     ArrayList<Integer> sqaureToClear = new ArrayList<>();
@@ -167,15 +167,32 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                     }
                     ChessButton pieceToClear = buttonList.get(sqaureToClear);
                     pieceToClear.clear();
+
                 } else if (isPromotion(clickedButton)) {
                     move.setIsPromotion();
+
                 } else if (isCastle(clickedButton)) {
                     move.setIsCastle();
-                    ArrayList<Integer> rookToMove = new ArrayList<>();
+                    ArrayList<Integer> rookToClear = new ArrayList<>();
+                    ArrayList<Integer> rookToAdd = new ArrayList<>();
+
                     // checking which direction castle is
                     if (destination.get(0) > origin.get(0)) {
-
+                        rookToAdd.add(destination.get(0) - 1);
+                        rookToClear.add(8);
+                    } else {
+                        rookToAdd.add(destination.get(0) + 1);
+                        rookToClear.add(1);
                     }
+                    rookToClear.add(destination.get(1));
+                    rookToAdd.add(destination.get(1));
+
+                    ChessButton rookRemoved = buttonList.get(rookToClear);
+                    ChessButton rookAdded = buttonList.get(rookToAdd);
+
+                    move.setRookAdded(rookAdded);
+                    move.setRookRemoved(rookRemoved);
+
                 }
                 makeMoveController.execute(move, clickedButton);
                 unhighlight(buttonList);
@@ -217,7 +234,7 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
     public void highlight(HashMap<ArrayList<Integer>, ChessButton> buttonsList) {
         for (ChessButton button : buttonsList.values()) {
             if (button.isHighlighted()) {
-                button.setBackground(Color.yellow);
+                button.setBackground(new Color(240,226,182));
                 button.setOpaque(true);
                 button.setBorderPainted(false);
             }
