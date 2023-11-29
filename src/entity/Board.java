@@ -70,40 +70,25 @@ public class Board {
         this.highlights.put(pos, ishigh);
     }
 
-    public void setLastmove(Move lastmove) {
-        this.lastmove = lastmove;
-    }
-
-    public void setBoardstate(HashMap<ArrayList<Integer>, Piece> boardstates){
-        this.boardstate = boardstates;
-    }
-
-    public HashMap<ArrayList<Integer>, Piece> getBoardstate() {
-        return boardstate;
-    }
-
     public void makeMove(Move move){
-        if (move.getIsCastle()){
-            ArrayList<Integer> org = move.getOrigin();
-            ArrayList<Integer> des = move.getDestination();
-            Piece piece = move.getPieceMoving();
-            boardstate.put(org,null);
+        PieceBuilder builder = new PieceBuilder();
+        ArrayList<Integer> org = move.getOrigin();
+        ArrayList<Integer> des = move.getDestination();
+        Piece piece = move.getPieceMoving();
+        // checking if we need to mark a piece as "moved"
+
+        piece.pieceMove();
+
+        // checking for en passant, promotion, or castle
+        if (move.getIsPieceCaptured()){
+            ArrayList<Integer> capture = move.getPieceCaptureLocation();
+            boardstate.remove(capture);
             boardstate.put(des, piece);
-            if (des.equals(coor(7,1))){
-                boardstate.put(coor(6,1),boardstate.get(coor(8,1)));
-                boardstate.put(coor(8,1),null);
-            } else if (des.equals(coor(7,8))) {
-                boardstate.put(coor(6,8),boardstate.get(coor(8,8)));
-                boardstate.put(coor(8,8),null);
-            } else {
-                boardstate.put(coor(4,8),boardstate.get(coor(1,8)));
-                boardstate.put(coor(1,8),null);
-            }
-            lastmove = move;
-         else if (move.getIsEnPassant()) {
-            Piece piece = move.getPieceMoving();
-            boardstate.remove(org);
+        }
+        else if (move.getIsEnPassant()) {
+            // move the pawn
             boardstate.put(des, piece);
+            // get the coordinates of the piece being captured by the en passant
             ArrayList<Integer> coordToRemove = new ArrayList<>();
             coordToRemove.add(des.get(0));
             if (piece.getColor().equals("white")) {
@@ -111,28 +96,31 @@ public class Board {
             } else {
                 coordToRemove.add(des.get(1) + 1);
             }
+            // remove the piece captured by the en passant from the boardState
             boardstate.remove(coordToRemove);
-        
-            Piece piece = move.getPieceMoving();
-            boardstate.remove(org);
+        } else if (move.getIsPromotion()) {
+            Piece queen = builder.create("Queen", piece.getColor());
+            boardstate.put(des, queen);
+        } else if (move.getIsCastle()){
             boardstate.put(des, piece);
-        } else {
-            ArrayList<Integer> org = move.getOrigin();
-            ArrayList<Integer> des = move.getDestination();
-            if (move.getIsPieceCaptured()){
-                ArrayList<Integer> capture = move.getPieceCaptureLocation();
-                boardstate.put(capture,null);
-            }
-            Piece piece = move.getPieceMoving();
-            boardstate.put(org,null);
-            boardstate.put(des, piece);
-            lastmove = move;
-            if (move.getIsPromotion()){
-                boardstate.remove(des);
-                boardstate.put(des, new PieceBuilder().create("Queen", piece.getColor()));
-            }
-        }
+            // adding rook to left/right of king
+            ArrayList<Integer> coordOfRookAdded = new ArrayList<>();
+            coordOfRookAdded.add(move.getRookAdded().getRow());
+            coordOfRookAdded.add(move.getRookAdded().getCol());
+            Piece rook = builder.create("Rook", piece.getColor());
+            boardstate.put(coordOfRookAdded, rook);
 
+            // removing rook from its current position
+            ArrayList<Integer> coordOfRookRemoved = new ArrayList<>();
+            coordOfRookRemoved.add(move.getRookRemoved().getRow());
+            coordOfRookRemoved.add(move.getRookRemoved().getCol());
+            boardstate.remove(coordOfRookRemoved);
+        }
+        else {
+            boardstate.put(des, piece);
+        }
+        boardstate.remove(org);
+        lastmove = move;
     }
         
   

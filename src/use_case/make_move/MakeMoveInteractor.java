@@ -22,20 +22,33 @@ public class MakeMoveInteractor implements MakeMoveInputBoundary {
     public void execute(MakeMoveInputData makeMoveInputData) {
         Move move = makeMoveInputData.getMove();
         Piece piece = move.getPieceMoving();
-        Move[] validMoves = piece.getValidMoves(move.getOrigin(), board.getBoardstate(), board.getLastmove());
-        // iterating through valid moves to see if the move the user made is in there     
 
         board.makeMove(move);
 
-        // testing en passent
-        if (move.getIsEnPassant()) {
-            ArrayList<Integer> coordToRemove = new ArrayList<>();
-            coordToRemove.add(move.getDestination().get(0));
-            coordToRemove.add(move.getDestination().get(1)-1);
+        HashMap<ArrayList<Integer>, Piece> bs = board.getBoardstate();
 
-            HashMap<ArrayList<Integer>, Piece> bs = board.getBoardstate();
-            System.out.println(bs.get(coordToRemove) == null);
-        }
+        // testing en passant
+//        if (move.getIsEnPassant()) {
+//            ArrayList<Integer> coordToRemove = new ArrayList<>();
+//            coordToRemove.add(move.getDestination().get(0));
+//            coordToRemove.add(move.getDestination().get(1)-1);
+//            System.out.println(bs.get(coordToRemove) == null);
+//        }
+
+        // testing promotion
+//        if (move.getIsPromotion()) {
+//            System.out.println(bs.get(move.getDestination()).symbolToString());
+//        }
+
+        // testing castle
+//        if (move.getIsCastle()) {
+//            ArrayList<Integer> coordOfRook =  new ArrayList<>();
+//            coordOfRook.add(move.getRookAdded().getRow());
+//            coordOfRook.add(move.getRookAdded().getCol());
+//            System.out.println(bs.get(move.getDestination()).symbolToString());
+//            System.out.println(bs.get(coordOfRook).symbolToString());
+//        }
+
         // push move to API if its valid
         // makeMoveDataAccessObject.pushMove(move);
 
