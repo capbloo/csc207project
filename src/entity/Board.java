@@ -86,9 +86,11 @@ public class Board {
         ArrayList<Integer> org = move.getOrigin();
         ArrayList<Integer> des = move.getDestination();
         Piece piece = move.getPieceMoving();
-        if (piece.symbolToString().equals("Pawn")) {
+        // checking if we need to mark a piece as "moved"
+        if (piece.symbolToString().equals("Pawn") || piece.symbolToString().equals("King") || piece.symbolToString().equals("Rook")) {
             piece.pieceMove();
         }
+        // checking for en passant, promotion, or castle
         if (move.getIsPieceCaptured()){
             ArrayList<Integer> capture = move.getPieceCaptureLocation();
             boardstate.remove(capture);
@@ -108,7 +110,10 @@ public class Board {
             PieceBuilder builder = new PieceBuilder();
             Piece queen = builder.create("Queen", piece.getColor());
             boardstate.put(des, queen);
-        } else {
+        } else if (move.getIsCastle()){
+
+        }
+        else {
             boardstate.put(des, piece);
         }
         boardstate.remove(org);

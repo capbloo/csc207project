@@ -169,6 +169,13 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                     pieceToClear.clear();
                 } else if (isPromotion(clickedButton)) {
                     move.setIsPromotion();
+                } else if (isCastle(clickedButton)) {
+                    move.setIsCastle();
+                    ArrayList<Integer> rookToMove = new ArrayList<>();
+                    // checking which direction castle is
+                    if (destination.get(0) > origin.get(0)) {
+
+                    }
                 }
                 makeMoveController.execute(move, clickedButton);
                 unhighlight(buttonList);
@@ -191,6 +198,13 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
     private boolean isPromotion(ChessButton clickedButton) {
         if (previousMove.getPiece().equals("Pawn")) {
             return clickedButton.getCol().equals(8) || clickedButton.getCol().equals(1);
+        }
+        return false;
+    }
+
+    public boolean isCastle(ChessButton clickedButton) {
+        if (previousMove.getPiece().equals("King")) {
+            return Math.abs(previousMove.getRow() - clickedButton.getRow()) > 1;
         }
         return false;
     }

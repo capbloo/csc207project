@@ -35,7 +35,8 @@ public class MakeMovePresenter implements MakeMoveOutputBoundary {
             clickedButton.setText("♛");
             }
 
-        } else {
+        }
+        else {
             clickedButton.setText(pieceSymbol);
         }
         clickedButton.setFont(f);
