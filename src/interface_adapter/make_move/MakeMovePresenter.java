@@ -37,10 +37,12 @@ public class MakeMovePresenter implements MakeMoveOutputBoundary {
 
  }
         else if (move.getIsCastle()) {
+            // first, remove the current rook
             ChessButton rookRemoved = move.getRookRemoved();
             rookRemoved.clear();
+            // move the king
             clickedButton.setText(pieceSymbol);
-
+            // adding the rook to the left/right of the king
             ChessButton rookAdded = move.getRookAdded();
             if (piece.getColor().equals("white")) {
                 rookAdded.setText("♖");

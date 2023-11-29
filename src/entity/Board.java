@@ -98,7 +98,9 @@ public class Board {
             boardstate.put(des, piece);
         }
         else if (move.getIsEnPassant()) {
+            // move the pawn
             boardstate.put(des, piece);
+            // get the coordinates of the piece being captured by the en passant
             ArrayList<Integer> coordToRemove = new ArrayList<>();
             coordToRemove.add(des.get(0));
             if (piece.getColor().equals("white")) {
@@ -106,9 +108,9 @@ public class Board {
             } else {
                 coordToRemove.add(des.get(1) + 1);
             }
+            // remove the piece captured by the en passant from the boardState
             boardstate.remove(coordToRemove);
         } else if (move.getIsPromotion()) {
-
             Piece queen = builder.create("Queen", piece.getColor());
             boardstate.put(des, queen);
         } else if (move.getIsCastle()){
@@ -119,6 +121,7 @@ public class Board {
             coordOfRookAdded.add(move.getRookAdded().getCol());
             Piece rook = builder.create("Rook", piece.getColor());
             boardstate.put(coordOfRookAdded, rook);
+
             // removing rook from its current position
             ArrayList<Integer> coordOfRookRemoved = new ArrayList<>();
             coordOfRookRemoved.add(move.getRookRemoved().getRow());

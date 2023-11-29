@@ -173,23 +173,28 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
 
                 } else if (isCastle(clickedButton)) {
                     move.setIsCastle();
+
+                    // getting coordinates of where the rooks should be moved to and from
                     ArrayList<Integer> rookToClear = new ArrayList<>();
                     ArrayList<Integer> rookToAdd = new ArrayList<>();
 
                     // checking which direction castle is
                     if (destination.get(0) > origin.get(0)) {
+                        // if it is a castle to the right, the rightmost rook is moved one space left of the king
                         rookToAdd.add(destination.get(0) - 1);
                         rookToClear.add(8);
                     } else {
+                        // if it is a castle to the left, the leftmost rook is moved one space to the right of the king
                         rookToAdd.add(destination.get(0) + 1);
                         rookToClear.add(1);
                     }
+                    // determining whether this is a white castle or black castle, depending on the y coordinate of the king
                     rookToClear.add(destination.get(1));
                     rookToAdd.add(destination.get(1));
 
                     ChessButton rookRemoved = buttonList.get(rookToClear);
                     ChessButton rookAdded = buttonList.get(rookToAdd);
-
+                    // adding buttons to move class so the presenter can update them
                     move.setRookAdded(rookAdded);
                     move.setRookRemoved(rookRemoved);
 
