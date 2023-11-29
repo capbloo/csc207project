@@ -5,6 +5,9 @@ import entity.Move;
 import entity.Piece;
 import entity.PieceBuilder;
 import entity.ChessButton;
+import interface_adapter.CheckGameEnds.CheckGameEndsController;
+import interface_adapter.CheckGameEnds.CheckGameEndsState;
+import interface_adapter.CheckGameEnds.CheckGameEndsViewModel;
 import interface_adapter.HighlightSquare.HighlightViewModel;
 import interface_adapter.make_move.MakeMoveController;
 import interface_adapter.make_move.MakeMoveState;
@@ -27,6 +30,10 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
     private MakeMoveViewModel makeMoveViewModel;
     private HighlightController highlightController;
     private HighlightViewModel highlightViewModel;
+
+    private CheckGameEndsViewModel checkGameEndsViewModel;
+
+    private CheckGameEndsController checkGameEndsController;
     private ChessButton previousMove;
     private PieceBuilder pieceBuilder;
     private static HashMap<ArrayList<Integer>, ChessButton> buttonList = new HashMap<>();
@@ -34,12 +41,16 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
 
 
     public BoardView(Board board, MakeMoveController makeMoveController, MakeMoveViewModel makeMoveViewModel,
-                     HighlightController highlightController, HighlightViewModel highlightViewModel) {
+                     HighlightController highlightController, HighlightViewModel highlightViewModel,
+                     CheckGameEndsController checkGameEndsController, CheckGameEndsViewModel checkGameEndsViewModel) {
         this.makeMoveController = makeMoveController;
         this.makeMoveViewModel = makeMoveViewModel;
         this.highlightController = highlightController;
         this.highlightViewModel = highlightViewModel;
+        this.checkGameEndsController = checkGameEndsController;
+        this.checkGameEndsViewModel = checkGameEndsViewModel;
         makeMoveViewModel.addPropertyChangeListener(this);
+        checkGameEndsViewModel.addPropertyChangeListener(this);
         //highlightViewModel.addPropertyChangeListener(this);
         pieceBuilder = new PieceBuilder();
 
@@ -199,8 +210,14 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                     move.setRookRemoved(rookRemoved);
 
                 }
-                makeMoveController.execute(move, clickedButton);
-                unhighlight(buttonList);
+                try{
+                    unhighlight(buttonList);
+                    makeMoveController.execute(move, clickedButton);
+                }finally {
+                    System.out.println("before");
+                    checkGameEndsController.execute(move);
+                    System.out.println("after");
+                }
             } else {
                 unhighlight(buttonList);
                 this.previousMove = null;
@@ -232,8 +249,24 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
     }
 
     public void propertyChange(PropertyChangeEvent e) {
-        previousMove.clear();
-        this.previousMove = null;
+            try {
+                CheckGameEndsState state = (CheckGameEndsState) e.getNewValue();
+                String color = "";
+                if (state.getiswhite()) {
+                    color = "white";
+                } else {
+                    color = "black";
+                }
+                if (state.getwin()) {
+                    JOptionPane.showMessageDialog(this, color + "win!");
+                } else if (state.getstale()) {
+                    JOptionPane.showMessageDialog(this, "It's a tie");
+                }
+                System.out.println("not end");
+            }catch (ClassCastException er){
+                previousMove.clear();
+                this.previousMove = null;
+            }
     }
 
     public void highlight(HashMap<ArrayList<Integer>, ChessButton> buttonsList) {
