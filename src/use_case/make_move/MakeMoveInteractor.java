@@ -22,8 +22,6 @@ public class MakeMoveInteractor implements MakeMoveInputBoundary {
     public void execute(MakeMoveInputData makeMoveInputData) {
         Move move = makeMoveInputData.getMove();
         Piece piece = move.getPieceMoving();
-        Move[] validMoves = piece.getValidMoves(move.getOrigin(), board.getBoardstate(), board.getLastmove());
-        // iterating through valid moves to see if the move the user made is in there     
 
         board.makeMove(move);
 
@@ -36,6 +34,15 @@ public class MakeMoveInteractor implements MakeMoveInputBoundary {
             HashMap<ArrayList<Integer>, Piece> bs = board.getBoardstate();
             System.out.println(bs.get(coordToRemove) == null);
         }
+
+        if (move.getIsPromotion()) {
+
+        }
+
+        // testing promotion
+//        if (move.getIsPromotion()) {
+//
+//        }
         // push move to API if its valid
         // makeMoveDataAccessObject.pushMove(move);
 

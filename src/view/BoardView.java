@@ -167,6 +167,8 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                     }
                     ChessButton pieceToClear = buttonList.get(sqaureToClear);
                     pieceToClear.clear();
+                } else if (isPromotion(clickedButton)) {
+                    move.setIsPromotion();
                 }
                 makeMoveController.execute(move, clickedButton);
                 unhighlight(buttonList);
@@ -177,11 +179,18 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
         }
     }
 
-    public boolean isEnPassent(ChessButton clickedButton) {
+    private boolean isEnPassent(ChessButton clickedButton) {
         System.out.println(previousMove.getPiece());
         if (previousMove.getPiece().equals("Pawn")) {
             // return true if the pawn is moving diagonally and not taking over a piece, ie en passent
             return clickedButton.getPiece() == null && !clickedButton.getRow().equals(previousMove.getRow());
+        }
+        return false;
+    }
+
+    private boolean isPromotion(ChessButton clickedButton) {
+        if (previousMove.getPiece().equals("Pawn")) {
+            return clickedButton.getCol().equals(8) || clickedButton.getCol().equals(1);
         }
         return false;
     }

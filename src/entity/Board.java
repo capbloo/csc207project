@@ -85,13 +85,16 @@ public class Board {
     public void makeMove(Move move){
         ArrayList<Integer> org = move.getOrigin();
         ArrayList<Integer> des = move.getDestination();
+        Piece piece = move.getPieceMoving();
+        if (piece.symbolToString().equals("Pawn")) {
+            piece.pieceMove();
+        }
         if (move.getIsPieceCaptured()){
             ArrayList<Integer> capture = move.getPieceCaptureLocation();
             boardstate.remove(capture);
+            boardstate.put(des, piece);
         }
         else if (move.getIsEnPassant()) {
-            Piece piece = move.getPieceMoving();
-            boardstate.remove(org);
             boardstate.put(des, piece);
             ArrayList<Integer> coordToRemove = new ArrayList<>();
             coordToRemove.add(des.get(0));
@@ -101,10 +104,14 @@ public class Board {
                 coordToRemove.add(des.get(1) + 1);
             }
             boardstate.remove(coordToRemove);
+        } else if (move.getIsPromotion()) {
+            PieceBuilder builder = new PieceBuilder();
+            Piece queen = builder.create("Queen", piece.getColor());
+            boardstate.put(des, queen);
+        } else {
+            boardstate.put(des, piece);
         }
-        Piece piece = move.getPieceMoving();
         boardstate.remove(org);
-        boardstate.put(des, piece);
         lastmove = move;
     }
 
