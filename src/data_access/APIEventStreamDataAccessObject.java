@@ -1,5 +1,7 @@
 package data_access;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import use_case.challenge_ai.ChallengeAIDataAccessInterface2;
+import use_case.challenge_player.ChallengePlayerDataAccessInterface2;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,7 +20,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Stream;
 
-public class APIEventStreamDataAccessObject {
+public class APIEventStreamDataAccessObject implements ChallengeAIDataAccessInterface2, ChallengePlayerDataAccessInterface2 {
 
     private String API_TOKEN;
     private final ObjectMapper objectMapper;
@@ -31,7 +33,7 @@ public class APIEventStreamDataAccessObject {
 
         APIEventStreamDataAccessObject dao = new APIEventStreamDataAccessObject();
 
-        System.out.println(dao.getChallengeInfo());
+        System.out.println(dao.getChallengeInfo(gameID));
     }
 
     public APIEventStreamDataAccessObject() {
@@ -44,7 +46,7 @@ public class APIEventStreamDataAccessObject {
             e.printStackTrace();
         }
     }
-    public String getChallengeInfo() throws ExecutionException, InterruptedException {
+    public String getChallengeInfo(String gameID) {
 
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
@@ -58,7 +60,13 @@ public class APIEventStreamDataAccessObject {
         // ONLY WORKS IF NO OTHER CHALLENGES OR GAMES ARE ACTIVE
         CompletableFuture<HttpResponse<Stream<String>>> response = client.sendAsync(request, HttpResponse.BodyHandlers.ofLines());
 
-        String responseBody = response.get().body().findFirst().orElseThrow();
+        String responseBody;
+
+        try {
+            responseBody = response.get().body().findFirst().orElseThrow();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
 
         Map<String, Object> gameData = jsonToString(responseBody);
 
