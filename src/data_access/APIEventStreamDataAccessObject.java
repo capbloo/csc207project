@@ -26,10 +26,10 @@ public class APIEventStreamDataAccessObject implements ChallengeAIDataAccessInte
     private final ObjectMapper objectMapper;
     private final String LICHESS = "https://lichess.org";
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         APIChallengeDataAccessObject apiChallengeDataAccessObject = new APIChallengeDataAccessObject();
 
-        System.out.println(apiChallengeDataAccessObject.challengePlayer("white", "capbloo"));
+        String gameID = apiChallengeDataAccessObject.challengePlayer("white", "capbloo");
 
         APIEventStreamDataAccessObject dao = new APIEventStreamDataAccessObject();
 
