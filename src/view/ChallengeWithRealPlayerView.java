@@ -3,12 +3,16 @@ package view;
 
 import data_access.MakeMoveDataAccessObject;
 import entity.Board;
+import interface_adapter.CheckGameEnds.CheckGameEndsController;
+import interface_adapter.CheckGameEnds.CheckGameEndsPresenter;
+import interface_adapter.CheckGameEnds.CheckGameEndsViewModel;
 import interface_adapter.HighlightSquare.HighlightController;
 import interface_adapter.HighlightSquare.HighlightPresenter;
 import interface_adapter.HighlightSquare.HighlightViewModel;
 import interface_adapter.make_move.MakeMoveController;
 import interface_adapter.make_move.MakeMovePresenter;
 import interface_adapter.make_move.MakeMoveViewModel;
+import use_case.CheckGameEnds.CheckGameEndsInteractor;
 import use_case.HighlightSquare.HighlightInteractor;
 import use_case.make_move.MakeMoveInteractor;
 
@@ -75,7 +79,13 @@ public class ChallengeWithRealPlayerView implements MenuView {
                         HighlightInteractor highlightInteractor = new HighlightInteractor(highlightPresenter, board);
                         HighlightController highlightController = new HighlightController(highlightInteractor);
 
-                        BoardView boardview = new BoardView(board, makeMoveController, makeMoveViewModel, highlightController, highlightViewModel);
+                        CheckGameEndsViewModel checkGameEndsViewModel = new CheckGameEndsViewModel();
+                        CheckGameEndsPresenter checkGameEndsPresenter = new CheckGameEndsPresenter(checkGameEndsViewModel);
+                        CheckGameEndsInteractor checkGameEndsInteractor = new CheckGameEndsInteractor(checkGameEndsPresenter, board);
+                        CheckGameEndsController checkGameEndsController = new CheckGameEndsController(checkGameEndsInteractor);
+
+                        BoardView boardview = new BoardView(board, makeMoveController, makeMoveViewModel, highlightController, highlightViewModel
+                        ,checkGameEndsController, checkGameEndsViewModel);
                         boardview.setVisible(true);
 
                     } else {
