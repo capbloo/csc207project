@@ -9,6 +9,9 @@ import interface_adapter.CheckGameEnds.CheckGameEndsViewModel;
 import interface_adapter.HighlightSquare.HighlightController;
 import interface_adapter.HighlightSquare.HighlightPresenter;
 import interface_adapter.HighlightSquare.HighlightViewModel;
+import interface_adapter.challenge_ai.ChallengeAIController;
+import interface_adapter.challenge_ai.ChallengeAIState;
+import interface_adapter.challenge_ai.ChallengeAIViewModel;
 import interface_adapter.make_move.MakeMoveController;
 import interface_adapter.make_move.MakeMovePresenter;
 import interface_adapter.make_move.MakeMoveViewModel;
@@ -22,19 +25,36 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-public class PracticeWithAIView implements MenuView {
+public class PracticeWithAIView implements MenuView, ActionListener, PropertyChangeListener {
 
     private JFrame frame;
     private JComboBox<String> colorComboBox;
     private JComboBox<String> difficultyComboBox;
 
-    public PracticeWithAIView(JFrame frame) {
+    private ChallengeAIViewModel challengeAIViewModel;
+
+    private ChallengeAIController challengeAIController;
+
+    private String ID;
+
+    private String color2;
+
+
+    public PracticeWithAIView(JFrame frame, ChallengeAIController challengeAIController, ChallengeAIViewModel challengeAIViewModel) {
         this.frame = frame;
+        this.challengeAIViewModel = challengeAIViewModel;
+        this.challengeAIController = challengeAIController;
+        challengeAIViewModel.addPropertyChangeListener(this);
     }
+    int level = 1;
+    int color = 0;
 
     @Override
     public void show() {
+
         SwingUtilities.invokeLater(() -> {
             JPanel panel = new JPanel(new BorderLayout());
 
@@ -51,26 +71,45 @@ public class PracticeWithAIView implements MenuView {
             colorComboBox = new JComboBox<>(colors);
             contentPanel.add(new JLabel("Select Color: "));
             contentPanel.add(colorComboBox);
+            colorComboBox.addActionListener(new ActionListener() {
+                                                @Override
+                                                public void actionPerformed(ActionEvent e) {
+                                                    color = colorComboBox.getSelectedIndex();
+                                                    System.out.println("Set color to" + color);
+                                                }
+                                            }
+            );
+
 
             // Create a JComboBox for selecting difficulty levels
             String[] difficultyLevels = {"LV. 1", "LV. 2", "LV. 3", "LV. 4", "LV. 5", "LV.6", "LV. 7", "LV. 8"};
             difficultyComboBox = new JComboBox<>(difficultyLevels);
             contentPanel.add(new JLabel("select Difficulty: "));
             contentPanel.add(difficultyComboBox);
+            difficultyComboBox.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    level = difficultyComboBox.getSelectedIndex() + 1;
+                    System.out.println("level set to " + level);
+                }
+            });
 
             // Create a Button for starting the game
             JButton startButton = new JButton("Start Game");
             startButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    System.out.println("level is " + level);
+                    challengeAIController.execute(color, level);
+
                     close();
                     // This will be based on the api call now, setting it as white rn for testing
-                    String usersColour = "white";
+                    String usersColour = color2;
                     // Create chess board
                     Board board = new Board();
                     MakeMoveViewModel makeMoveViewModel = new MakeMoveViewModel();
                     MakeMovePresenter makeMovePresenter = new MakeMovePresenter(makeMoveViewModel);
-                    MakeMoveDataAccessObject makeMoveDataAccessObject = new MakeMoveDataAccessObject("abcd");
+                    MakeMoveDataAccessObject makeMoveDataAccessObject = new MakeMoveDataAccessObject(ID);
                     MakeMoveInteractor makeMoveInteractor = new MakeMoveInteractor(makeMoveDataAccessObject, makeMovePresenter, board);
                     MakeMoveController makeMoveController = new MakeMoveController(makeMoveInteractor);
 
@@ -113,5 +152,20 @@ public class PracticeWithAIView implements MenuView {
     @Override
     public void close() {
         SwingUtilities.invokeLater(() -> frame.dispose());
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getPropertyName().equals("ChallengeAI")){
+            ChallengeAIState state = (ChallengeAIState) evt.getNewValue();
+            ID = state.getGameID();
+            color2 = state.getColor();
+            System.out.println("Game Started");
+        }
     }
 }

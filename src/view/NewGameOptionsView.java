@@ -1,6 +1,13 @@
 // NewGameOptionsView.java
 package view;
 
+import data_access.APIChallengeDataAccessObject;
+import data_access.APIEventStreamDataAccessObject;
+import interface_adapter.challenge_ai.ChallengeAIController;
+import interface_adapter.challenge_ai.ChallengeAIPresenter;
+import interface_adapter.challenge_ai.ChallengeAIViewModel;
+import use_case.challenge_ai.ChallengeAIInteractor;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -26,7 +33,16 @@ public class NewGameOptionsView implements MenuView {
 
             JButton practiceWithAIButton = new JButton("Practice with AI");
             practiceWithAIButton.setPreferredSize(new Dimension(150, 50));
-            practiceWithAIButton.addActionListener(e -> new PracticeWithAIView(frame).show());
+
+            ChallengeAIViewModel challengeAIViewModel = new ChallengeAIViewModel();
+            ChallengeAIPresenter challengeAIPresenter = new ChallengeAIPresenter(challengeAIViewModel);
+            APIChallengeDataAccessObject apiChallengeDataAccessObject = new APIChallengeDataAccessObject();
+            APIEventStreamDataAccessObject apiEventStreamDataAccessObject = new APIEventStreamDataAccessObject();
+
+            ChallengeAIInteractor challengeAIInteractor = new ChallengeAIInteractor(challengeAIPresenter, apiChallengeDataAccessObject, apiEventStreamDataAccessObject);
+            ChallengeAIController challengeAIController = new ChallengeAIController(challengeAIInteractor);
+
+            practiceWithAIButton.addActionListener(e -> new PracticeWithAIView(frame, challengeAIController, challengeAIViewModel).show());
             buttonsPanel.add(practiceWithAIButton);
 
             JButton challengeWithRealPlayerButton = new JButton("Challenge with Real Player");
