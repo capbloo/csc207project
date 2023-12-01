@@ -10,9 +10,12 @@ public class Board {
 
     private Move lastmove;
 
+    private int movenumber;
+
 //    private final String usersColour;
 
     public Board(){
+        movenumber = 0;
         this.lastmove = null;
         this.boardstate = new HashMap<>();
         this.highlights = new HashMap<>();
@@ -85,6 +88,9 @@ public class Board {
         ArrayList<Integer> org = move.getOrigin();
         ArrayList<Integer> des = move.getDestination();
         Piece piece = move.getPieceMoving();
+        if (piece.getColor().equals("black")){
+            movenumber += 1;
+        }
         // checking if we need to mark a piece as "moved"
 
         piece.pieceMove();
