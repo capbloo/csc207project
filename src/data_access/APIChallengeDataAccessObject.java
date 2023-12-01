@@ -11,7 +11,6 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -35,6 +34,7 @@ public class APIChallengeDataAccessObject implements ChallengeAIDataAccessInterf
         APIChallengeDataAccessObject apiChallengeDataAccessObject = new APIChallengeDataAccessObject();
 
         apiChallengeDataAccessObject.challengeAI("white", 3);
+        apiChallengeDataAccessObject.challengePlayer("white", "capbloo");
     }
 
     /** Send a challenge to the Lichess AI.
@@ -47,32 +47,27 @@ public class APIChallengeDataAccessObject implements ChallengeAIDataAccessInterf
         HttpResponse<String> response;
 
         try {
-            // format the parameters of the challenge
-            Map<String, Object> parameters = new HashMap<>();
-
-            parameters.put("level", difficulty);
-            parameters.put("color", color);
-
-            String jsonBody = new ObjectMapper().writeValueAsString(parameters);
-
             // create the challenge, send it, and save the response
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(new URI(LICHESS + "/api/challenge/ai"))
                     .header("Authorization", "Bearer " + API_TOKEN)
-                    .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
+                    .header("Content-Type", "application/x-www-form-urlencoded")
+                    .POST(HttpRequest.BodyPublishers.ofString("level=" + difficulty + "&color=" + color))
                     .build();
+
             response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+
         } catch (URISyntaxException | InterruptedException | IOException e) { // Shouldn't happen, so we just throw the error and debug if needed.
             throw new RuntimeException(e);
         }
 
         if (response.statusCode() != 201) { // Expected status code is 201 for success or 400 for fail. We'll treat anything other than 200 as a fail.
-            throw new RuntimeException(response.statusCode() + "Sending AI challenge to Lichess API failed. HTTP response body:\n" + response.body());
+            throw new RuntimeException(response.statusCode() + " Sending AI challenge to Lichess API failed. HTTP response body:\n" + response.body());
         }
 
         Map<String, Object> responseMap = HttpBodyToString(response.body()); // convert the JSON response to a Map
 
-        return (String) ((Map<?, ?>) responseMap.get("challenge")).get("id");// pull the challenge id out of the Map and return
+        return (String) responseMap.get("id"); // pull the challenge id out of the Map and return
     }
 
     /** Send an unrated correspondence challenge to another player on Lichess.
@@ -85,26 +80,22 @@ public class APIChallengeDataAccessObject implements ChallengeAIDataAccessInterf
         HttpResponse<String> response;
 
         try {
-            // format the parameters of the challenge
-            Map<String, Object> parameters = new HashMap<>();
-
-            parameters.put("color", color);
-
-            String jsonBody = new ObjectMapper().writeValueAsString(parameters);
-
             // create the challenge, send it, and save the response
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(new URI(LICHESS + "/api/challenge/" + name))
                     .header("Authorization", "Bearer " + API_TOKEN)
-                    .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
+                    .header("Content-Type", "application/x-www-form-urlencoded")
+                    .POST(HttpRequest.BodyPublishers.ofString("&color=" + color))
                     .build();
+
             response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+
         } catch (URISyntaxException | InterruptedException | IOException e) { // Shouldn't happen, so we just throw the error and debug if needed.
             throw new RuntimeException(e);
         }
 
         if (response.statusCode() != 200) { // Expected status code is 200 for success or 400 for fail. We'll treat anything other than 200 as a fail.
-            throw new RuntimeException(response.statusCode() + "Sending AI challenge to Lichess API failed. HTTP response body:\n" + response.body());
+            throw new RuntimeException(response.statusCode() + " Sending AI challenge to Lichess API failed. HTTP response body:\n" + response.body());
         }
 
         Map<String, Object> responseMap = HttpBodyToString(response.body()); // convert the JSON response to a Map
