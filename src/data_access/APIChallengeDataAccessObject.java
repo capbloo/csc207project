@@ -17,11 +17,11 @@ import java.util.Scanner;
 
 import com.fasterxml.jackson.databind.*;
 
-public class APIDataAccessObject implements ChallengeAIDataAccessInterface, ChallengePlayerDataAccessInterface {
+public class APIChallengeDataAccessObject implements ChallengeAIDataAccessInterface, ChallengePlayerDataAccessInterface {
     private String API_TOKEN = null;
     private final String LICHESS = "https://lichess.org";
 
-    public APIDataAccessObject() { // when instantiated, read in API token from LOCAL text file
+    public APIChallengeDataAccessObject() { // when instantiated, read in API token from LOCAL text file
         try {
             Scanner reader = new Scanner(new File("token.txt"));
             API_TOKEN = reader.nextLine();
@@ -29,6 +29,12 @@ public class APIDataAccessObject implements ChallengeAIDataAccessInterface, Chal
             System.out.println("Couldn't read API Token. (token.txt missing?)");
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) {
+        APIChallengeDataAccessObject apiChallengeDataAccessObject = new APIChallengeDataAccessObject();
+
+        apiChallengeDataAccessObject.challengeAI("white", 3);
     }
 
     /** Send a challenge to the Lichess AI.
