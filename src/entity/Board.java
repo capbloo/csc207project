@@ -147,12 +147,6 @@ public class Board {
         return co;
     }
 
-    private Board cloneBoard() {
-        Board newb = new Board();
-        newb.setLastmove(lastmove);
-        newb.setBoardstate((HashMap<ArrayList<Integer>, Piece>)boardstate.clone());
-        return newb;
-    }
     public boolean isCheckMate(String colorToPlay){
         if (!isCheckHelper(colorToPlay)){
             return false;
