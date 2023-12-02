@@ -38,7 +38,7 @@ public class PracticeWithAIView implements MenuView, ActionListener, PropertyCha
 
     private ChallengeAIController challengeAIController;
 
-    private String ID;
+    private String gameID;
 
     private String color2;
 
@@ -67,7 +67,7 @@ public class PracticeWithAIView implements MenuView, ActionListener, PropertyCha
             JPanel contentPanel = new JPanel(new GridLayout(0, 2, 0, 20));
 
             // Create a JComBox for selecting difficulty levels
-            String[] colors = {"White - You Go First!", "Black"};
+            String[] colors = {"White - You Go First!", "Black", "Random"};
             colorComboBox = new JComboBox<>(colors);
             contentPanel.add(new JLabel("Select Color: "));
             contentPanel.add(colorComboBox);
@@ -109,7 +109,7 @@ public class PracticeWithAIView implements MenuView, ActionListener, PropertyCha
                     Board board = new Board();
                     MakeMoveViewModel makeMoveViewModel = new MakeMoveViewModel();
                     MakeMovePresenter makeMovePresenter = new MakeMovePresenter(makeMoveViewModel);
-                    MakeMoveDataAccessObject makeMoveDataAccessObject = new MakeMoveDataAccessObject(ID);
+                    MakeMoveDataAccessObject makeMoveDataAccessObject = new MakeMoveDataAccessObject(gameID);
                     MakeMoveInteractor makeMoveInteractor = new MakeMoveInteractor(makeMoveDataAccessObject, makeMovePresenter, board);
                     MakeMoveController makeMoveController = new MakeMoveController(makeMoveInteractor);
 
@@ -163,7 +163,7 @@ public class PracticeWithAIView implements MenuView, ActionListener, PropertyCha
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("ChallengeAI")){
             ChallengeAIState state = (ChallengeAIState) evt.getNewValue();
-            ID = state.getGameID();
+            gameID = state.getGameID();
             color2 = state.getColor();
             System.out.println("Game Started");
         }
