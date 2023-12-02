@@ -42,7 +42,7 @@ public class MakeMoveDataAccessObject implements MakeMoveDataAccessInterface {
                     .uri(new URI(gameURL + moveString))
                     .header("Authorization", "Bearer " + API_TOKEN)
                     .header("Content-Type", "application/x-www-form-urlencoded")
-                    .POST(HttpRequest.BodyPublishers.ofString())
+                    .POST(HttpRequest.BodyPublishers.noBody())
                     .build();
             HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
 
