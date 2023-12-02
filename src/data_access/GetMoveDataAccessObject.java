@@ -47,10 +47,17 @@ public class GetMoveDataAccessObject {
 
     }
 
-    public String getLastMove() {
-        return moves.get(moves.size()-1);
+    /**
+     * Returns true if the API has already returned the move that would follow.
+     * Call this if you don't want to potentially get stuck in a loop after calling getMoveAfter().
+     *
+     * @param moveNo The number of the move just played. Will check for NEXT move after this.
+     * @return true if a call to getMoveAfter would return instantly right now. false if not.
+     */
+    public boolean has(int moveNo) {
+        return moves.size() > moveNo;
     }
-
+    
     /**
      * Waits until the API sends back the move requested, then returns it.
      * NOTE: MAY WAIT FOR A WHILE BEFORE RETURNING A VALUE, DEPENDING ON GAME STATE
