@@ -44,8 +44,8 @@ public class ChallengeWithRealPlayerView implements MenuView {
 
             JPanel contentPanel = new JPanel(new GridLayout(0, 2, 0, 20));
 
-            // Create a JComBox for selecting difficulty levels
-            String[] colors = {"White - You Go First!", "Black"};
+            // Create a JComBox for selecting difficulty levels0
+            String[] colors = {"White - You Go First!", "Black", "Random"};
             colorComboBox = new JComboBox<>(colors);
             contentPanel.add(new JLabel("Select Color: "));
             contentPanel.add(colorComboBox);
