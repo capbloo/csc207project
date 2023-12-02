@@ -16,8 +16,10 @@ public class ChallengePlayerController {
         String colorS = "";
         if (color == 0){
             colorS = "white";
-        } else {
+        } else if (color == 1){
             colorS = "black";
+        }else {
+            colorS = "random";
         }
         ChallengePlayerInputData challengePlayerInputData = new ChallengePlayerInputData(name, colorS);
         challengePlayerInteractor.execute(challengePlayerInputData);

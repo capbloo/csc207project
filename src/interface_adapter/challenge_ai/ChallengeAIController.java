@@ -17,8 +17,10 @@ public class ChallengeAIController {
         String colorS = "";
         if (color == 0){
             colorS = "white";
-        } else {
+        } else if (color == 1){
             colorS = "black";
+        }else {
+            colorS = "random";
         }
         ChallengeAIInputData challengeAIInputData = new ChallengeAIInputData(level, colorS);
         challengeAIInteractor.execute(challengeAIInputData);
