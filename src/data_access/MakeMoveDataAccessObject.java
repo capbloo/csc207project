@@ -21,7 +21,7 @@ public class MakeMoveDataAccessObject implements MakeMoveDataAccessInterface {
 
     public MakeMoveDataAccessObject(String gameID) {
         this.gameID = gameID;
-        this.gameURL = "https://lichess.org/api/board/game/" + gameID + "/move/";
+        this.gameURL = "https://lichess.org/api/bot/game/" + gameID + "/move/";
     }
 
     public void pushMove(Move move) {
