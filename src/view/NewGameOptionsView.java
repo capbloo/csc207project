@@ -6,7 +6,12 @@ import data_access.APIEventStreamDataAccessObject;
 import interface_adapter.challenge_ai.ChallengeAIController;
 import interface_adapter.challenge_ai.ChallengeAIPresenter;
 import interface_adapter.challenge_ai.ChallengeAIViewModel;
+import interface_adapter.challenge_player.ChallengePlayerController;
+import interface_adapter.challenge_player.ChallengePlayerPresenter;
+import interface_adapter.challenge_player.ChallengePlayerState;
+import interface_adapter.challenge_player.ChallengePlayerViewModel;
 import use_case.challenge_ai.ChallengeAIInteractor;
+import use_case.challenge_player.ChallengePlayerInteractor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,7 +52,14 @@ public class NewGameOptionsView implements MenuView {
 
             JButton challengeWithRealPlayerButton = new JButton("Challenge with Real Player");
             challengeWithRealPlayerButton.setPreferredSize(new Dimension(200, 50));
-            challengeWithRealPlayerButton.addActionListener(e -> new ChallengeWithRealPlayerView(frame).show());
+
+            ChallengePlayerViewModel challengePlayerViewModel = new ChallengePlayerViewModel();
+            ChallengePlayerPresenter challengePlayerPresenter = new ChallengePlayerPresenter(challengePlayerViewModel);
+            ChallengePlayerInteractor challengePlayerInteractor = new ChallengePlayerInteractor(challengePlayerPresenter, apiChallengeDataAccessObject, apiEventStreamDataAccessObject);
+            ChallengePlayerController challengePlayerController = new ChallengePlayerController(challengePlayerInteractor);
+
+
+            challengeWithRealPlayerButton.addActionListener(e -> new ChallengeWithRealPlayerView(frame, challengePlayerController, challengePlayerViewModel).show());
             buttonsPanel.add(challengeWithRealPlayerButton);
 
             panel.add(buttonsPanel, BorderLayout.CENTER);
