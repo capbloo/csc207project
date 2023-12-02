@@ -17,49 +17,11 @@ public class MakeMovePresenter implements MakeMoveOutputBoundary {
     }
 
     public void prepareSuccessView(MakeMoveOutputData makeMoveOutputData) {
+        MakeMoveState state = makeMoveViewModel.getState();
 
         ChessButton clickedButton = makeMoveOutputData.getClickedButton();
-        Piece piece = makeMoveOutputData.getMove().getPieceMoving();
-        Move move = makeMoveOutputData.getMove();
-        Font f = new Font("serif", Font.PLAIN, 60);
-        String pieceSymbol = piece.toString();
-
-        if (move.getIsPromotion()) {
-            // if promotion, change the piece to a queen permanently
-            PieceBuilder builder = new PieceBuilder();
-            piece = builder.create("Queen", piece.getColor());
-            if (piece.getColor().equals("white")) {
-                clickedButton.setText("♕");
-            }
-            else {
-            clickedButton.setText("♛");
-            }
-
- }
-        else if (move.getIsCastle()) {
-            // first, remove the current rook
-            ChessButton rookRemoved = move.getRookRemoved();
-            rookRemoved.clear();
-            // move the king
-            clickedButton.setText(pieceSymbol);
-            // adding the rook to the left/right of the king
-            ChessButton rookAdded = move.getRookAdded();
-            if (piece.getColor().equals("white")) {
-                rookAdded.setText("♖");
-            }
-            else {
-                rookAdded.setText("♜");
-            }
-            rookAdded.setFont(f);
-            rookAdded.setPieceColour(piece.getColor());
-            rookAdded.setPiece("Rook");
-        }
-        else {
-            clickedButton.setText(pieceSymbol);
-        }
-        clickedButton.setFont(f);
-        clickedButton.setPieceColour(piece.getColor());
-        clickedButton.setPiece(piece.symbolToString());
+        state.setClickedButton(clickedButton);
+        state.setMove(makeMoveOutputData.getMove());
 
         makeMoveViewModel.firePropertyChanged();
     }
