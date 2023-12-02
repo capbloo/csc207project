@@ -4,10 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.CharBuffer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -26,11 +23,12 @@ import org.apache.hc.core5.io.CloseMode;
 import org.apache.hc.core5.reactor.IOReactorConfig;
 import org.apache.hc.core5.util.Timeout;
 
+import static java.lang.Thread.sleep;
+
 public class GetMoveDataAccessObject {
     private String API_TOKEN = null;
-    private final ObjectMapper objectMapper = new ObjectMapper();
     private final String gameID;
-    private final ArrayList<Integer> moves = new ArrayList<>();
+    private volatile List<String> moves = new ArrayList<>();
 
     public GetMoveDataAccessObject(String gameID) {
         try {
@@ -43,16 +41,38 @@ public class GetMoveDataAccessObject {
 
         this.gameID = gameID;
         newThreadBoardStream();
-
-        System.out.println("this hopefully runs?");
     }
 
     public static void main(final String[] args) {
-        APIChallengeDataAccessObject apiChallengeDataAccessObject = new APIChallengeDataAccessObject();
 
-        String id = apiChallengeDataAccessObject.challengeAI("white", 1);
+    }
 
-        GetMoveDataAccessObject getMoveDataAccessObject = new GetMoveDataAccessObject(id);
+    public String getLastMove() {
+        return moves.get(moves.size()-1);
+    }
+
+    /**
+     * Waits until the API sends back the move requested, then returns it.
+     * NOTE: MAY WAIT FOR A WHILE BEFORE RETURNING A VALUE, DEPENDING ON GAME STATE
+     *
+     * @return A string representing a move in UCI format.
+     * @param moveNo The number of the move just played. Will wait for the NEXT move after this.
+     */
+    public String getMoveAfter(int moveNo) {
+        boolean done = false;
+
+        while(!done) {
+            if (moves.size() > moveNo) {
+                return moves.get(moveNo);
+            }
+            try {
+                sleep(20);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return null; // this should not be possible to reach
     }
 
     private void newThreadBoardStream() {
@@ -77,7 +97,7 @@ public class GetMoveDataAccessObject {
                 .build();
 
         System.out.println("Executing request " + request);
-        final Future<Void> future = client.execute(new BasicRequestProducer(request, null), new AbstractCharResponseConsumer<Void>() {
+        final Future<Void> future = client.execute(new BasicRequestProducer(request, null), new AbstractCharResponseConsumer<>() {
 
             @Override
             protected void start(final HttpResponse response, final ContentType contentType) {
@@ -95,24 +115,39 @@ public class GetMoveDataAccessObject {
                 while (data.hasRemaining()) {
                     char c = data.get();
 
-                    System.out.print(c);
                     output.append(c);
 
                     if (c == '\n') { // end of a line
                         String line = output.toString();
 
-                        if (!(line.isEmpty())) { // cull keepalive newlines
+                        if (!line.equals("\n")) { // cull keepalive newlines
                             Map<String, Object> lineMap = jsonToMap(line);
 
+                            String moveString = "";
 
+                            for (String key : lineMap.keySet()) {
+                                if (key.equals("state")) { // process the initial block that gets sent
+                                    Object stateMap = lineMap.get(key);
+
+                                    if (stateMap instanceof Map) {
+                                        moveString = (String) ((Map<?, ?>) stateMap).get("moves");
+                                    } else {
+                                        throw new RuntimeException("State wasn't a map...");
+                                    }
+                                    break;
+                                } else if (key.equals("moves")) {
+                                    moveString = (String) lineMap.get("moves");
+                                }
+                            }
+
+                            // update list of moves
+                            moves = Arrays.asList(moveString.split(" "));
                         }
-
-
                         output = new StringBuilder();
                     }
                 }
                 if (endOfStream) {
-                    System.out.println("end of stream");
+                    System.out.println("End of stream");
                 }
             }
 
@@ -134,9 +169,7 @@ public class GetMoveDataAccessObject {
 
         try {
             future.get();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
 
