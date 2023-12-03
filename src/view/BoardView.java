@@ -298,12 +298,16 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                 this.previousMove = null;
 
             } else {
+                Font f = new Font("serif", Font.PLAIN, 60);
+
                 GetMoveState state = (GetMoveState) e.getNewValue();
                 apiMove = state.getMove();
                 Piece movingPiece = state.getMove().getPieceMoving();
+                buttonList.get(apiMove.getDestination()).setText(movingPiece.toString());
+                buttonList.get(apiMove.getDestination()).setFont(f);
+                buttonList.get(apiMove.getDestination()).setPiece(movingPiece.symbolToString());
+                buttonList.get(apiMove.getDestination()).setPieceColour(movingPiece.getColor());
                 buttonList.get(apiMove.getOrigin()).clear();
-                buttonList.get(apiMove.getDestination()).setText(apiMove.getPieceMoving().toString());
-                Font f = new Font("serif", Font.PLAIN, 60);
 
                 // check if is promotion
                 if (apiMove.getIsPromotion()){
