@@ -2,7 +2,6 @@ package interface_adapter.challenge_player;
 
 import use_case.challenge_player.ChallengePlayerInputBoundary;
 import use_case.challenge_player.ChallengePlayerInputData;
-import use_case.challenge_player.ChallengePlayerInteractor;
 
 public class ChallengePlayerController {
 
@@ -12,7 +11,7 @@ public class ChallengePlayerController {
         this.challengePlayerInteractor = challengePlayerInputBoundary;
     }
 
-    public void excute(int color, String name){
+    public void execute(int color, String name){
         String colorS = "";
         if (color == 0){
             colorS = "white";
