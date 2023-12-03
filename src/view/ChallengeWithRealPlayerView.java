@@ -106,7 +106,7 @@ public class ChallengeWithRealPlayerView implements MenuView, ActionListener, Pr
                         // This will be based on the api call now, setting it as white rn for testing
                         String usersColour = color2;
                         // Create chess board
-                        Board board = new Board();
+                        Board board = new Board(usersColour);
                         MakeMoveViewModel makeMoveViewModel = new MakeMoveViewModel();
                         MakeMovePresenter makeMovePresenter = new MakeMovePresenter(makeMoveViewModel);
                         MakeMoveDataAccessObject makeMoveDataAccessObject = new MakeMoveDataAccessObject(gameID);
@@ -124,7 +124,7 @@ public class ChallengeWithRealPlayerView implements MenuView, ActionListener, Pr
                         CheckGameEndsController checkGameEndsController = new CheckGameEndsController(checkGameEndsInteractor);
 
                         BoardView boardview = new BoardView(board, makeMoveController, makeMoveViewModel, highlightController, highlightViewModel
-                        ,checkGameEndsController, checkGameEndsViewModel);
+                        ,checkGameEndsController, checkGameEndsViewModel, usersColour);
                         boardview.setVisible(true);
 
                     } else {
@@ -167,7 +167,7 @@ public class ChallengeWithRealPlayerView implements MenuView, ActionListener, Pr
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("ChallengePlayer")){
             ChallengePlayerState state = (ChallengePlayerState) evt.getNewValue();
-            gameID = state.getGameID();
+            this.gameID = state.getGameID();
             color2 = state.getColor();
             System.out.println("Game Started");
         }

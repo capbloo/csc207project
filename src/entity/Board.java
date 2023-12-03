@@ -12,10 +12,11 @@ public class Board {
 
     private int movenumber;
 
-//    private final String usersColour;
+    private final String usersColour;
 
-    public Board(){
+    public Board(String usersColour){
         movenumber = 0;
+        this.usersColour = usersColour;
         this.lastmove = null;
         this.boardstate = new HashMap<>();
         this.highlights = new HashMap<>();
@@ -150,7 +151,7 @@ public class Board {
     }
 
     private Board cloneBoard() {
-        Board newb = new Board();
+        Board newb = new Board(this.usersColour);
         newb.setLastmove(lastmove);
         newb.setBoardstate((HashMap<ArrayList<Integer>, Piece>)boardstate.clone());
         return newb;

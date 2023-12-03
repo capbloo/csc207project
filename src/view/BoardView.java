@@ -37,12 +37,13 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
     private ChessButton previousMove;
     private PieceBuilder pieceBuilder;
     private static HashMap<ArrayList<Integer>, ChessButton> buttonList = new HashMap<>();
-//    private final String usersColour;
+    private final String usersColour;
 
 
     public BoardView(Board board, MakeMoveController makeMoveController, MakeMoveViewModel makeMoveViewModel,
                      HighlightController highlightController, HighlightViewModel highlightViewModel,
-                     CheckGameEndsController checkGameEndsController, CheckGameEndsViewModel checkGameEndsViewModel) {
+                     CheckGameEndsController checkGameEndsController, CheckGameEndsViewModel checkGameEndsViewModel, String usersColour) {
+        this.usersColour = usersColour;
         this.makeMoveController = makeMoveController;
         this.makeMoveViewModel = makeMoveViewModel;
         this.highlightController = highlightController;
@@ -133,10 +134,10 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
         Integer y = clickedButton.getCol();
 
         // first if condition ensures the player is only moving their own pieces
-//        if (clickedButton.getPieceColour() != null && (!clickedButton.getPieceColour().equals(usersColour)) && previousMove == null) {
-//        return;
-//        }
-        if (clickedButton.isEmpty() && previousMove == null) {
+        if (clickedButton.getPieceColour() != null && (!clickedButton.getPieceColour().equals(usersColour)) && previousMove == null) {
+        return;
+        }
+        else if (clickedButton.isEmpty() && previousMove == null) {
             unhighlight(buttonList);
         } else if (this.previousMove == null) {
             if (!clickedButton.isEmpty()) {
