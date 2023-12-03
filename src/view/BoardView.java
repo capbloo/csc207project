@@ -301,7 +301,6 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                 GetMoveState state = (GetMoveState) e.getNewValue();
                 apiMove = state.getMove();
                 Piece movingPiece = state.getMove().getPieceMoving();
-                buttonList.get(apiMove.getOrigin()).clear();
                 buttonList.get(apiMove.getDestination()).setText(apiMove.getPieceMoving().toString());
                 Font f = new Font("serif", Font.PLAIN, 60);
 
@@ -313,6 +312,7 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                 if (apiMove.getIsCastle()) {
                     Castle(buttonList.get(apiMove.getDestination()), apiMove, f);
                 }
+                buttonList.get(apiMove.getOrigin()).clear();
             }
 
     }
