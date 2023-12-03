@@ -1,11 +1,15 @@
 // ChallengeWithRealPlayerView.java
 package view;
 
+import data_access.GetMoveDataAccessObject;
 import data_access.MakeMoveDataAccessObject;
 import entity.Board;
 import interface_adapter.CheckGameEnds.CheckGameEndsController;
 import interface_adapter.CheckGameEnds.CheckGameEndsPresenter;
 import interface_adapter.CheckGameEnds.CheckGameEndsViewModel;
+import interface_adapter.Get_move.GetMoveController;
+import interface_adapter.Get_move.GetMovePresenter;
+import interface_adapter.Get_move.GetMoveViewModel;
 import interface_adapter.HighlightSquare.HighlightController;
 import interface_adapter.HighlightSquare.HighlightPresenter;
 import interface_adapter.HighlightSquare.HighlightViewModel;
@@ -18,6 +22,7 @@ import interface_adapter.make_move.MakeMoveController;
 import interface_adapter.make_move.MakeMovePresenter;
 import interface_adapter.make_move.MakeMoveViewModel;
 import use_case.CheckGameEnds.CheckGameEndsInteractor;
+import use_case.Get_move.GetMoveInteractor;
 import use_case.HighlightSquare.HighlightInteractor;
 import use_case.make_move.MakeMoveInteractor;
 
@@ -106,7 +111,7 @@ public class ChallengeWithRealPlayerView implements MenuView, ActionListener, Pr
                         // This will be based on the api call now, setting it as white rn for testing
                         String usersColour = color2;
                         // Create chess board
-                        Board board = new Board(usersColour);
+                        Board board = new Board();
                         MakeMoveViewModel makeMoveViewModel = new MakeMoveViewModel();
                         MakeMovePresenter makeMovePresenter = new MakeMovePresenter(makeMoveViewModel);
                         MakeMoveDataAccessObject makeMoveDataAccessObject = new MakeMoveDataAccessObject(gameID);
@@ -123,8 +128,14 @@ public class ChallengeWithRealPlayerView implements MenuView, ActionListener, Pr
                         CheckGameEndsInteractor checkGameEndsInteractor = new CheckGameEndsInteractor(checkGameEndsPresenter, board);
                         CheckGameEndsController checkGameEndsController = new CheckGameEndsController(checkGameEndsInteractor);
 
+                        GetMoveViewModel getMoveViewModel = new GetMoveViewModel();
+                        GetMovePresenter getMovePresenter = new GetMovePresenter(getMoveViewModel);
+                        GetMoveDataAccessObject getMoveDataAccessObject = new GetMoveDataAccessObject(gameID);
+                        GetMoveInteractor getMoveInteractor = new GetMoveInteractor(getMovePresenter, getMoveDataAccessObject, board);
+                        GetMoveController getMoveController = new GetMoveController(getMoveInteractor);
+
                         BoardView boardview = new BoardView(board, makeMoveController, makeMoveViewModel, highlightController, highlightViewModel
-                        ,checkGameEndsController, checkGameEndsViewModel, usersColour);
+                        ,checkGameEndsController, checkGameEndsViewModel, getMoveViewModel, getMoveController);
                         boardview.setVisible(true);
 
                     } else {
@@ -167,7 +178,7 @@ public class ChallengeWithRealPlayerView implements MenuView, ActionListener, Pr
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("ChallengePlayer")){
             ChallengePlayerState state = (ChallengePlayerState) evt.getNewValue();
-            this.gameID = state.getGameID();
+            gameID = state.getGameID();
             color2 = state.getColor();
             System.out.println("Game Started");
         }

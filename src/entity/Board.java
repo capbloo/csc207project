@@ -84,6 +84,10 @@ public class Board {
         this.highlights.put(pos, ishigh);
     }
 
+    public int getMovenumber() {
+        return movenumber;
+    }
+
     public void makeMove(Move move){
         PieceBuilder builder = new PieceBuilder();
         ArrayList<Integer> org = move.getOrigin();
@@ -139,9 +143,6 @@ public class Board {
         boardstate.remove(org);
         lastmove = move;
     }
-        
-  
-  
   
     public ArrayList<Integer> coor(int x, int y) {
         ArrayList<Integer> co = new ArrayList<Integer>();

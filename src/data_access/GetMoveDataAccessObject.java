@@ -14,6 +14,7 @@ import org.apache.hc.core5.http.support.BasicRequestBuilder;
 import org.apache.hc.core5.io.CloseMode;
 import org.apache.hc.core5.reactor.IOReactorConfig;
 import org.apache.hc.core5.util.Timeout;
+import use_case.Get_move.GetMoveDataAccessInterface;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -25,7 +26,7 @@ import java.util.concurrent.Future;
 
 import static java.lang.Thread.sleep;
 
-public class GetMoveDataAccessObject {
+public class GetMoveDataAccessObject implements GetMoveDataAccessInterface {
     private String API_TOKEN = null;
     private final String gameID;
     private volatile List<String> moves = new ArrayList<>();
