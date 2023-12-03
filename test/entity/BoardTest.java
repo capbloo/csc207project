@@ -58,6 +58,12 @@ public class BoardTest {
         board.getBoardstate().remove(coor(7,1));
         Move move = new Move(board.getBoardstate().get(coor(5,1)), coor(5,1), coor(7,1));
         move.setIsCastle();
+        ChessButton rook = new ChessButton();
+        ChessButton rook2 = new ChessButton();
+        rook.setCoord(6, 1);
+        rook2.setCoord(8, 1);
+        move.setRookRemoved(rook2);
+        move.setRookAdded(rook);
         board.makeMove(move);
         assertTrue(board.getBoardstate().get(coor(7,1)) instanceof King);
         assertTrue(board.getBoardstate().get(coor(6,1)) instanceof Rook);
@@ -88,7 +94,7 @@ public class BoardTest {
     public void testIsCheckMate1(){
         Board board = setEmptyBoard();
         Board board2 = new Board();
-        Piece org = board.getBoardstate().get(coor(2,2));
+        Piece org = board2.getBoardstate().get(coor(2,2));
         Move move1 = new Move(org, coor(2,2), coor(2,4));
         board2.makeMove(move1);
         assertFalse(board.isCheckMate("white"));
@@ -146,6 +152,13 @@ public class BoardTest {
         board.getBoardstate().put(coor(6,6),wqueen);
         assertFalse(board.isStaleMate("white"));
         assertTrue(board.isStaleMate("black"));
+    }
+
+    @org.junit.Test
+    public void testIsValidMove(){
+        Board board2 = new Board();
+        Move move = new Move(board2.getBoardstate().get(coor(2, 2)), coor(2,2), coor(2,3) );
+        assertTrue(board2.isValidMove(move));
     }
 
 
