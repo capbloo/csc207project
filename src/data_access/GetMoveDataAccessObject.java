@@ -76,8 +76,6 @@ public class GetMoveDataAccessObject {
                 throw new RuntimeException(e);
             }
         }
-
-        return null; // this should not be possible to reach
     }
 
     private void newThreadBoardStream() {
