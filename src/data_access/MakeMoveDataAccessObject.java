@@ -26,6 +26,9 @@ public class MakeMoveDataAccessObject implements MakeMoveDataAccessInterface {
 
     public void pushMove(Move move) {
         String moveString = move.algebraicNotation();
+        if (move.getIsPromotion()) {
+            moveString += "q";
+        }
 
         String API_TOKEN = "";
         try {

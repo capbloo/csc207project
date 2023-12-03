@@ -126,10 +126,12 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
         int[] numSideBar = {0, 1, 2, 3, 4, 5, 6, 7, 8};
         String[] letterSideBar = {"x", "h", "g", "f", "e", "d", "c", "b", "a"};
         int i = numSideBar.length - 1;
-
+        Font labelFont = new Font("serif", Font.PLAIN, 20);
         while (i > 0) {
             JLabel bottomLabel = new JLabel(letterSideBar[i]);
+            bottomLabel.setFont(labelFont);
             JLabel leftLabel = new JLabel(String.valueOf(numSideBar[i]));
+            leftLabel.setFont(labelFont);
             bottomLabel.setHorizontalAlignment(JLabel.CENTER);
             bottomPanel.add(bottomLabel);
             leftPanel.add(leftLabel);
