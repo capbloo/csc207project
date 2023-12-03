@@ -26,6 +26,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.IllegalFormatCodePointException;
 
 public class BoardView extends JFrame implements ActionListener, PropertyChangeListener {
 
@@ -137,6 +138,10 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
         }
         add(leftPanel, BorderLayout.WEST);
         add(bottomPanel, BorderLayout.SOUTH);
+
+        if (usersColour.equals("black")){
+            getMoveController.execute();
+        }
 
     }
 
@@ -313,6 +318,7 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                     Castle(buttonList.get(apiMove.getDestination()), apiMove, f);
                 }
                 buttonList.get(apiMove.getOrigin()).clear();
+                buttonList.get(apiMove.getPieceCaptureLocation()).clear();
             }
 
     }
