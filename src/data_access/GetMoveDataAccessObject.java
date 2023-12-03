@@ -66,9 +66,7 @@ public class GetMoveDataAccessObject {
      * @param moveNo The number of the move just played. Will wait for the NEXT move after this.
      */
     public String getMoveAfter(int moveNo) {
-        boolean done = false;
-
-        while(!done) {
+        while(true) {
             if (moves.size() > moveNo) {
                 return moves.get(moveNo);
             }
