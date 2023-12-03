@@ -144,21 +144,21 @@ public class GetMoveInteractor implements GetMoveInputBoundary{
         String apiMove = getMoveDataAccessObeject.getMoveAfter(board.getMovenumber());
 
         // translate api response - Origin
-        ArrayList<Integer> origin = new ArrayList<Integer>();
-        int originFirstCoordinate = apiMove.charAt(0) - 'a' + 1;
+        ArrayList<Integer> origin = new ArrayList<>();
+        Integer originFirstCoordinate = apiMove.charAt(0) - 'a' + 1;
         origin.add(originFirstCoordinate);
-        int originSecondCoordinate = Integer.parseInt(apiMove.substring(1, 2));
+        Integer originSecondCoordinate = Integer.parseInt(apiMove.substring(1, 2));
         origin.add(originSecondCoordinate);
-
         // get moving piece
         Piece movingPiece = board.getBoardstate().get(origin);
 
         // translate api response - Destination
-        ArrayList<Integer> destination = new ArrayList<Integer>();
-        int destinationFirstCoordinate = apiMove.charAt(3) - 'a' + 1;
+        ArrayList<Integer> destination = new ArrayList<>();
+        Integer destinationFirstCoordinate = apiMove.charAt(2) - 'a' + 1;
         destination.add(destinationFirstCoordinate);
-        int destinationSecondCoordinate = Integer.parseInt(apiMove.substring(3, 4));
+        Integer destinationSecondCoordinate = Integer.parseInt(apiMove.substring(3, 4));
         destination.add(destinationSecondCoordinate);
+        System.out.println(destination.isEmpty());
 
         // initialize a move
         Move move = new Move(movingPiece, origin, destination);

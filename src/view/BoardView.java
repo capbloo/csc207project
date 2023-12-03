@@ -277,7 +277,7 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                     JOptionPane.showMessageDialog(this, "It's a tie");
                 }
                 System.out.println("not end");
-            } else { // if (e.getPropertyName().equals(("MakeMove")))//
+            } else  if (e.getPropertyName().equals(("MakeMove"))){
                 MakeMoveState state = (MakeMoveState) e.getNewValue();
                 ChessButton clickedButton = state.getClickedButton();
                 Piece pieceMoving = state.getMove().getPieceMoving();
@@ -297,22 +297,22 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                 }
                 previousMove.clear();
                 this.previousMove = null;
-//            } else {
-//                GetMoveState state = (GetMoveState) e.getNewValue();
-//                apiMove = state.getMove();
-//                Piece movingPiece = state.getMove().getPieceMoving();
-//                buttonList.get(apiMove.getDestination()).setText(apiMove.getPieceMoving().toString());
-//                Font f = new Font("serif", Font.PLAIN, 60);
-//
-//                // check if is promotion
-//                if (apiMove.getIsPromotion()){
-//                    buttonList.get(apiMove.getDestination()).setText(apiMove.getPiecePromotedTo().toString());
-//                }
-//                // check if castle
-//                if (apiMove.getIsCastle()) {
-//                    Castle(buttonList.get(apiMove.getDestination()), apiMove, f);
-//                }
-//                buttonList.get(apiMove.getOrigin()).clear();
+            } else {
+                GetMoveState state = (GetMoveState) e.getNewValue();
+                apiMove = state.getMove();
+                Piece movingPiece = state.getMove().getPieceMoving();
+                buttonList.get(apiMove.getDestination()).setText(apiMove.getPieceMoving().toString());
+                Font f = new Font("serif", Font.PLAIN, 60);
+                buttonList.get(apiMove.getDestination()).setFont(f);
+                // check if is promotion
+                if (apiMove.getIsPromotion()){
+                    buttonList.get(apiMove.getDestination()).setText(apiMove.getPiecePromotedTo().toString());
+                }
+                // check if castle
+                else if (apiMove.getIsCastle()) {
+                    Castle(buttonList.get(apiMove.getDestination()), apiMove, f);
+                }
+                buttonList.get(apiMove.getOrigin()).clear();
             }
 
     }
