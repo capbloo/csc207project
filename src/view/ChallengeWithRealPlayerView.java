@@ -1,15 +1,11 @@
 // ChallengeWithRealPlayerView.java
 package view;
 
-import data_access.GetMoveDataAccessObject;
 import data_access.MakeMoveDataAccessObject;
 import entity.Board;
 import interface_adapter.CheckGameEnds.CheckGameEndsController;
 import interface_adapter.CheckGameEnds.CheckGameEndsPresenter;
 import interface_adapter.CheckGameEnds.CheckGameEndsViewModel;
-import interface_adapter.Get_move.GetMoveController;
-import interface_adapter.Get_move.GetMovePresenter;
-import interface_adapter.Get_move.GetMoveViewModel;
 import interface_adapter.HighlightSquare.HighlightController;
 import interface_adapter.HighlightSquare.HighlightPresenter;
 import interface_adapter.HighlightSquare.HighlightViewModel;
@@ -22,7 +18,6 @@ import interface_adapter.make_move.MakeMoveController;
 import interface_adapter.make_move.MakeMovePresenter;
 import interface_adapter.make_move.MakeMoveViewModel;
 import use_case.CheckGameEnds.CheckGameEndsInteractor;
-import use_case.Get_move.GetMoveInteractor;
 import use_case.HighlightSquare.HighlightInteractor;
 import use_case.make_move.MakeMoveInteractor;
 
@@ -128,14 +123,8 @@ public class ChallengeWithRealPlayerView implements MenuView, ActionListener, Pr
                         CheckGameEndsInteractor checkGameEndsInteractor = new CheckGameEndsInteractor(checkGameEndsPresenter, board);
                         CheckGameEndsController checkGameEndsController = new CheckGameEndsController(checkGameEndsInteractor);
 
-                        GetMoveViewModel getMoveViewModel = new GetMoveViewModel();
-                        GetMovePresenter getMovePresenter = new GetMovePresenter(getMoveViewModel);
-                        GetMoveDataAccessObject getMoveDataAccessObject = new GetMoveDataAccessObject(gameID);
-                        GetMoveInteractor getMoveInteractor = new GetMoveInteractor(getMovePresenter, getMoveDataAccessObject, board);
-                        GetMoveController getMoveController = new GetMoveController(getMoveInteractor);
-
                         BoardView boardview = new BoardView(board, makeMoveController, makeMoveViewModel, highlightController, highlightViewModel
-                        ,checkGameEndsController, checkGameEndsViewModel, getMoveViewModel, getMoveController);
+                        ,checkGameEndsController, checkGameEndsViewModel);
                         boardview.setVisible(true);
 
                     } else {
