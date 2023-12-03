@@ -13,8 +13,6 @@ import interface_adapter.Get_move.GetMoveViewModel;
 import interface_adapter.HighlightSquare.HighlightController;
 import interface_adapter.HighlightSquare.HighlightPresenter;
 import interface_adapter.HighlightSquare.HighlightViewModel;
-import interface_adapter.challenge_ai.ChallengeAIController;
-import interface_adapter.challenge_ai.ChallengeAIViewModel;
 import interface_adapter.challenge_player.ChallengePlayerController;
 import interface_adapter.challenge_player.ChallengePlayerState;
 import interface_adapter.challenge_player.ChallengePlayerViewModel;
@@ -41,7 +39,7 @@ public class ChallengeWithRealPlayerView implements MenuView, ActionListener, Pr
 
     private ChallengePlayerViewModel challengePlayerViewModel;
 
-    private ChallengePlayerController challengeAIController;
+    private ChallengePlayerController challengePlayerController;
 
     private String gameID;
 
@@ -53,7 +51,7 @@ public class ChallengeWithRealPlayerView implements MenuView, ActionListener, Pr
     public ChallengeWithRealPlayerView(JFrame frame, ChallengePlayerController challengePlayerController, ChallengePlayerViewModel challengePlayerViewModel) {
         this.frame = frame;
         this.challengePlayerViewModel = challengePlayerViewModel;
-        this.challengeAIController = challengePlayerController;
+        this.challengePlayerController = challengePlayerController;
         challengePlayerViewModel.addPropertyChangeListener(this);
     }
 
@@ -103,7 +101,7 @@ public class ChallengeWithRealPlayerView implements MenuView, ActionListener, Pr
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("Challenge "+ name);
-                    challengeAIController.excute(color, name);
+                    challengePlayerController.execute(color, name);
                     String playerName = playerNameTextField.getText();
                     if (!playerName.isEmpty()) {
                         JOptionPane.showMessageDialog(frame, "Starting challenge with player: " + playerName);

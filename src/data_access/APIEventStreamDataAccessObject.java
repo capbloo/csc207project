@@ -90,6 +90,8 @@ public class APIEventStreamDataAccessObject implements ChallengeAIDataAccessInte
 
             @Override
             protected void data(final CharBuffer data, final boolean endOfStream) {
+                System.out.println("reached data");
+
                 StringBuilder output = new StringBuilder();
                 while (data.hasRemaining()) {
                     char c = data.get();
@@ -99,13 +101,18 @@ public class APIEventStreamDataAccessObject implements ChallengeAIDataAccessInte
                     if (c == '\n') { // end of a line
                         String line = output.toString();
 
+                        System.out.println(line);
+
                         if (!line.equals("\n")) { // cull keepalive newlines
                             Map<String, Object> lineMap = jsonToMap(line);
 
-                            String type = (String) lineMap.get("type");
+                            if (lineMap != null) {
 
-                            if (type.equals("challengeDeclined") || type.equals("gameStart")) {
-                                events.add(lineMap);
+                                String type = (String) lineMap.get("type");
+
+                                if (type.equals("challengeDeclined") || type.equals("gameStart")) {
+                                    events.add(lineMap);
+                                }
                             }
                         }
                         output = new StringBuilder();
