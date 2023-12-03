@@ -33,8 +33,8 @@ public class APIChallengeDataAccessObject implements ChallengeAIDataAccessInterf
     public static void main(String[] args) {
         APIChallengeDataAccessObject apiChallengeDataAccessObject = new APIChallengeDataAccessObject();
 
-        apiChallengeDataAccessObject.challengeAI("white", 3);
-        apiChallengeDataAccessObject.challengePlayer("white", "capbloo");
+        System.out.println(apiChallengeDataAccessObject.challengeAI("white", 3));
+        System.out.println(apiChallengeDataAccessObject.challengePlayer("white", "capbloo"));
     }
 
     /** Send a challenge to the Lichess AI.
@@ -78,6 +78,8 @@ public class APIChallengeDataAccessObject implements ChallengeAIDataAccessInterf
      */
     public String challengePlayer(String color, String name) {
         HttpResponse<String> response;
+
+        System.out.println(LICHESS + "/api/challenge/" + name);
 
         try {
             // create the challenge, send it, and save the response
