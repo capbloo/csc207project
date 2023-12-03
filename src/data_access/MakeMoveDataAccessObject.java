@@ -21,7 +21,7 @@ public class MakeMoveDataAccessObject implements MakeMoveDataAccessInterface {
 
     public MakeMoveDataAccessObject(String gameID) {
         this.gameID = gameID;
-        this.gameURL = "https://lichess.org/api/board/game/" + gameID;
+        this.gameURL = "https://lichess.org/api/bot/game/" + gameID + "/move/";
     }
 
     public void pushMove(Move move) {
@@ -39,12 +39,13 @@ public class MakeMoveDataAccessObject implements MakeMoveDataAccessInterface {
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     // url must be of the format: https://lichess.org/api/board/game/{gameId}/move/{move}
-                    .uri(new URI(gameURL + "/move/" + moveString))
+                    .uri(new URI(gameURL + moveString))
                     .header("Authorization", "Bearer " + API_TOKEN)
+                    .header("Content-Type", "application/x-www-form-urlencoded")
                     .POST(HttpRequest.BodyPublishers.noBody())
                     .build();
-            HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-
+            HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+            System.out.println(response);
         }
         catch (URISyntaxException e) {
             throw new RuntimeException(e);

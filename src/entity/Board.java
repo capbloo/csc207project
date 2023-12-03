@@ -112,10 +112,12 @@ public class Board {
             }
             // remove the piece captured by the en passant from the boardState
             boardstate.remove(coordToRemove);
-        } else if (move.getIsPromotion()) {
+        }
+        else if (move.getIsPromotion()) {
             Piece queen = builder.create("Queen", piece.getColor());
             boardstate.put(des, queen);
-        } else if (move.getIsCastle()){
+        }
+        else if (move.getIsCastle()){
             boardstate.put(des, piece);
             // adding rook to left/right of king
             ArrayList<Integer> coordOfRookAdded = new ArrayList<>();
