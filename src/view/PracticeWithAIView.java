@@ -106,7 +106,7 @@ public class PracticeWithAIView implements MenuView, ActionListener, PropertyCha
                     // This will be based on the api call now, setting it as white rn for testing
                     String usersColour = color2;
                     // Create chess board
-                    Board board = new Board(usersColour);
+                    Board board = new Board();
                     MakeMoveViewModel makeMoveViewModel = new MakeMoveViewModel();
                     MakeMovePresenter makeMovePresenter = new MakeMovePresenter(makeMoveViewModel);
                     MakeMoveDataAccessObject makeMoveDataAccessObject = new MakeMoveDataAccessObject(gameID);
