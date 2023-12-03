@@ -119,10 +119,7 @@
 package use_case.Get_move;
 
 import data_access.GetMoveDataAccessObject;
-import entity.Board;
-import entity.Move;
-import entity.Piece;
-import entity.PieceBuilder;
+import entity.*;
 import interface_adapter.Get_move.GetMovePresenter;
 
 import java.util.ArrayList;
@@ -168,6 +165,31 @@ public class GetMoveInteractor implements GetMoveInputBoundary{
             if (m.getDestination() == destination){
                 move = m;
             }
+        }
+        // check if is castle
+        if (move.getIsCastle()){
+            Piece movingKing = movingPiece;
+            ChessButton rookToAdd = new ChessButton();
+            ChessButton rookToRemove = new ChessButton();
+            if (movingKing.getColor().equals("white")){
+                if (destinationFirstCoordinate == 7){
+                    rookToAdd.setCoord(6, 1);
+                    rookToRemove.setCoord(8, 1);
+                } else {
+                    rookToAdd.setCoord(4, 1);
+                    rookToRemove.setCoord(1, 1);
+                }
+            } else {
+                if (destinationFirstCoordinate == 7){
+                    rookToAdd.setCoord(6, 8);
+                    rookToRemove.setCoord(8, 8);
+                } else {
+                    rookToAdd.setCoord(4, 8);
+                    rookToRemove.setCoord(1, 8);
+                }
+            }
+            move.setRookAdded(rookToAdd);
+            move.setRookRemoved(rookToRemove);
         }
 
         // check if is promotion
