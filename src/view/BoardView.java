@@ -261,7 +261,24 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                     JOptionPane.showMessageDialog(this, "It's a tie");
                 }
                 System.out.println("not end");
-            }else {
+            } else {
+                MakeMoveState state = (MakeMoveState) e.getNewValue();
+                ChessButton clickedButton = state.getClickedButton();
+                Piece pieceMoving = state.getMove().getPieceMoving();
+                Move move = state.getMove();
+                Font f = new Font("serif", Font.PLAIN, 60);
+                String pieceSymbol = pieceMoving.toString();
+
+                if (move.getIsPromotion()) {
+                    Promotion(clickedButton, pieceMoving);
+                } else if (move.getIsCastle()) {
+                    Castle(clickedButton, move, f);
+                } else {
+                    clickedButton.setText(pieceSymbol);
+                    clickedButton.setFont(f);
+                    clickedButton.setPieceColour(pieceMoving.getColor());
+                    clickedButton.setPiece(pieceMoving.symbolToString());
+                }
                 previousMove.clear();
                 this.previousMove = null;
             }
@@ -297,7 +314,39 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
         }
 
     }
+    public void Castle(ChessButton clickedButton, Move move, Font f) {
+        ChessButton rookRemoved = move.getRookRemoved();
+        Piece pieceMoving = move.getPieceMoving();
+        String pieceSymbol = pieceMoving.toString();
+        rookRemoved.clear();
+        clickedButton.setText(pieceSymbol);
+        ChessButton rookAdded = move.getRookAdded();
+        if (pieceMoving.getColor().equals("white")) {
+            rookAdded.setText("♖");
+        }
+        else {
+            rookAdded.setText("♜");
+        }
+        rookAdded.setFont(f);
+        rookAdded.setPieceColour(pieceMoving.getColor());
+        rookAdded.setPiece("Rook");
+        clickedButton.setFont(f);
+        clickedButton.setPieceColour(pieceMoving.getColor());
+        clickedButton.setPiece(pieceMoving.symbolToString());
+    }
 
+    public void Promotion(ChessButton clickedButton, Piece pieceMoving) {
+        PieceBuilder builder = new PieceBuilder();
+        pieceMoving = builder.create("Queen", pieceMoving.getColor());
+        if (pieceMoving.getColor().equals("white")) {
+            clickedButton.setText("♕");
+        }
+        else {
+            clickedButton.setText("♛");
+        }
+        clickedButton.setPieceColour(pieceMoving.getColor());
+        clickedButton.setPiece(pieceMoving.symbolToString());
+    }
 }
 
 
