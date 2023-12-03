@@ -83,6 +83,10 @@ public class Board {
         this.highlights.put(pos, ishigh);
     }
 
+    public int getMovenumber() {
+        return movenumber;
+    }
+
     public void makeMove(Move move){
         PieceBuilder builder = new PieceBuilder();
         ArrayList<Integer> org = move.getOrigin();

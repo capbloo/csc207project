@@ -8,6 +8,9 @@ import entity.ChessButton;
 import interface_adapter.CheckGameEnds.CheckGameEndsController;
 import interface_adapter.CheckGameEnds.CheckGameEndsState;
 import interface_adapter.CheckGameEnds.CheckGameEndsViewModel;
+import interface_adapter.Get_move.GetMoveController;
+import interface_adapter.Get_move.GetMoveState;
+import interface_adapter.Get_move.GetMoveViewModel;
 import interface_adapter.HighlightSquare.HighlightViewModel;
 import interface_adapter.make_move.MakeMoveController;
 import interface_adapter.make_move.MakeMoveState;
@@ -34,15 +37,22 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
     private CheckGameEndsViewModel checkGameEndsViewModel;
 
     private CheckGameEndsController checkGameEndsController;
+
+    private GetMoveViewModel getMoveViewModel;
+
+    private GetMoveController getMoveController;
+
     private ChessButton previousMove;
     private PieceBuilder pieceBuilder;
     private static HashMap<ArrayList<Integer>, ChessButton> buttonList = new HashMap<>();
     private final String usersColour;
 
+    private Move apiMove;
 
     public BoardView(Board board, MakeMoveController makeMoveController, MakeMoveViewModel makeMoveViewModel,
                      HighlightController highlightController, HighlightViewModel highlightViewModel,
-                     CheckGameEndsController checkGameEndsController, CheckGameEndsViewModel checkGameEndsViewModel, String usersColour) {
+                     CheckGameEndsController checkGameEndsController, CheckGameEndsViewModel checkGameEndsViewModel, String usersColour,
+                     GetMoveViewModel getMoveViewModel, GetMoveController getMoveController) {
         this.usersColour = usersColour;
         this.makeMoveController = makeMoveController;
         this.makeMoveViewModel = makeMoveViewModel;
@@ -50,8 +60,11 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
         this.highlightViewModel = highlightViewModel;
         this.checkGameEndsController = checkGameEndsController;
         this.checkGameEndsViewModel = checkGameEndsViewModel;
+        this.getMoveViewModel = getMoveViewModel;
+        this.getMoveController = getMoveController;
         makeMoveViewModel.addPropertyChangeListener(this);
         checkGameEndsViewModel.addPropertyChangeListener(this);
+        getMoveViewModel.addPropertyChangeListener(this);
         //highlightViewModel.addPropertyChangeListener(this);
         pieceBuilder = new PieceBuilder();
 
@@ -216,6 +229,8 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                     makeMoveController.execute(move, clickedButton);
                 }finally {
                     checkGameEndsController.execute(move);
+                    getMoveController.execute();
+                    checkGameEndsController.execute(apiMove);
                 }
             } else {
                 unhighlight(buttonList);
@@ -262,7 +277,7 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                     JOptionPane.showMessageDialog(this, "It's a tie");
                 }
                 System.out.println("not end");
-            } else {
+            } else { // if (e.getPropertyName().equals(("MakeMove")))//
                 MakeMoveState state = (MakeMoveState) e.getNewValue();
                 ChessButton clickedButton = state.getClickedButton();
                 Piece pieceMoving = state.getMove().getPieceMoving();
@@ -282,6 +297,22 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                 }
                 previousMove.clear();
                 this.previousMove = null;
+//            } else {
+//                GetMoveState state = (GetMoveState) e.getNewValue();
+//                apiMove = state.getMove();
+//                Piece movingPiece = state.getMove().getPieceMoving();
+//                buttonList.get(apiMove.getDestination()).setText(apiMove.getPieceMoving().toString());
+//                Font f = new Font("serif", Font.PLAIN, 60);
+//
+//                // check if is promotion
+//                if (apiMove.getIsPromotion()){
+//                    buttonList.get(apiMove.getDestination()).setText(apiMove.getPiecePromotedTo().toString());
+//                }
+//                // check if castle
+//                if (apiMove.getIsCastle()) {
+//                    Castle(buttonList.get(apiMove.getDestination()), apiMove, f);
+//                }
+//                buttonList.get(apiMove.getOrigin()).clear();
             }
 
     }
