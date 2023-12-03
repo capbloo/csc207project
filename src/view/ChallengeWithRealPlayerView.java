@@ -124,7 +124,7 @@ public class ChallengeWithRealPlayerView implements MenuView, ActionListener, Pr
                         CheckGameEndsController checkGameEndsController = new CheckGameEndsController(checkGameEndsInteractor);
 
                         BoardView boardview = new BoardView(board, makeMoveController, makeMoveViewModel, highlightController, highlightViewModel
-                        ,checkGameEndsController, checkGameEndsViewModel);
+                        ,checkGameEndsController, checkGameEndsViewModel, usersColour);
                         boardview.setVisible(true);
 
                     } else {
