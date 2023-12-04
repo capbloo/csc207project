@@ -48,6 +48,8 @@ public class PracticeWithAIView implements MenuView, ActionListener, PropertyCha
 
     private String color2;
 
+    private JButton startButton;
+
 
     public PracticeWithAIView(JFrame frame, ChallengeAIController challengeAIController, ChallengeAIViewModel challengeAIViewModel) {
         this.frame = frame;
@@ -103,7 +105,7 @@ public class PracticeWithAIView implements MenuView, ActionListener, PropertyCha
             });
 
             // Create a Button for starting the game
-            JButton startButton = new JButton("Start Game");
+            startButton = new JButton("Start Game");
             startButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -198,5 +200,9 @@ public class PracticeWithAIView implements MenuView, ActionListener, PropertyCha
 
             return this;
         }
+    }
+
+    public JButton getStartButton() {
+        return startButton;
     }
 }
