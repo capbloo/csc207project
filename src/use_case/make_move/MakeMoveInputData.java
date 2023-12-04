@@ -4,16 +4,11 @@ import entity.Move;
 
 public class MakeMoveInputData {
     final Move move;
-    final ChessButton clickedButton;
 
-    public MakeMoveInputData(Move move, ChessButton clickedButton) {
+    public MakeMoveInputData(Move move) {
         this.move = move;
-        this.clickedButton = clickedButton;
     }
 
     public Move getMove() {return this.move;}
 
-    public ChessButton getClickedButton() {
-        return clickedButton;
-    }
 }

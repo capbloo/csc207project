@@ -25,6 +25,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 public class BoardView extends JFrame implements ActionListener, PropertyChangeListener {
@@ -73,59 +74,117 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
         JPanel pn = new JPanel(new GridLayout(8, 8));
         setBounds(800, 800, 800, 800);
         boolean iswhite = true;
-        for (int y = 8; y > 0; y--) {
-            for (int x = 0; x < 8; x++) {
+        if (usersColour.equals("white")) {
+            for (int y = 8; y > 0; y--) {
+                for (int x = 0; x < 8; x++) {
 
-                ChessButton block = new ChessButton();
-                pn.add(block);
-                block.setBounds(x * 64, y * 64, 64, 64);
-                ArrayList<Integer> pos1 = new ArrayList<Integer>();
-                pos1.add(x + 1);
+                    ChessButton block = new ChessButton();
+                    pn.add(block);
+                    block.setBounds(x * 64, y * 64, 64, 64);
+                    ArrayList<Integer> pos1 = new ArrayList<Integer>();
+                    pos1.add(x + 1);
 
-              
-                ArrayList<Integer> coord = new ArrayList<>();
-                coord.add(x + 1);
-                coord.add(y);
-                buttonList.put(coord, block);
 
-                pos1.add(y);
-                block.setCoord(x + 1, y);
+                    ArrayList<Integer> coord = new ArrayList<>();
+                    coord.add(x + 1);
+                    coord.add(y);
+                    buttonList.put(coord, block);
 
-                block.addActionListener(this);
-                if (!(board.getBoardstate().get(pos1) == null)) {
-                    block.setText(board.getBoardstate().get(pos1).toString());
-                    block.setHorizontalAlignment(SwingConstants.CENTER);
-                    Font f = new Font("serif", Font.PLAIN, 60);
-                    block.setFont(f);
-                    block.setPiece(board.getBoardstate().get(pos1).symbolToString());
-                    block.setPieceColour(board.getBoardstate().get(pos1).getColor());
+                    pos1.add(y);
+                    block.setCoord(x + 1, y);
+
+                    block.addActionListener(this);
+                    if (!(board.getBoardstate().get(pos1) == null)) {
+                        block.setText(board.getBoardstate().get(pos1).toString());
+                        block.setHorizontalAlignment(SwingConstants.CENTER);
+                        Font f = new Font("serif", Font.PLAIN, 60);
+                        block.setFont(f);
+                        block.setPiece(board.getBoardstate().get(pos1).symbolToString());
+                        block.setPieceColour(board.getBoardstate().get(pos1).getColor());
+                    }
+
+                    if (iswhite) {
+                        block.setBackground(new Color(69, 75, 27));
+                        block.setOpaque(true);
+                        block.setBorderPainted(false);
+                        block.setSquareColour("green");
+                    } else {
+                        block.setBackground(Color.lightGray);
+                        block.setOpaque(true);
+                        block.setBorderPainted(false);
+                        block.setSquareColour("white");
+                    }
+
+                    iswhite = !iswhite;
                 }
-
-                if (iswhite) {
-                    block.setBackground(new Color(69, 75, 27));
-                    block.setOpaque(true);
-                    block.setBorderPainted(false);
-                    block.setSquareColour("green");
-                } else {
-                    block.setBackground(Color.lightGray);
-                    block.setOpaque(true);
-                    block.setBorderPainted(false);
-                    block.setSquareColour("white");
-                }
-
                 iswhite = !iswhite;
             }
-            iswhite = !iswhite;
+            add(pn, BorderLayout.CENTER);
         }
-        add(pn, BorderLayout.CENTER);
+        else {
+            for (int y = 0; y < 8; y++) {
+                for (int x = 8; x > 0; x--) {
+
+                    ChessButton block = new ChessButton();
+                    pn.add(block);
+                    block.setBounds(x * 64, y * 64, 64, 64);
+                    ArrayList<Integer> pos1 = new ArrayList<Integer>();
+                    pos1.add(x);
+
+
+                    ArrayList<Integer> coord = new ArrayList<>();
+                    coord.add(x);
+                    coord.add(y+1);
+                    buttonList.put(coord, block);
+
+                    pos1.add(y+1);
+                    block.setCoord(x, y+1);
+
+                    block.addActionListener(this);
+                    if (!(board.getBoardstate().get(pos1) == null)) {
+                        block.setText(board.getBoardstate().get(pos1).toString());
+                        block.setHorizontalAlignment(SwingConstants.CENTER);
+                        Font f = new Font("serif", Font.PLAIN, 60);
+                        block.setFont(f);
+                        block.setPiece(board.getBoardstate().get(pos1).symbolToString());
+                        block.setPieceColour(board.getBoardstate().get(pos1).getColor());
+                    }
+
+                    if (iswhite) {
+                        block.setBackground(new Color(69, 75, 27));
+                        block.setOpaque(true);
+                        block.setBorderPainted(false);
+                        block.setSquareColour("green");
+                    } else {
+                        block.setBackground(Color.lightGray);
+                        block.setOpaque(true);
+                        block.setBorderPainted(false);
+                        block.setSquareColour("white");
+                    }
+
+                    iswhite = !iswhite;
+                }
+                iswhite = !iswhite;
+            }
+            add(pn, BorderLayout.CENTER);
+        }
 
         JPanel bottomPanel = new JPanel(new GridLayout(1, 8));
         JPanel leftPanel = new JPanel(new GridLayout(8, 1));
         bottomPanel.setBounds(1000, 800, 800, 800);
         leftPanel.setBounds(1000, 800, 800, 800);
-        int[] numSideBar = {0, 1, 2, 3, 4, 5, 6, 7, 8};
-        String[] letterSideBar = {"x", "h", "g", "f", "e", "d", "c", "b", "a"};
+        int[] numSideBar;
+        String[] letterSideBar;
+        if (usersColour.equals("white")) {
+            numSideBar = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8};
+            letterSideBar = new String[]{"x", "h", "g", "f", "e", "d", "c", "b", "a"};
+        }
+        else {
+            numSideBar = new int[]{9, 8, 7, 6, 5, 4, 3 ,2, 1};
+            letterSideBar = new String[]{"x", "a", "b", "c", "d", "e", "f", "g", "h"};
+        }
         int i = numSideBar.length - 1;
+
         Font labelFont = new Font("serif", Font.PLAIN, 20);
         while (i > 0) {
             JLabel bottomLabel = new JLabel(letterSideBar[i]);
@@ -139,6 +198,10 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
         }
         add(leftPanel, BorderLayout.WEST);
         add(bottomPanel, BorderLayout.SOUTH);
+
+        if (usersColour.equals("black")) {
+            getMoveController.execute();
+        }
 
     }
 
@@ -226,7 +289,8 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                     unhighlight(buttonList);
                     makeMoveController.execute(move, clickedButton);
                     checkGameEndsController.execute(move);
-                    getMove(apiMove);
+                    getMoveController.execute();
+                    checkGameEndsController.execute(move);
 
 
             } else {
@@ -234,11 +298,6 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                 this.previousMove = null;
             }
         }
-    }
-
-    private void getMove(Move move) {
-        getMoveController.execute();
-        checkGameEndsController.execute(move);
     }
 
     private boolean isEnPassent(ChessButton clickedButton) {
@@ -281,7 +340,7 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                 System.out.println("not end");
             } else if (e.getPropertyName().equals(("MakeMove"))){
                 MakeMoveState state = (MakeMoveState) e.getNewValue();
-                ChessButton clickedButton = state.getClickedButton();
+                ChessButton clickedButton = buttonList.get(state.getMove().getDestination());
                 Piece pieceMoving = state.getMove().getPieceMoving();
                 Move move = state.getMove();
                 Font f = new Font("serif", Font.PLAIN, 60);

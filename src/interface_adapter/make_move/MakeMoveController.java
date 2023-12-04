@@ -13,7 +13,7 @@ public class MakeMoveController {
     }
 
     public boolean execute(Move move, ChessButton clickedButton) {
-        MakeMoveInputData makeMoveInputData = new MakeMoveInputData(move, clickedButton);
+        MakeMoveInputData makeMoveInputData = new MakeMoveInputData(move);
         makeMoveInteractor.execute(makeMoveInputData);
         return true;
     }
