@@ -47,8 +47,7 @@ public class MakeMoveDataAccessObject implements MakeMoveDataAccessInterface {
                     .header("Content-Type", "application/x-www-form-urlencoded")
                     .POST(HttpRequest.BodyPublishers.noBody())
                     .build();
-            HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println(response);
+            HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
         }
         catch (URISyntaxException e) {
             throw new RuntimeException(e);
