@@ -3,7 +3,7 @@ package view;
 import entity.Board;
 import entity.Move;
 import entity.Piece;
-import entity.PieceBuilder;
+import entity.PieceFactory;
 import entity.ChessButton;
 import interface_adapter.CheckGameEnds.CheckGameEndsController;
 import interface_adapter.CheckGameEnds.CheckGameEndsState;
@@ -16,7 +16,6 @@ import interface_adapter.make_move.MakeMoveController;
 import interface_adapter.make_move.MakeMoveState;
 import interface_adapter.make_move.MakeMoveViewModel;
 import interface_adapter.HighlightSquare.HighlightController;
-import use_case.make_move.MakeMoveInputData;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,7 +24,6 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 
 public class BoardView extends JFrame implements ActionListener, PropertyChangeListener {
@@ -44,7 +42,7 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
     private GetMoveController getMoveController;
 
     private ChessButton previousMove;
-    private PieceBuilder pieceBuilder;
+    private PieceFactory pieceFactory;
     private static HashMap<ArrayList<Integer>, ChessButton> buttonList = new HashMap<>();
     private final String usersColour;
     private Move apiMove;
@@ -67,7 +65,7 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
         checkGameEndsViewModel.addPropertyChangeListener(this);
         getMoveViewModel.addPropertyChangeListener(this);
         //highlightViewModel.addPropertyChangeListener(this);
-        pieceBuilder = new PieceBuilder();
+        pieceFactory = new PieceFactory();
         UIManager.put("text", Color.BLACK);
 
         setBounds(1000, 1000, 1000, 1000);
@@ -231,7 +229,7 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
             unhighlight(buttonList);
         } else {
             if (clickedButton.isHighlighted()) {
-                Piece piece = pieceBuilder.create(previousMove.getPiece(), previousMove.getPieceColour());
+                Piece piece = pieceFactory.create(previousMove.getPiece(), previousMove.getPieceColour());
                 ArrayList<Integer> origin = new ArrayList<>();
                 origin.add(previousMove.getRow());
                 origin.add(previousMove.getCol());
@@ -466,7 +464,7 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
     }
 
     public void Promotion(ChessButton clickedButton, Piece pieceMoving) {
-        PieceBuilder builder = new PieceBuilder();
+        PieceFactory builder = new PieceFactory();
         pieceMoving = builder.create("Queen", pieceMoving.getColor());
         if (pieceMoving.getColor().equals("white")) {
             clickedButton.setText("♕");

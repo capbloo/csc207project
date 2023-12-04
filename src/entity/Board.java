@@ -1,6 +1,5 @@
 package entity;
 
-import javax.naming.PartialResultException;
 import java.util.*;
 
 public class Board {
@@ -19,7 +18,7 @@ public class Board {
         this.lastmove = null;
         this.boardstate = new HashMap<>();
         this.highlights = new HashMap<>();
-        PieceBuilder builder = new PieceBuilder();
+        PieceFactory builder = new PieceFactory();
         ArrayList<String> pieces = new ArrayList<String>();
         pieces.add("Rook");
         pieces.add("Knight");
@@ -88,7 +87,7 @@ public class Board {
     }
 
     public void makeMove(Move move){
-        PieceBuilder builder = new PieceBuilder();
+        PieceFactory builder = new PieceFactory();
         ArrayList<Integer> org = move.getOrigin();
         ArrayList<Integer> des = move.getDestination();
         Piece piece = move.getPieceMoving();
