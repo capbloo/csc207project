@@ -46,8 +46,8 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
     private PieceBuilder pieceBuilder;
     private static HashMap<ArrayList<Integer>, ChessButton> buttonList = new HashMap<>();
     private final String usersColour;
-
     private Move apiMove;
+    private volatile String turn = "white";
 
     public BoardView(Board board, MakeMoveController makeMoveController, MakeMoveViewModel makeMoveViewModel,
                      HighlightController highlightController, HighlightViewModel highlightViewModel,
@@ -140,6 +140,7 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
         add(leftPanel, BorderLayout.WEST);
         add(bottomPanel, BorderLayout.SOUTH);
 
+        startGetMoveThread();
     }
 
     @Override
@@ -231,13 +232,38 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                     makeMoveController.execute(move, clickedButton);
                 }finally {
                     checkGameEndsController.execute(move);
-                    getMoveController.execute();
-                    checkGameEndsController.execute(apiMove);
+                    flipTurn();
                 }
             } else {
                 unhighlight(buttonList);
                 this.previousMove = null;
             }
+        }
+    }
+
+    private void startGetMoveThread() {
+        Thread getMoves = new Thread(()-> {
+            while (true) {
+                if (!usersColour.equals(turn)) {
+                    getMoveController.execute();
+                    checkGameEndsController.execute(apiMove);
+                    flipTurn();
+                }
+                try {
+                    Thread.sleep(20);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        getMoves.start();
+    }
+
+    private void flipTurn() {
+        if (turn.equals("white")) {
+            turn = "black";
+        } else {
+            turn = "white";
         }
     }
 

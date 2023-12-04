@@ -140,86 +140,90 @@ public class GetMoveInteractor implements GetMoveInputBoundary{
         // Get move from API
         String apiMove = getMoveDataAccessObeject.getMoveAfter(board.getMovenumber());
 
-        // translate api response - Origin
-        ArrayList<Integer> origin = new ArrayList<>();
-        Integer originFirstCoordinate = apiMove.charAt(0) - 'a' + 1;
-        origin.add(originFirstCoordinate);
-        Integer originSecondCoordinate = Integer.parseInt(apiMove.substring(1, 2));
-        origin.add(originSecondCoordinate);
-        // get moving piece
-        Piece movingPiece = board.getBoardstate().get(origin);
+        System.out.println("got api move: " + apiMove);
 
-        // translate api response - Destination
-        ArrayList<Integer> destination = new ArrayList<>();
-        Integer destinationFirstCoordinate = apiMove.charAt(2) - 'a' + 1;
-        destination.add(destinationFirstCoordinate);
-        Integer destinationSecondCoordinate = Integer.parseInt(apiMove.substring(3, 4));
-        destination.add(destinationSecondCoordinate);
-        System.out.println(destination.isEmpty());
+        if (apiMove != null && !apiMove.isEmpty()) {
 
-        // initialize a move
-        Move move = new Move(movingPiece, origin, destination);
+            // translate api response - Origin
+            ArrayList<Integer> origin = new ArrayList<>();
+            Integer originFirstCoordinate = apiMove.charAt(0) - 'a' + 1;
+            origin.add(originFirstCoordinate);
+            Integer originSecondCoordinate = Integer.parseInt(apiMove.substring(1, 2));
+            origin.add(originSecondCoordinate);
+            // get moving piece
+            Piece movingPiece = board.getBoardstate().get(origin);
 
-        Move[] moves = movingPiece.getValidMoves(origin, board.getBoardstate(), board.getLastmove());
-        for (Move m : moves){
-            if (m.getDestination() == destination){
-                move = m;
-            }
-        }
-        // check if is castle
-        if (move.getIsCastle()){
-            Piece movingKing = movingPiece;
-            ChessButton rookToAdd = new ChessButton();
-            ChessButton rookToRemove = new ChessButton();
-            if (movingKing.getColor().equals("white")){
-                if (destinationFirstCoordinate == 7){
-                    rookToAdd.setCoord(6, 1);
-                    rookToRemove.setCoord(8, 1);
-                } else {
-                    rookToAdd.setCoord(4, 1);
-                    rookToRemove.setCoord(1, 1);
-                }
-            } else {
-                if (destinationFirstCoordinate == 7){
-                    rookToAdd.setCoord(6, 8);
-                    rookToRemove.setCoord(8, 8);
-                } else {
-                    rookToAdd.setCoord(4, 8);
-                    rookToRemove.setCoord(1, 8);
+            // translate api response - Destination
+            ArrayList<Integer> destination = new ArrayList<>();
+            Integer destinationFirstCoordinate = apiMove.charAt(2) - 'a' + 1;
+            destination.add(destinationFirstCoordinate);
+            Integer destinationSecondCoordinate = Integer.parseInt(apiMove.substring(3, 4));
+            destination.add(destinationSecondCoordinate);
+            System.out.println(destination.isEmpty());
+
+            // initialize a move
+            Move move = new Move(movingPiece, origin, destination);
+
+            Move[] moves = movingPiece.getValidMoves(origin, board.getBoardstate(), board.getLastmove());
+            for (Move m : moves) {
+                if (m.getDestination() == destination) {
+                    move = m;
                 }
             }
-            move.setRookAdded(rookToAdd);
-            move.setRookRemoved(rookToRemove);
-        }
-
-        // check if is promotion
-        if (apiMove.length() == 5) {
-            move.setIsPromotion();
-
-            // check promotion detail
-            String piecePromotedTo = "";
-            char promotion = apiMove.charAt(4);
-            if (promotion == 'q'){
-                piecePromotedTo = "Queen";
-            } else if (promotion == 'r') {
-                piecePromotedTo = "Rook";
-            } else if (promotion == 'k') {
-                piecePromotedTo = "Knight";
-            } else if (promotion == 'b') {
-                piecePromotedTo = "Bishop";
+            // check if is castle
+            if (move.getIsCastle()) {
+                Piece movingKing = movingPiece;
+                ChessButton rookToAdd = new ChessButton();
+                ChessButton rookToRemove = new ChessButton();
+                if (movingKing.getColor().equals("white")) {
+                    if (destinationFirstCoordinate == 7) {
+                        rookToAdd.setCoord(6, 1);
+                        rookToRemove.setCoord(8, 1);
+                    } else {
+                        rookToAdd.setCoord(4, 1);
+                        rookToRemove.setCoord(1, 1);
+                    }
+                } else {
+                    if (destinationFirstCoordinate == 7) {
+                        rookToAdd.setCoord(6, 8);
+                        rookToRemove.setCoord(8, 8);
+                    } else {
+                        rookToAdd.setCoord(4, 8);
+                        rookToRemove.setCoord(1, 8);
+                    }
+                }
+                move.setRookAdded(rookToAdd);
+                move.setRookRemoved(rookToRemove);
             }
 
-            // finalizing promotion
-            Piece piece = new PieceBuilder().create(piecePromotedTo, movingPiece.getColor());
-            move.setPiecePromotedTo(piece);
+            // check if is promotion
+            if (apiMove.length() == 5) {
+                move.setIsPromotion();
+
+                // check promotion detail
+                String piecePromotedTo = "";
+                char promotion = apiMove.charAt(4);
+                if (promotion == 'q') {
+                    piecePromotedTo = "Queen";
+                } else if (promotion == 'r') {
+                    piecePromotedTo = "Rook";
+                } else if (promotion == 'k') {
+                    piecePromotedTo = "Knight";
+                } else if (promotion == 'b') {
+                    piecePromotedTo = "Bishop";
+                }
+
+                // finalizing promotion
+                Piece piece = new PieceBuilder().create(piecePromotedTo, movingPiece.getColor());
+                move.setPiecePromotedTo(piece);
+            }
+
+            // make move
+            board.makeMove(move);
+
+            // wrap output data
+            GetMoveOutputData getMoveOutputData = new GetMoveOutputData(move);
+            getMovePresenter.prepareSuccessView(getMoveOutputData);
         }
-
-        // make move
-        board.makeMove(move);
-
-        // wrap output data
-        GetMoveOutputData getMoveOutputData = new GetMoveOutputData(move);
-        getMovePresenter.prepareSuccessView(getMoveOutputData);
-
     }
 }
