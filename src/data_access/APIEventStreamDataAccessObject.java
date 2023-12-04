@@ -36,16 +36,6 @@ public class APIEventStreamDataAccessObject implements ChallengeAIDataAccessInte
     private final ObjectMapper objectMapper;
     private final List<Map<String, Object>> events = new ArrayList<>();
 
-    public static void main(String[] args) {
-        APIChallengeDataAccessObject apiChallengeDataAccessObject = new APIChallengeDataAccessObject();
-
-        String gameID = apiChallengeDataAccessObject.challengeAI("white", 1);
-
-        APIEventStreamDataAccessObject dao = new APIEventStreamDataAccessObject();
-
-        System.out.println(dao.getChallengeInfo(gameID));
-    }
-
     public APIEventStreamDataAccessObject() {
         objectMapper = new ObjectMapper();
         try {

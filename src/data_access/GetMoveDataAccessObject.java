@@ -44,10 +44,6 @@ public class GetMoveDataAccessObject implements GetMoveDataAccessInterface {
         newThreadBoardStream();
     }
 
-    public static void main(final String[] args) {
-
-    }
-
     /**
      * Returns true if the API has already returned the move that would follow.
      * Call this if you don't want to potentially get stuck in a loop after calling getMoveAfter().
