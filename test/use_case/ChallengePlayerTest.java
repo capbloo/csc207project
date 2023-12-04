@@ -19,15 +19,29 @@ public class ChallengePlayerTest {
     @org.junit.Test
     public void challenge_playerTest(){
         ChallengePlayerViewModel challengePlayerViewModel = new ChallengePlayerViewModel();
-        ChallengePlayerOutputBoundary challengePlayerpresenter = new ChallengePlayerPresenter(challengePlayerViewModel);
-        ChallengePlayerDataAccessInterface challengePlayerDataAccessInterface = new APIChallengeDataAccessObject();
-        ChallengePlayerDataAccessInterface2 challengePlayerDataAccessInterface2 = new APIEventStreamDataAccessObject();
-
-        ChallengePlayerInteractor challengePlayerInteractor = new ChallengePlayerInteractor(challengePlayerpresenter, challengePlayerDataAccessInterface, challengePlayerDataAccessInterface2);
+        ChallengePlayerOutputBoundary challengePlayerPresenter = new ChallengePlayerPresenter(challengePlayerViewModel);
+        ChallengePlayerDataAccessInterface challengePlayerDataAccessInterface = new TestingAPIChallengeDAO();
         ChallengePlayerInputData challengePlayerInputData = new ChallengePlayerInputData("John","white");
+        ChallengePlayerDataAccessInterface2 challengePlayerDataAccessInterface2 = new TestingAPIEventStreamDAO("white");
+
+        ChallengePlayerInteractor challengePlayerInteractor = new ChallengePlayerInteractor(challengePlayerPresenter, challengePlayerDataAccessInterface, challengePlayerDataAccessInterface2);
         challengePlayerInteractor.execute(challengePlayerInputData);
 
         assertEquals("white", challengePlayerViewModel.getState().getColor());
+
+    }
+    @org.junit.Test
+    public void challenge_playerTest_decline(){
+        ChallengePlayerViewModel challengePlayerViewModel = new ChallengePlayerViewModel();
+        ChallengePlayerOutputBoundary challengePlayerPresenter = new ChallengePlayerPresenter(challengePlayerViewModel);
+        ChallengePlayerDataAccessInterface challengePlayerDataAccessInterface = new TestingAPIChallengeDAO();
+        ChallengePlayerInputData challengePlayerInputData = new ChallengePlayerInputData("John","white");
+        ChallengePlayerDataAccessInterface2 challengePlayerDataAccessInterface2 = new TestingAPIEventStreamDAO("decline");
+
+        ChallengePlayerInteractor challengePlayerInteractor = new ChallengePlayerInteractor(challengePlayerPresenter, challengePlayerDataAccessInterface, challengePlayerDataAccessInterface2);
+        challengePlayerInteractor.execute(challengePlayerInputData);
+
+        assertNull(challengePlayerViewModel.getState().getColor());
 
     }
 }

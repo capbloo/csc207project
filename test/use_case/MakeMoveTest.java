@@ -2,7 +2,6 @@ package use_case;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import entity.*;
 
@@ -68,7 +67,7 @@ public class MakeMoveTest {
 
         MakeMoveInputData makeMoveInputData = new MakeMoveInputData(move, chessButton);
 
-        MakeMoveDataAccessInterface makeMoveDataAccessInterface = null;
+        MakeMoveDataAccessInterface makeMoveDataAccessInterface = new TestingMakeMoveDAO();
         MakeMoveViewModel makeMoveViewModel = new MakeMoveViewModel();
         MakeMoveOutputBoundary makeMovePresenter = new MakeMovePresenter(makeMoveViewModel);
 
@@ -77,6 +76,8 @@ public class MakeMoveTest {
 
         assertTrue(board.getBoardstate().get(coords(4,3)) instanceof Pawn);
         assertNull(board.getBoardstate().get(coords(4,2)));
+        TestingMakeMoveDAO testingMakeMoveDAO = (TestingMakeMoveDAO) makeMoveDataAccessInterface;
+        assertEquals(move, testingMakeMoveDAO.getReceivedmove());
 
     }
 }

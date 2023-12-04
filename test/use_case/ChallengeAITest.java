@@ -19,11 +19,11 @@ public class ChallengeAITest {
     public void challenge_aiTest(){
         ChallengeAIViewModel challengeAIViewModel = new ChallengeAIViewModel();
         ChallengeAIOutputBoundary challengeAIpresenter = new ChallengeAIPresenter(challengeAIViewModel);
-        ChallengeAIDataAccessInterface challengeAIDataAccessInterface = new APIChallengeDataAccessObject();
-        ChallengeAIDataAccessInterface2 challengeAIDataAccessInterface2 = new APIEventStreamDataAccessObject();
+        ChallengeAIDataAccessInterface challengeAIDataAccessInterface = new TestingAPIChallengeDAO();
+        ChallengeAIInputData challengeAIInputData = new ChallengeAIInputData(1,"white");
+        ChallengeAIDataAccessInterface2 challengeAIDataAccessInterface2 = new TestingAPIEventStreamDAO(challengeAIInputData.getColor());
 
         ChallengeAIInteractor challengeAIInteractor = new ChallengeAIInteractor(challengeAIpresenter, challengeAIDataAccessInterface, challengeAIDataAccessInterface2);
-        ChallengeAIInputData challengeAIInputData = new ChallengeAIInputData(1,"white");
         challengeAIInteractor.execute(challengeAIInputData);
 
         assertEquals("white", challengeAIViewModel.getState().getColor());
