@@ -287,7 +287,6 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                     makeMoveController.execute(move, clickedButton);
                     checkGameEndsController.execute(move);
                     flipTurn();
-                }
             } else {
                 unhighlight(buttonList);
                 this.previousMove = null;
