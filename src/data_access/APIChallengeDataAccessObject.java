@@ -30,13 +30,6 @@ public class APIChallengeDataAccessObject implements ChallengeAIDataAccessInterf
         }
     }
 
-    public static void main(String[] args) {
-        APIChallengeDataAccessObject apiChallengeDataAccessObject = new APIChallengeDataAccessObject();
-
-        System.out.println(apiChallengeDataAccessObject.challengeAI("white", 3));
-        System.out.println(apiChallengeDataAccessObject.challengePlayer("white", "capbloo"));
-    }
-
     /** Send a challenge to the Lichess AI.
      * @param color Starting color for our side: either "black", "white", or "random".
      * @param difficulty Desired difficulty of the AI, as an integer from 1 to 8.
