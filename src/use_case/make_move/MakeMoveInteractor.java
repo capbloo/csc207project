@@ -52,8 +52,11 @@ public class MakeMoveInteractor implements MakeMoveInputBoundary {
         // push move to API if its valid
         makeMoveDataAccessObject.pushMove(move);
 
-        MakeMoveOutputData makeMoveOutputData = new MakeMoveOutputData(move, makeMoveInputData.getClickedButton());
+        MakeMoveOutputData makeMoveOutputData = new MakeMoveOutputData(move);
         makeMovePresenter.prepareSuccessView(makeMoveOutputData);
+
+
+
 
     }
 }

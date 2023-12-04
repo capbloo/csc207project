@@ -19,8 +19,6 @@ public class MakeMovePresenter implements MakeMoveOutputBoundary {
     public void prepareSuccessView(MakeMoveOutputData makeMoveOutputData) {
         MakeMoveState state = makeMoveViewModel.getState();
 
-        ChessButton clickedButton = makeMoveOutputData.getClickedButton();
-        state.setClickedButton(clickedButton);
         state.setMove(makeMoveOutputData.getMove());
 
         makeMoveViewModel.firePropertyChanged();
