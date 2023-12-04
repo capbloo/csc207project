@@ -13,17 +13,7 @@ public class MakeMoveState {
     private HashMap<ArrayList<Integer>, Piece> boardState;
 
     private Move move;
-
-    public MakeMoveState(MakeMoveState copy) {
-        this.boardState = copy.getBoardstate();
-    }
-
-    public MakeMoveState() {
-    }
-
-
-
-
+    public MakeMoveState() {}
     public void setMove(Move move) {
         this.move = move;
     }
@@ -34,7 +24,4 @@ public class MakeMoveState {
 
     public HashMap<ArrayList<Integer>, Piece> getBoardstate() {
         return boardState;
-    }
-}
-
-
+    }}

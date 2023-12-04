@@ -8,14 +8,6 @@ public class ViewManagerModel {
 
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
-    public String getCurrentView() {
-        return currentViewName;
-    }
-
-    public void setCurrentView(String newView) {
-        this.currentViewName = newView;
-    }
-
     public void firePropertyChanged() {
         support.firePropertyChange("view", null, this.currentViewName);
     }

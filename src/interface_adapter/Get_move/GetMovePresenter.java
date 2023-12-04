@@ -13,9 +13,7 @@ public class GetMovePresenter implements GetMoveOutputBoundary {
 
     public void prepareSuccessView(GetMoveOutputData getMoveOutputData) {
         GetMoveState state = getMoveViewModel.getState();
-
         state.setMove(getMoveOutputData.getMove());
-
         getMoveViewModel.firePropertyChanged();
     }
 
