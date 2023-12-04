@@ -10,7 +10,6 @@ import java.util.HashMap;
 
 public class MakeMoveState {
 
-    private ChessButton clickedButton;
     private HashMap<ArrayList<Integer>, Piece> boardState;
 
     private Move move;
@@ -22,15 +21,6 @@ public class MakeMoveState {
     public MakeMoveState() {
     }
 
-
-
-    public void setClickedButton(ChessButton clickedButton) {
-        this.clickedButton = clickedButton;
-    }
-
-    public ChessButton getClickedButton() {
-        return clickedButton;
-    }
 
 
 
