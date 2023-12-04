@@ -27,6 +27,7 @@ import view.MenuView;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.plaf.basic.BasicComboBoxRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -76,6 +77,8 @@ public class PracticeWithAIView implements MenuView, ActionListener, PropertyCha
             colorComboBox = new JComboBox<>(colors);
             contentPanel.add(new JLabel("Select Color: "));
             contentPanel.add(colorComboBox);
+            // Set the custom renderer to change text color
+            colorComboBox.setRenderer(new CustomComboBoxRenderer());
             colorComboBox.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -85,10 +88,12 @@ public class PracticeWithAIView implements MenuView, ActionListener, PropertyCha
             });
 
             // Create a JComboBox for selecting difficulty levels
-            String[] difficultyLevels = {"LV. 1", "LV. 2", "LV. 3", "LV. 4", "LV. 5", "LV.6", "LV. 7", "LV. 8"};
+            String[] difficultyLevels = {"LV. 1", "LV. 2", "LV. 3", "LV. 4", "LV. 5", "LV. 6", "LV. 7", "LV. 8"};
             difficultyComboBox = new JComboBox<>(difficultyLevels);
             contentPanel.add(new JLabel("Select Difficulty: "));
             contentPanel.add(difficultyComboBox);
+            // Set the custom renderer to change text color
+            difficultyComboBox.setRenderer(new CustomComboBoxRenderer());
             difficultyComboBox.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -175,6 +180,23 @@ public class PracticeWithAIView implements MenuView, ActionListener, PropertyCha
             gameID = state.getGameID();
             color2 = state.getColor();
             System.out.println("Game Started");
+        }
+    }
+
+    private class CustomComboBoxRenderer extends BasicComboBoxRenderer {
+        @Override
+        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+
+            // Set the text color to black
+            setForeground(Color.BLACK);
+            // Set the background color to white
+            setBackground(Color.WHITE);
+            // Set the custom font
+            Font customFont = new Font("Bell MT", Font.BOLD, 16);
+            setFont(customFont);
+
+            return this;
         }
     }
 }

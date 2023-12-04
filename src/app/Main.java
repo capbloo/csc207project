@@ -10,7 +10,6 @@ public class Main {
         try {
             // Set Nimbus look and feel
             UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-
             // Set dark mode colors
             UIManager.put("nimbusBase", new Color(18, 30, 49));
             UIManager.put("nimbusBlueGrey", new Color(18, 30, 49));
