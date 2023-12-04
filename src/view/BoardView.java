@@ -68,6 +68,7 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
         getMoveViewModel.addPropertyChangeListener(this);
         //highlightViewModel.addPropertyChangeListener(this);
         pieceBuilder = new PieceBuilder();
+        UIManager.put("text", Color.BLACK);
 
         setBounds(1000, 1000, 1000, 1000);
         setLayout(new BorderLayout());
@@ -354,8 +355,10 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                 }
                 if (state.getwin()) {
                     JOptionPane.showMessageDialog(this, color + " win!");
+                    System.exit(0);
                 } else if (state.getstale()) {
                     JOptionPane.showMessageDialog(this, "It's a tie");
+                    System.exit(0);
                 }
                 System.out.println("not end");
             } else if (e.getPropertyName().equals(("MakeMove"))){
