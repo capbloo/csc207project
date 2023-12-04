@@ -9,14 +9,7 @@ public class ChallengePlayerState {
     private String gameID;
 
     private String color;
-
-    public ChallengePlayerState(ChallengePlayerState copy){
-        this.gameID = copy.gameID;
-        this.color = copy.color;
-    }
-
     public ChallengePlayerState() {};
-
     public void setColor(String color) {
         this.color = color;
     }
@@ -28,7 +21,6 @@ public class ChallengePlayerState {
     public String getColor() {
         return color;
     }
-
     public String getGameID() {
         return gameID;
     }

@@ -12,18 +12,9 @@ public class GetMoveState {
 
     private Move move;
 
-    public GetMoveState(MakeMoveState copy) {
-        this.boardState = copy.getBoardstate();
-    }
-
-    public GetMoveState(){
-
-    }
-
+    public GetMoveState(){}
     public void setMove(Move move) {this.move = move;}
-
     public Move getMove() {return move;}
-
     public HashMap<ArrayList<Integer>, Piece> getBoardstate() {
         return boardState;
     }

@@ -7,9 +7,10 @@ public class ChallengePlayerPresenter implements ChallengePlayerOutputBoundary {
 
     private final ChallengePlayerViewModel challengePlayerViewModel;
 
-    public ChallengePlayerPresenter(ChallengePlayerViewModel challengePlayerViewModel){
+    public ChallengePlayerPresenter(ChallengePlayerViewModel challengePlayerViewModel) {
         this.challengePlayerViewModel = challengePlayerViewModel;
     }
+
     @Override
     public void prepareGame(ChallengePlayerOutputData challengePlayerOutputData) {
         ChallengePlayerState challengePlayerState = challengePlayerViewModel.getState();
@@ -22,6 +23,5 @@ public class ChallengePlayerPresenter implements ChallengePlayerOutputBoundary {
 
     @Override
     public void cancelGame() {
-
     }
 }

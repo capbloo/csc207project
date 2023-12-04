@@ -60,9 +60,6 @@ public class Board {
 
 
     }
-    public void setLastmove(Move lastmove) {
-        this.lastmove = lastmove;
-    }
 
     public void setBoardstate(HashMap<ArrayList<Integer>, Piece> boardstates){
         this.boardstate = boardstates;
@@ -73,14 +70,6 @@ public class Board {
     }
     public Move getLastmove() {
         return lastmove;
-    }
-
-    public HashMap<ArrayList<Integer>, Boolean> getHighLights() {
-        return highlights;
-    }
-
-    public void setHighLights(ArrayList<Integer> pos, boolean ishigh) {
-        this.highlights.put(pos, ishigh);
     }
 
     public int getMovenumber() {
@@ -103,20 +92,7 @@ public class Board {
             boardstate.remove(capture);
             boardstate.put(des, piece);
         }
-        else if (move.getIsEnPassant()) {
-            // move the pawn
-            boardstate.put(des, piece);
-            // get the coordinates of the piece being captured by the en passant
-            ArrayList<Integer> coordToRemove = new ArrayList<>();
-            coordToRemove.add(des.get(0));
-            if (piece.getColor().equals("white")) {
-                coordToRemove.add(des.get(1) - 1);
-            } else {
-                coordToRemove.add(des.get(1) + 1);
-            }
-            // remove the piece captured by the en passant from the boardState
-            boardstate.remove(coordToRemove);
-        }
+
         else if (move.getIsPromotion()) {
             Piece queen = builder.create("Queen", piece.getColor());
             boardstate.put(des, queen);
