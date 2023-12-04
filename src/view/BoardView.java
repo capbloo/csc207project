@@ -49,6 +49,7 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
     private final String usersColour;
     private Move apiMove;
     private volatile String turn = "white";
+    private ChessButton[] enemyHighlights;
 
     public BoardView(Board board, MakeMoveController makeMoveController, MakeMoveViewModel makeMoveViewModel,
                      HighlightController highlightController, HighlightViewModel highlightViewModel,
@@ -344,6 +345,41 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
         return false;
     }
 
+    public void enemyHighlight() {
+        ChessButton org = enemyHighlights[0];
+        ChessButton des = enemyHighlights[1];
+        org.setBackground(new Color(173,216,230));
+        org.setOpaque(true);
+        org.setBorderPainted(false);
+
+        des.setBackground(new Color(173,216,230));
+        des.setOpaque(true);
+        des.setBorderPainted(false);
+    }
+
+    public void enemyUnhighlight() {
+        ChessButton org = enemyHighlights[0];
+        ChessButton des = enemyHighlights[1];
+        if (org.getSquareColor().equals("green")) {
+            org.setBackground(new Color(69, 75, 27));
+            org.setOpaque(true);
+            org.setBorderPainted(false);
+        } else if (org.getSquareColor().equals("white")) {
+            org.setBackground(Color.lightGray);
+            org.setOpaque(true);
+            org.setBorderPainted(false);
+        }
+        if (des.getSquareColor().equals("green")) {
+            des.setBackground(new Color(69, 75, 27));
+            des.setOpaque(true);
+            des.setBorderPainted(false);
+        } else if (des.getSquareColor().equals("white")) {
+            des.setBackground(Color.lightGray);
+            des.setOpaque(true);
+            des.setBorderPainted(false);
+        }
+    }
+
     public void propertyChange(PropertyChangeEvent e) {
             if (e.getPropertyName().equals("CheckGameEnds")) {
                 CheckGameEndsState state = (CheckGameEndsState) e.getNewValue();
@@ -393,7 +429,6 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                     destination.setText(apiMove.getPieceMoving().toString());
                     destination.setPiece(apiMove.getPieceMoving().symbolToString());
                     destination.setPieceColour(apiMove.getPieceMoving().getColor());
-
                 }
                 else if (apiMove.getIsPromotion()){
                     buttonList.get(apiMove.getDestination()).setText(apiMove.getPiecePromotedTo().toString());
@@ -409,6 +444,8 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                     destination.setText(apiMove.getPieceMoving().toString());
                     destination.setPieceColour(apiMove.getPieceMoving().getColor());
                     destination.setPiece(apiMove.getPieceMoving().symbolToString());
+                    enemyHighlights = new ChessButton[]{buttonList.get(apiMove.getOrigin()), destination};
+                    enemyHighlight();
                 }
 
                 destination.setFont(f);
