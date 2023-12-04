@@ -35,8 +35,10 @@ public class RulesView implements MenuView {
                     "These are just basic rules. Enjoy your game!");
 
             rulesTextArea.setEditable(false);
+            rulesTextArea.setBackground(new Color(18, 30, 49)); // Set the background color
+            rulesTextArea.setForeground(Color.WHITE); // Set the text color
             JScrollPane rulesScrollPane = new JScrollPane(rulesTextArea);
-            rulesScrollPane.setPreferredSize(new Dimension(500, 250)); // Set the preferred size here
+            rulesScrollPane.setPreferredSize(new Dimension(600, 250)); // Set the preferred size here
 
             // YouTube Tutorial Link
             JEditorPane youtubeLinkPane = new JEditorPane("text/html", "<html><a href=\"https://www.youtube.com/watch?v=6Pqd7UFWr7M\">Chess Tutorial from wikiHow</a></html>");
@@ -67,7 +69,7 @@ public class RulesView implements MenuView {
 
             // Buttons panel
             JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 20));
-            JButton goBackButton = new JButton("Understood!, I'm ready to play some chess!");
+            JButton goBackButton = new JButton("Understood! Let's Play!");
             goBackButton.setPreferredSize(new Dimension(300, 50));
             goBackButton.addActionListener(e -> {
                 close();
@@ -80,7 +82,7 @@ public class RulesView implements MenuView {
             frame.getContentPane().setLayout(new BorderLayout());
             frame.getContentPane().add(mainPanel, BorderLayout.CENTER);
             frame.getContentPane().add(buttonsPanel, BorderLayout.SOUTH);
-            frame.setSize(600, 500);
+            frame.setSize(700, 530);
             frame.revalidate();
             frame.repaint();
             frame.setVisible(true);

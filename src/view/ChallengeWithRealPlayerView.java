@@ -65,7 +65,7 @@ public class ChallengeWithRealPlayerView implements MenuView, ActionListener, Pr
 
             // Title
             JLabel titleLabel = new JLabel("Welcome! Who are you challenging today?");
-            titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
+            titleLabel.setFont(new Font("Bell MT", Font.BOLD, 20));
             titleLabel.setHorizontalAlignment(JLabel.CENTER);
             panel.add(titleLabel, BorderLayout.NORTH);
 

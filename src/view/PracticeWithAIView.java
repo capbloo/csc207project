@@ -65,7 +65,7 @@ public class PracticeWithAIView implements MenuView, ActionListener, PropertyCha
 
             // Title
             JLabel titleLabel = new JLabel("Welcome! Let's match you with an AI!");
-            titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
+            titleLabel.setFont(new Font("Bell MT", Font.BOLD, 20));
             titleLabel.setHorizontalAlignment(JLabel.CENTER);
             panel.add(titleLabel, BorderLayout.NORTH);
 
@@ -77,19 +77,17 @@ public class PracticeWithAIView implements MenuView, ActionListener, PropertyCha
             contentPanel.add(new JLabel("Select Color: "));
             contentPanel.add(colorComboBox);
             colorComboBox.addActionListener(new ActionListener() {
-                                                @Override
-                                                public void actionPerformed(ActionEvent e) {
-                                                    color = colorComboBox.getSelectedIndex();
-                                                    System.out.println("Set color to" + color);
-                                                }
-                                            }
-            );
-
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    color = colorComboBox.getSelectedIndex();
+                    System.out.println("Set color to" + color);
+                }
+            });
 
             // Create a JComboBox for selecting difficulty levels
             String[] difficultyLevels = {"LV. 1", "LV. 2", "LV. 3", "LV. 4", "LV. 5", "LV.6", "LV. 7", "LV. 8"};
             difficultyComboBox = new JComboBox<>(difficultyLevels);
-            contentPanel.add(new JLabel("select Difficulty: "));
+            contentPanel.add(new JLabel("Select Difficulty: "));
             contentPanel.add(difficultyComboBox);
             difficultyComboBox.addActionListener(new ActionListener() {
                 @Override
