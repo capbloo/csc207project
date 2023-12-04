@@ -100,7 +100,7 @@ public class Board {
         // checking for en passant, promotion, or castle
         if (move.getIsPieceCaptured()){
             ArrayList<Integer> capture = move.getPieceCaptureLocation();
-            boardstate.remove(capture);
+            boardstate.put(capture, null);
             boardstate.put(des, piece);
         }
         else if (move.getIsEnPassant()) {
@@ -115,7 +115,7 @@ public class Board {
                 coordToRemove.add(des.get(1) + 1);
             }
             // remove the piece captured by the en passant from the boardState
-            boardstate.remove(coordToRemove);
+            boardstate.put(coordToRemove, null);
         }
         else if (move.getIsPromotion()) {
             Piece queen = builder.create("Queen", piece.getColor());
@@ -134,12 +134,12 @@ public class Board {
             ArrayList<Integer> coordOfRookRemoved = new ArrayList<>();
             coordOfRookRemoved.add(move.getRookRemoved().getRow());
             coordOfRookRemoved.add(move.getRookRemoved().getCol());
-            boardstate.remove(coordOfRookRemoved);
+            boardstate.put(coordOfRookRemoved, null);
         }
         else {
             boardstate.put(des, piece);
         }
-        boardstate.remove(org);
+        boardstate.put(org, null);
         lastmove = move;
     }
         
