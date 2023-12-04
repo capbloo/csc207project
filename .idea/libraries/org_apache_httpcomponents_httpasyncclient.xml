@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="fasterxml.jackson.core" type="repository">
+  <library name="org.apache.httpcomponents:httpasyncclient" type="repository">
     <properties maven-id="com.fasterxml.jackson.core:jackson-core:2.14.2" />
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/lib/jackson-core-2.14.2.jar!/" />

@@ -8,6 +8,9 @@ import entity.ChessButton;
 import interface_adapter.CheckGameEnds.CheckGameEndsController;
 import interface_adapter.CheckGameEnds.CheckGameEndsState;
 import interface_adapter.CheckGameEnds.CheckGameEndsViewModel;
+import interface_adapter.Get_move.GetMoveController;
+import interface_adapter.Get_move.GetMoveState;
+import interface_adapter.Get_move.GetMoveViewModel;
 import interface_adapter.HighlightSquare.HighlightViewModel;
 import interface_adapter.make_move.MakeMoveController;
 import interface_adapter.make_move.MakeMoveState;
@@ -22,6 +25,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 public class BoardView extends JFrame implements ActionListener, PropertyChangeListener {
@@ -34,88 +38,161 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
     private CheckGameEndsViewModel checkGameEndsViewModel;
 
     private CheckGameEndsController checkGameEndsController;
+
+    private GetMoveViewModel getMoveViewModel;
+
+    private GetMoveController getMoveController;
+
     private ChessButton previousMove;
     private PieceBuilder pieceBuilder;
     private static HashMap<ArrayList<Integer>, ChessButton> buttonList = new HashMap<>();
-//    private final String usersColour;
-
+    private final String usersColour;
+    private Move apiMove;
+    private volatile String turn = "white";
+    private ChessButton[] enemyHighlights;
 
     public BoardView(Board board, MakeMoveController makeMoveController, MakeMoveViewModel makeMoveViewModel,
                      HighlightController highlightController, HighlightViewModel highlightViewModel,
-                     CheckGameEndsController checkGameEndsController, CheckGameEndsViewModel checkGameEndsViewModel) {
+                     CheckGameEndsController checkGameEndsController, CheckGameEndsViewModel checkGameEndsViewModel, String usersColour,
+                     GetMoveViewModel getMoveViewModel, GetMoveController getMoveController) {
+        this.usersColour = usersColour;
         this.makeMoveController = makeMoveController;
         this.makeMoveViewModel = makeMoveViewModel;
         this.highlightController = highlightController;
         this.highlightViewModel = highlightViewModel;
         this.checkGameEndsController = checkGameEndsController;
         this.checkGameEndsViewModel = checkGameEndsViewModel;
+        this.getMoveViewModel = getMoveViewModel;
+        this.getMoveController = getMoveController;
         makeMoveViewModel.addPropertyChangeListener(this);
         checkGameEndsViewModel.addPropertyChangeListener(this);
+        getMoveViewModel.addPropertyChangeListener(this);
         //highlightViewModel.addPropertyChangeListener(this);
         pieceBuilder = new PieceBuilder();
+        UIManager.put("text", Color.BLACK);
 
         setBounds(1000, 1000, 1000, 1000);
         setLayout(new BorderLayout());
         JPanel pn = new JPanel(new GridLayout(8, 8));
         setBounds(800, 800, 800, 800);
         boolean iswhite = true;
-        for (int y = 8; y > 0; y--) {
-            for (int x = 0; x < 8; x++) {
+        if (usersColour.equals("white")) {
+            for (int y = 8; y > 0; y--) {
+                for (int x = 0; x < 8; x++) {
 
-                ChessButton block = new ChessButton();
-                pn.add(block);
-                block.setBounds(x * 64, y * 64, 64, 64);
-                ArrayList<Integer> pos1 = new ArrayList<Integer>();
-                pos1.add(x + 1);
+                    ChessButton block = new ChessButton();
+                    pn.add(block);
+                    block.setBounds(x * 64, y * 64, 64, 64);
+                    ArrayList<Integer> pos1 = new ArrayList<Integer>();
+                    pos1.add(x + 1);
 
-              
-                ArrayList<Integer> coord = new ArrayList<>();
-                coord.add(x + 1);
-                coord.add(y);
-                buttonList.put(coord, block);
 
-                pos1.add(y);
-                block.setCoord(x + 1, y);
+                    ArrayList<Integer> coord = new ArrayList<>();
+                    coord.add(x + 1);
+                    coord.add(y);
+                    buttonList.put(coord, block);
 
-                block.addActionListener(this);
-                if (!(board.getBoardstate().get(pos1) == null)) {
-                    block.setText(board.getBoardstate().get(pos1).toString());
-                    block.setHorizontalAlignment(SwingConstants.CENTER);
-                    Font f = new Font("serif", Font.PLAIN, 60);
-                    block.setFont(f);
-                    block.setPiece(board.getBoardstate().get(pos1).symbolToString());
-                    block.setPieceColour(board.getBoardstate().get(pos1).getColor());
+                    pos1.add(y);
+                    block.setCoord(x + 1, y);
+
+                    block.addActionListener(this);
+                    if (!(board.getBoardstate().get(pos1) == null)) {
+                        block.setText(board.getBoardstate().get(pos1).toString());
+                        block.setHorizontalAlignment(SwingConstants.CENTER);
+                        Font f = new Font("serif", Font.PLAIN, 60);
+                        block.setFont(f);
+                        block.setPiece(board.getBoardstate().get(pos1).symbolToString());
+                        block.setPieceColour(board.getBoardstate().get(pos1).getColor());
+                    }
+
+                    if (iswhite) {
+                        block.setBackground(new Color(69, 75, 27));
+                        block.setOpaque(true);
+                        block.setBorderPainted(false);
+                        block.setSquareColour("green");
+                    } else {
+                        block.setBackground(Color.lightGray);
+                        block.setOpaque(true);
+                        block.setBorderPainted(false);
+                        block.setSquareColour("white");
+                    }
+
+                    iswhite = !iswhite;
                 }
-
-                if (iswhite) {
-                    block.setBackground(new Color(69, 75, 27));
-                    block.setOpaque(true);
-                    block.setBorderPainted(false);
-                    block.setSquareColour("green");
-                } else {
-                    block.setBackground(Color.lightGray);
-                    block.setOpaque(true);
-                    block.setBorderPainted(false);
-                    block.setSquareColour("white");
-                }
-
                 iswhite = !iswhite;
             }
-            iswhite = !iswhite;
+            add(pn, BorderLayout.CENTER);
         }
-        add(pn, BorderLayout.CENTER);
+        else {
+            for (int y = 0; y < 8; y++) {
+                for (int x = 8; x > 0; x--) {
+
+                    ChessButton block = new ChessButton();
+                    pn.add(block);
+                    block.setBounds(x * 64, y * 64, 64, 64);
+                    ArrayList<Integer> pos1 = new ArrayList<Integer>();
+                    pos1.add(x);
+
+
+                    ArrayList<Integer> coord = new ArrayList<>();
+                    coord.add(x);
+                    coord.add(y+1);
+                    buttonList.put(coord, block);
+
+                    pos1.add(y+1);
+                    block.setCoord(x, y+1);
+
+                    block.addActionListener(this);
+                    if (!(board.getBoardstate().get(pos1) == null)) {
+                        block.setText(board.getBoardstate().get(pos1).toString());
+                        block.setHorizontalAlignment(SwingConstants.CENTER);
+                        Font f = new Font("serif", Font.PLAIN, 60);
+                        block.setFont(f);
+                        block.setPiece(board.getBoardstate().get(pos1).symbolToString());
+                        block.setPieceColour(board.getBoardstate().get(pos1).getColor());
+                    }
+
+                    if (iswhite) {
+                        block.setBackground(new Color(69, 75, 27));
+                        block.setOpaque(true);
+                        block.setBorderPainted(false);
+                        block.setSquareColour("green");
+                    } else {
+                        block.setBackground(Color.lightGray);
+                        block.setOpaque(true);
+                        block.setBorderPainted(false);
+                        block.setSquareColour("white");
+                    }
+
+                    iswhite = !iswhite;
+                }
+                iswhite = !iswhite;
+            }
+            add(pn, BorderLayout.CENTER);
+        }
 
         JPanel bottomPanel = new JPanel(new GridLayout(1, 8));
         JPanel leftPanel = new JPanel(new GridLayout(8, 1));
         bottomPanel.setBounds(1000, 800, 800, 800);
         leftPanel.setBounds(1000, 800, 800, 800);
-        int[] numSideBar = {0, 1, 2, 3, 4, 5, 6, 7, 8};
-        String[] letterSideBar = {"x", "h", "g", "f", "e", "d", "c", "b", "a"};
+        int[] numSideBar;
+        String[] letterSideBar;
+        if (usersColour.equals("white")) {
+            numSideBar = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8};
+            letterSideBar = new String[]{"x", "h", "g", "f", "e", "d", "c", "b", "a"};
+        }
+        else {
+            numSideBar = new int[]{9, 8, 7, 6, 5, 4, 3 ,2, 1};
+            letterSideBar = new String[]{"x", "a", "b", "c", "d", "e", "f", "g", "h"};
+        }
         int i = numSideBar.length - 1;
 
+        Font labelFont = new Font("serif", Font.PLAIN, 20);
         while (i > 0) {
             JLabel bottomLabel = new JLabel(letterSideBar[i]);
+            bottomLabel.setFont(labelFont);
             JLabel leftLabel = new JLabel(String.valueOf(numSideBar[i]));
+            leftLabel.setFont(labelFont);
             bottomLabel.setHorizontalAlignment(JLabel.CENTER);
             bottomPanel.add(bottomLabel);
             leftPanel.add(leftLabel);
@@ -124,6 +201,7 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
         add(leftPanel, BorderLayout.WEST);
         add(bottomPanel, BorderLayout.SOUTH);
 
+        startGetMoveThread();
     }
 
     @Override
@@ -133,10 +211,10 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
         Integer y = clickedButton.getCol();
 
         // first if condition ensures the player is only moving their own pieces
-//        if (clickedButton.getPieceColour() != null && (!clickedButton.getPieceColour().equals(usersColour)) && previousMove == null) {
-//        return;
-//        }
-        if (clickedButton.isEmpty() && previousMove == null) {
+        if (clickedButton.getPieceColour() != null && (!clickedButton.getPieceColour().equals(usersColour)) && previousMove == null) {
+        return;
+        }
+        else if (clickedButton.isEmpty() && previousMove == null) {
             unhighlight(buttonList);
         } else if (this.previousMove == null) {
             if (!clickedButton.isEmpty()) {
@@ -203,23 +281,44 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                     rookToClear.add(destination.get(1));
                     rookToAdd.add(destination.get(1));
 
-                    ChessButton rookRemoved = buttonList.get(rookToClear);
-                    ChessButton rookAdded = buttonList.get(rookToAdd);
-                    // adding buttons to move class so the presenter can update them
-                    move.setRookAdded(rookAdded);
-                    move.setRookRemoved(rookRemoved);
+                    move.setRookAdded(rookToAdd);
+                    move.setRookRemoved(rookToClear);
 
                 }
-                try{
                     unhighlight(buttonList);
                     makeMoveController.execute(move, clickedButton);
-                }finally {
                     checkGameEndsController.execute(move);
-                }
+                    flipTurn();
             } else {
                 unhighlight(buttonList);
                 this.previousMove = null;
             }
+        }
+    }
+
+    private void startGetMoveThread() {
+        Thread getMoves = new Thread(()-> {
+            while (true) {
+                if (!usersColour.equals(turn)) {
+                    getMoveController.execute();
+                    checkGameEndsController.execute(apiMove);
+                    flipTurn();
+                }
+                try {
+                    Thread.sleep(20);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        getMoves.start();
+    }
+
+    private void flipTurn() {
+        if (turn.equals("white")) {
+            turn = "black";
+        } else {
+            turn = "white";
         }
     }
 
@@ -246,6 +345,41 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
         return false;
     }
 
+    public void enemyHighlight() {
+        ChessButton org = enemyHighlights[0];
+        ChessButton des = enemyHighlights[1];
+        org.setBackground(new Color(173,216,230));
+        org.setOpaque(true);
+        org.setBorderPainted(false);
+
+        des.setBackground(new Color(173,216,230));
+        des.setOpaque(true);
+        des.setBorderPainted(false);
+    }
+
+    public void enemyUnhighlight() {
+        ChessButton org = enemyHighlights[0];
+        ChessButton des = enemyHighlights[1];
+        if (org.getSquareColor().equals("green")) {
+            org.setBackground(new Color(69, 75, 27));
+            org.setOpaque(true);
+            org.setBorderPainted(false);
+        } else if (org.getSquareColor().equals("white")) {
+            org.setBackground(Color.lightGray);
+            org.setOpaque(true);
+            org.setBorderPainted(false);
+        }
+        if (des.getSquareColor().equals("green")) {
+            des.setBackground(new Color(69, 75, 27));
+            des.setOpaque(true);
+            des.setBorderPainted(false);
+        } else if (des.getSquareColor().equals("white")) {
+            des.setBackground(Color.lightGray);
+            des.setOpaque(true);
+            des.setBorderPainted(false);
+        }
+    }
+
     public void propertyChange(PropertyChangeEvent e) {
             if (e.getPropertyName().equals("CheckGameEnds")) {
                 CheckGameEndsState state = (CheckGameEndsState) e.getNewValue();
@@ -257,13 +391,15 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                 }
                 if (state.getwin()) {
                     JOptionPane.showMessageDialog(this, color + " win!");
+                    System.exit(0);
                 } else if (state.getstale()) {
                     JOptionPane.showMessageDialog(this, "It's a tie");
+                    System.exit(0);
                 }
                 System.out.println("not end");
-            } else {
+            } else if (e.getPropertyName().equals(("MakeMove"))){
                 MakeMoveState state = (MakeMoveState) e.getNewValue();
-                ChessButton clickedButton = state.getClickedButton();
+                ChessButton clickedButton = buttonList.get(state.getMove().getDestination());
                 Piece pieceMoving = state.getMove().getPieceMoving();
                 Move move = state.getMove();
                 Font f = new Font("serif", Font.PLAIN, 60);
@@ -281,6 +417,39 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                 }
                 previousMove.clear();
                 this.previousMove = null;
+            } else {
+                GetMoveState state = (GetMoveState) e.getNewValue();
+                apiMove = state.getMove();
+                ChessButton destination = buttonList.get(apiMove.getDestination());
+                Font f = new Font("serif", Font.PLAIN, 60);
+                // check if is promotion
+                if (apiMove.getIsEnPassant()) {
+                    ArrayList<Integer> enPassantCaptureLocation = apiMove.getPieceCaptureLocation();
+                    buttonList.get(enPassantCaptureLocation).clear();
+                    destination.setText(apiMove.getPieceMoving().toString());
+                    destination.setPiece(apiMove.getPieceMoving().symbolToString());
+                    destination.setPieceColour(apiMove.getPieceMoving().getColor());
+                }
+                else if (apiMove.getIsPromotion()){
+                    buttonList.get(apiMove.getDestination()).setText(apiMove.getPiecePromotedTo().toString());
+                    buttonList.get(apiMove.getDestination()).setFont(f);
+                    buttonList.get(apiMove.getDestination()).setPiece("Queen");
+                    buttonList.get(apiMove.getDestination()).setPieceColour(apiMove.getPiecePromotedTo().getColor());
+                }
+                // check if castle
+                else if (apiMove.getIsCastle()) {
+                    Castle(buttonList.get(apiMove.getDestination()), apiMove, f);
+                }
+                else {
+                    destination.setText(apiMove.getPieceMoving().toString());
+                    destination.setPieceColour(apiMove.getPieceMoving().getColor());
+                    destination.setPiece(apiMove.getPieceMoving().symbolToString());
+                    enemyHighlights = new ChessButton[]{buttonList.get(apiMove.getOrigin()), destination};
+                    enemyHighlight();
+                }
+
+                destination.setFont(f);
+                buttonList.get(apiMove.getOrigin()).clear();
             }
 
     }
@@ -315,24 +484,24 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
 
     }
     public void Castle(ChessButton clickedButton, Move move, Font f) {
-        ChessButton rookRemoved = move.getRookRemoved();
+        ArrayList<Integer> rookRemoved = move.getRookRemoved();
         Piece pieceMoving = move.getPieceMoving();
         String pieceSymbol = pieceMoving.toString();
-        rookRemoved.clear();
         clickedButton.setText(pieceSymbol);
-        ChessButton rookAdded = move.getRookAdded();
+        ChessButton rookToAdd = buttonList.get(move.getRookAdded());
         if (pieceMoving.getColor().equals("white")) {
-            rookAdded.setText("♖");
+            rookToAdd.setText("♖");
         }
         else {
-            rookAdded.setText("♜");
+            rookToAdd.setText("♜");
         }
-        rookAdded.setFont(f);
-        rookAdded.setPieceColour(pieceMoving.getColor());
-        rookAdded.setPiece("Rook");
+        rookToAdd.setFont(f);
+        rookToAdd.setPieceColour(pieceMoving.getColor());
+        rookToAdd.setPiece("Rook");
         clickedButton.setFont(f);
         clickedButton.setPieceColour(pieceMoving.getColor());
         clickedButton.setPiece(pieceMoving.symbolToString());
+        buttonList.get(rookRemoved).clear();
     }
 
     public void Promotion(ChessButton clickedButton, Piece pieceMoving) {

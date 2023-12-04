@@ -12,9 +12,10 @@ public class MakeMoveController {
         this.makeMoveInteractor = makeMoveInteractor;
     }
 
-    public void execute(Move move, ChessButton clickedButton) {
-        MakeMoveInputData makeMoveInputData = new MakeMoveInputData(move, clickedButton);
+    public boolean execute(Move move, ChessButton clickedButton) {
+        MakeMoveInputData makeMoveInputData = new MakeMoveInputData(move);
         makeMoveInteractor.execute(makeMoveInputData);
+        return true;
     }
 
 

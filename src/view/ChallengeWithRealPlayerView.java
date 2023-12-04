@@ -1,16 +1,18 @@
 // ChallengeWithRealPlayerView.java
 package view;
 
+import data_access.GetMoveDataAccessObject;
 import data_access.MakeMoveDataAccessObject;
 import entity.Board;
 import interface_adapter.CheckGameEnds.CheckGameEndsController;
 import interface_adapter.CheckGameEnds.CheckGameEndsPresenter;
 import interface_adapter.CheckGameEnds.CheckGameEndsViewModel;
+import interface_adapter.Get_move.GetMoveController;
+import interface_adapter.Get_move.GetMovePresenter;
+import interface_adapter.Get_move.GetMoveViewModel;
 import interface_adapter.HighlightSquare.HighlightController;
 import interface_adapter.HighlightSquare.HighlightPresenter;
 import interface_adapter.HighlightSquare.HighlightViewModel;
-import interface_adapter.challenge_ai.ChallengeAIController;
-import interface_adapter.challenge_ai.ChallengeAIViewModel;
 import interface_adapter.challenge_player.ChallengePlayerController;
 import interface_adapter.challenge_player.ChallengePlayerState;
 import interface_adapter.challenge_player.ChallengePlayerViewModel;
@@ -18,10 +20,12 @@ import interface_adapter.make_move.MakeMoveController;
 import interface_adapter.make_move.MakeMovePresenter;
 import interface_adapter.make_move.MakeMoveViewModel;
 import use_case.CheckGameEnds.CheckGameEndsInteractor;
+import use_case.Get_move.GetMoveInteractor;
 import use_case.HighlightSquare.HighlightInteractor;
 import use_case.make_move.MakeMoveInteractor;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicComboBoxRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,19 +40,16 @@ public class ChallengeWithRealPlayerView implements MenuView, ActionListener, Pr
 
     private ChallengePlayerViewModel challengePlayerViewModel;
 
-    private ChallengePlayerController challengeAIController;
+    private ChallengePlayerController challengePlayerController;
 
     private String gameID;
 
     private String color2;
 
-
-
-
     public ChallengeWithRealPlayerView(JFrame frame, ChallengePlayerController challengePlayerController, ChallengePlayerViewModel challengePlayerViewModel) {
         this.frame = frame;
         this.challengePlayerViewModel = challengePlayerViewModel;
-        this.challengeAIController = challengePlayerController;
+        this.challengePlayerController = challengePlayerController;
         challengePlayerViewModel.addPropertyChangeListener(this);
     }
 
@@ -62,7 +63,7 @@ public class ChallengeWithRealPlayerView implements MenuView, ActionListener, Pr
 
             // Title
             JLabel titleLabel = new JLabel("Welcome! Who are you challenging today?");
-            titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
+            titleLabel.setFont(new Font("Bell MT", Font.BOLD, 20));
             titleLabel.setHorizontalAlignment(JLabel.CENTER);
             panel.add(titleLabel, BorderLayout.NORTH);
 
@@ -73,6 +74,8 @@ public class ChallengeWithRealPlayerView implements MenuView, ActionListener, Pr
             colorComboBox = new JComboBox<>(colors);
             contentPanel.add(new JLabel("Select Color: "));
             contentPanel.add(colorComboBox);
+            // Set the custom renderer to change text color
+            colorComboBox.setRenderer(new CustomComboBoxRenderer());
             colorComboBox.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -85,6 +88,8 @@ public class ChallengeWithRealPlayerView implements MenuView, ActionListener, Pr
             playerNameTextField = new JTextField(20);
             contentPanel.add(new JLabel("\nEnter Player's Name: "));
             contentPanel.add(playerNameTextField);
+            // Set the custom renderer to change text color
+            playerNameTextField.setForeground(Color.BLACK); // Set the text color
             playerNameTextField.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -98,7 +103,7 @@ public class ChallengeWithRealPlayerView implements MenuView, ActionListener, Pr
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("Challenge "+ name);
-                    challengeAIController.excute(color, name);
+                    challengePlayerController.execute(color, name);
                     String playerName = playerNameTextField.getText();
                     if (!playerName.isEmpty()) {
                         JOptionPane.showMessageDialog(frame, "Starting challenge with player: " + playerName);
@@ -123,8 +128,14 @@ public class ChallengeWithRealPlayerView implements MenuView, ActionListener, Pr
                         CheckGameEndsInteractor checkGameEndsInteractor = new CheckGameEndsInteractor(checkGameEndsPresenter, board);
                         CheckGameEndsController checkGameEndsController = new CheckGameEndsController(checkGameEndsInteractor);
 
+                        GetMoveViewModel getMoveViewModel = new GetMoveViewModel();
+                        GetMovePresenter getMovePresenter = new GetMovePresenter(getMoveViewModel);
+                        GetMoveDataAccessObject getMoveDataAccessObject = new GetMoveDataAccessObject(gameID);
+                        GetMoveInteractor getMoveInteractor = new GetMoveInteractor(getMovePresenter, getMoveDataAccessObject, board);
+                        GetMoveController getMoveController = new GetMoveController(getMoveInteractor);
+
                         BoardView boardview = new BoardView(board, makeMoveController, makeMoveViewModel, highlightController, highlightViewModel
-                        ,checkGameEndsController, checkGameEndsViewModel);
+                        ,checkGameEndsController, checkGameEndsViewModel, usersColour, getMoveViewModel, getMoveController);
                         boardview.setVisible(true);
 
                     } else {
@@ -172,5 +183,22 @@ public class ChallengeWithRealPlayerView implements MenuView, ActionListener, Pr
             System.out.println("Game Started");
         }
 
+    }
+
+    private class CustomComboBoxRenderer extends BasicComboBoxRenderer {
+        @Override
+        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+
+            // Set the text color to black
+            setForeground(Color.BLACK);
+            // Set the background color to white
+            setBackground(Color.WHITE);
+            // Set the custom font
+            Font customFont = new Font("Bell MT", Font.BOLD, 16);
+            setFont(customFont);
+
+            return this;
+        }
     }
 }

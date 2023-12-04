@@ -15,8 +15,8 @@ public class Move {
     private ArrayList<Integer> origin;
     private ArrayList<Integer> destination;
 
-    private ChessButton rookRemoved;
-    private ChessButton rookAdded;
+    private ArrayList<Integer> rookRemoved;
+    private ArrayList<Integer> rookAdded;
 
     public Move(Piece pieceMoving, ArrayList<Integer> origin, ArrayList<Integer> destination) {
         this.pieceMoving = pieceMoving;
@@ -50,10 +50,10 @@ public class Move {
         pieceCaptureLocation = captureLocation;
     }
 
-    public void setRookRemoved(ChessButton rook) {
+    public void setRookRemoved(ArrayList<Integer> rook) {
         rookRemoved = rook;
     }
-    public void setRookAdded(ChessButton rook) {
+    public void setRookAdded(ArrayList<Integer> rook) {
         rookAdded = rook;
     }
 
@@ -93,11 +93,11 @@ public class Move {
         return destination;
     }
 
-    public ChessButton getRookAdded() {
+    public ArrayList<Integer> getRookAdded() {
         return rookAdded;
     }
 
-    public ChessButton getRookRemoved() {
+    public ArrayList<Integer> getRookRemoved() {
         return rookRemoved;
     }
 

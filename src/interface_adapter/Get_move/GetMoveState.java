@@ -1,40 +1,30 @@
-package interface_adapter.make_move;
+package interface_adapter.Get_move;
 
-import entity.Board;
-import entity.ChessButton;
 import entity.Move;
 import entity.Piece;
+import interface_adapter.make_move.MakeMoveState;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MakeMoveState {
-
+public class GetMoveState {
     private HashMap<ArrayList<Integer>, Piece> boardState;
 
     private Move move;
 
-    public MakeMoveState(MakeMoveState copy) {
+    public GetMoveState(MakeMoveState copy) {
         this.boardState = copy.getBoardstate();
     }
 
-    public MakeMoveState() {
+    public GetMoveState(){
+
     }
 
+    public void setMove(Move move) {this.move = move;}
 
-
-
-    public void setMove(Move move) {
-        this.move = move;
-    }
-
-    public Move getMove() {
-        return move;
-    }
+    public Move getMove() {return move;}
 
     public HashMap<ArrayList<Integer>, Piece> getBoardstate() {
         return boardState;
     }
 }
-
-

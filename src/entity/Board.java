@@ -83,6 +83,10 @@ public class Board {
         this.highlights.put(pos, ishigh);
     }
 
+    public int getMovenumber() {
+        return movenumber;
+    }
+
     public void makeMove(Move move){
         PieceBuilder builder = new PieceBuilder();
         ArrayList<Integer> org = move.getOrigin();
@@ -120,16 +124,12 @@ public class Board {
         else if (move.getIsCastle()){
             boardstate.put(des, piece);
             // adding rook to left/right of king
-            ArrayList<Integer> coordOfRookAdded = new ArrayList<>();
-            coordOfRookAdded.add(move.getRookAdded().getRow());
-            coordOfRookAdded.add(move.getRookAdded().getCol());
+            ArrayList<Integer> coordOfRookAdded = move.getRookAdded();
             Piece rook = builder.create("Rook", piece.getColor());
             boardstate.put(coordOfRookAdded, rook);
 
             // removing rook from its current position
-            ArrayList<Integer> coordOfRookRemoved = new ArrayList<>();
-            coordOfRookRemoved.add(move.getRookRemoved().getRow());
-            coordOfRookRemoved.add(move.getRookRemoved().getCol());
+            ArrayList<Integer> coordOfRookRemoved = move.getRookRemoved();
             boardstate.remove(coordOfRookRemoved);
         }
         else {
@@ -149,12 +149,6 @@ public class Board {
         return co;
     }
 
-    private Board cloneBoard() {
-        Board newb = new Board();
-        newb.setLastmove(lastmove);
-        newb.setBoardstate((HashMap<ArrayList<Integer>, Piece>)boardstate.clone());
-        return newb;
-    }
     public boolean isCheckMate(String colorToPlay){
         if (!isCheckHelper(colorToPlay)){
             return false;
