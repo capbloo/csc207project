@@ -118,9 +118,7 @@
 
 package use_case.Get_move;
 
-import data_access.GetMoveDataAccessObject;
 import entity.*;
-import interface_adapter.Get_move.GetMovePresenter;
 
 import java.util.ArrayList;
 
@@ -217,7 +215,7 @@ public class GetMoveInteractor implements GetMoveInputBoundary{
             }
 
             // finalizing promotion
-            Piece piece = new PieceBuilder().create(piecePromotedTo, movingPiece.getColor());
+            Piece piece = new PieceFactory().create(piecePromotedTo, movingPiece.getColor());
             move.setPiecePromotedTo(piece);
         }
 
