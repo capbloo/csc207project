@@ -65,7 +65,7 @@ public class MakeMoveTest {
         HashMap<ArrayList<Integer>, ChessButton> buttonList = buttonList(board);
         ChessButton chessButton = buttonList.get(coords(4,3));
 
-        MakeMoveInputData makeMoveInputData = new MakeMoveInputData(move, chessButton);
+        MakeMoveInputData makeMoveInputData = new MakeMoveInputData(move);
 
         MakeMoveDataAccessInterface makeMoveDataAccessInterface = new TestingMakeMoveDAO();
         MakeMoveViewModel makeMoveViewModel = new MakeMoveViewModel();

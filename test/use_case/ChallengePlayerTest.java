@@ -41,7 +41,7 @@ public class ChallengePlayerTest {
         ChallengePlayerInteractor challengePlayerInteractor = new ChallengePlayerInteractor(challengePlayerPresenter, challengePlayerDataAccessInterface, challengePlayerDataAccessInterface2);
         challengePlayerInteractor.execute(challengePlayerInputData);
 
-        assertNull(challengePlayerViewModel.getState().getColor());
+        assertEquals("decline",challengePlayerViewModel.getState().getColor());
 
     }
 }
