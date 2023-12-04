@@ -25,6 +25,7 @@ import use_case.HighlightSquare.HighlightInteractor;
 import use_case.make_move.MakeMoveInteractor;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicComboBoxRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -44,9 +45,6 @@ public class ChallengeWithRealPlayerView implements MenuView, ActionListener, Pr
     private String gameID;
 
     private String color2;
-
-
-
 
     public ChallengeWithRealPlayerView(JFrame frame, ChallengePlayerController challengePlayerController, ChallengePlayerViewModel challengePlayerViewModel) {
         this.frame = frame;
@@ -76,6 +74,8 @@ public class ChallengeWithRealPlayerView implements MenuView, ActionListener, Pr
             colorComboBox = new JComboBox<>(colors);
             contentPanel.add(new JLabel("Select Color: "));
             contentPanel.add(colorComboBox);
+            // Set the custom renderer to change text color
+            colorComboBox.setRenderer(new CustomComboBoxRenderer());
             colorComboBox.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -88,6 +88,8 @@ public class ChallengeWithRealPlayerView implements MenuView, ActionListener, Pr
             playerNameTextField = new JTextField(20);
             contentPanel.add(new JLabel("\nEnter Player's Name: "));
             contentPanel.add(playerNameTextField);
+            // Set the custom renderer to change text color
+            playerNameTextField.setForeground(Color.BLACK); // Set the text color
             playerNameTextField.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -181,5 +183,22 @@ public class ChallengeWithRealPlayerView implements MenuView, ActionListener, Pr
             System.out.println("Game Started");
         }
 
+    }
+
+    private class CustomComboBoxRenderer extends BasicComboBoxRenderer {
+        @Override
+        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+
+            // Set the text color to black
+            setForeground(Color.BLACK);
+            // Set the background color to white
+            setBackground(Color.WHITE);
+            // Set the custom font
+            Font customFont = new Font("Bell MT", Font.BOLD, 16);
+            setFont(customFont);
+
+            return this;
+        }
     }
 }
