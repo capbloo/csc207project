@@ -58,12 +58,8 @@ public class BoardTest {
         board.getBoardstate().remove(coor(7,1));
         Move move = new Move(board.getBoardstate().get(coor(5,1)), coor(5,1), coor(7,1));
         move.setIsCastle();
-        ChessButton rook = new ChessButton();
-        ChessButton rook2 = new ChessButton();
-        rook.setCoord(6, 1);
-        rook2.setCoord(8, 1);
-        move.setRookRemoved(rook2);
-        move.setRookAdded(rook);
+        move.setRookAdded(coor(6,1));
+        move.setRookRemoved(coor(8,1));
         board.makeMove(move);
         assertTrue(board.getBoardstate().get(coor(7,1)) instanceof King);
         assertTrue(board.getBoardstate().get(coor(6,1)) instanceof Rook);
