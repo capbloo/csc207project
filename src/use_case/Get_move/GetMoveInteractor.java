@@ -155,37 +155,44 @@ public class GetMoveInteractor implements GetMoveInputBoundary{
         destination.add(destinationFirstCoordinate);
         Integer destinationSecondCoordinate = Integer.parseInt(apiMove.substring(3, 4));
         destination.add(destinationSecondCoordinate);
-        System.out.println(destination.isEmpty());
 
         // initialize a move
         Move move = new Move(movingPiece, origin, destination);
 
         Move[] moves = movingPiece.getValidMoves(origin, board.getBoardstate(), board.getLastmove());
         for (Move m : moves){
-            if (m.getDestination() == destination){
+            if (m.getDestination().equals(destination)){
                 move = m;
             }
         }
         // check if is castle
         if (move.getIsCastle()){
             Piece movingKing = movingPiece;
-            ChessButton rookToAdd = new ChessButton();
-            ChessButton rookToRemove = new ChessButton();
+            ArrayList<Integer> rookToAdd = new ArrayList<>();
+            ArrayList <Integer> rookToRemove = new ArrayList<>();
             if (movingKing.getColor().equals("white")){
                 if (destinationFirstCoordinate == 7){
-                    rookToAdd.setCoord(6, 1);
-                    rookToRemove.setCoord(8, 1);
+                    rookToAdd.add(6);
+                    rookToAdd.add(1);
+                    rookToRemove.add(8);
+                    rookToRemove.add(1);
                 } else {
-                    rookToAdd.setCoord(4, 1);
-                    rookToRemove.setCoord(1, 1);
+                    rookToAdd.add(4);
+                    rookToAdd.add(1);
+                    rookToRemove.add(1);
+                    rookToRemove.add(1);
                 }
             } else {
                 if (destinationFirstCoordinate == 7){
-                    rookToAdd.setCoord(6, 8);
-                    rookToRemove.setCoord(8, 8);
+                    rookToAdd.add(6);
+                    rookToAdd.add(8);
+                    rookToRemove.add(8);
+                    rookToRemove.add(8);
                 } else {
-                    rookToAdd.setCoord(4, 8);
-                    rookToRemove.setCoord(1, 8);
+                    rookToAdd.add(4);
+                    rookToAdd.add(8);
+                    rookToRemove.add(1);
+                    rookToRemove.add(8);
                 }
             }
             move.setRookAdded(rookToAdd);
@@ -203,7 +210,7 @@ public class GetMoveInteractor implements GetMoveInputBoundary{
                 piecePromotedTo = "Queen";
             } else if (promotion == 'r') {
                 piecePromotedTo = "Rook";
-            } else if (promotion == 'k') {
+            } else if (promotion == 'n') {
                 piecePromotedTo = "Knight";
             } else if (promotion == 'b') {
                 piecePromotedTo = "Bishop";

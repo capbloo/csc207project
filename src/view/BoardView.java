@@ -219,26 +219,26 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                     rookToClear.add(destination.get(1));
                     rookToAdd.add(destination.get(1));
 
-                    ChessButton rookRemoved = buttonList.get(rookToClear);
-                    ChessButton rookAdded = buttonList.get(rookToAdd);
-                    // adding buttons to move class so the presenter can update them
-                    move.setRookAdded(rookAdded);
-                    move.setRookRemoved(rookRemoved);
+                    move.setRookAdded(rookToAdd);
+                    move.setRookRemoved(rookToClear);
 
                 }
-                try{
                     unhighlight(buttonList);
                     makeMoveController.execute(move, clickedButton);
-                }finally {
                     checkGameEndsController.execute(move);
-                    getMoveController.execute();
-                    checkGameEndsController.execute(apiMove);
-                }
+                    getMove(apiMove);
+
+
             } else {
                 unhighlight(buttonList);
                 this.previousMove = null;
             }
         }
+    }
+
+    private void getMove(Move move) {
+        getMoveController.execute();
+        checkGameEndsController.execute(move);
     }
 
     private boolean isEnPassent(ChessButton clickedButton) {
@@ -279,7 +279,7 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                     JOptionPane.showMessageDialog(this, "It's a tie");
                 }
                 System.out.println("not end");
-            } else  if (e.getPropertyName().equals(("MakeMove"))){
+            } else if (e.getPropertyName().equals(("MakeMove"))){
                 MakeMoveState state = (MakeMoveState) e.getNewValue();
                 ChessButton clickedButton = state.getClickedButton();
                 Piece pieceMoving = state.getMove().getPieceMoving();
@@ -302,18 +302,32 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
             } else {
                 GetMoveState state = (GetMoveState) e.getNewValue();
                 apiMove = state.getMove();
+                ChessButton destination = buttonList.get(apiMove.getDestination());
                 Piece movingPiece = state.getMove().getPieceMoving();
-                buttonList.get(apiMove.getDestination()).setText(apiMove.getPieceMoving().toString());
                 Font f = new Font("serif", Font.PLAIN, 60);
-                buttonList.get(apiMove.getDestination()).setFont(f);
                 // check if is promotion
-                if (apiMove.getIsPromotion()){
+                if (apiMove.getIsEnPassant()) {
+                    System.out.println("en passant test start");
+                    ArrayList<Integer> enPassantCaptureLocation = apiMove.getPieceCaptureLocation();
+                    buttonList.get(enPassantCaptureLocation).clear();
+                    destination.setText(apiMove.getPieceMoving().toString());
+
+                    System.out.println("en passant test end");
+                }
+                else if (apiMove.getIsPromotion()){
                     buttonList.get(apiMove.getDestination()).setText(apiMove.getPiecePromotedTo().toString());
+                    buttonList.get(apiMove.getDestination()).setFont(f);
                 }
                 // check if castle
                 else if (apiMove.getIsCastle()) {
                     Castle(buttonList.get(apiMove.getDestination()), apiMove, f);
+                    System.out.println( buttonList.get(apiMove.getRookRemoved()));
                 }
+                else {
+                    destination.setText(apiMove.getPieceMoving().toString());
+                }
+
+                destination.setFont(f);
                 buttonList.get(apiMove.getOrigin()).clear();
             }
 
@@ -349,24 +363,24 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
 
     }
     public void Castle(ChessButton clickedButton, Move move, Font f) {
-        ChessButton rookRemoved = move.getRookRemoved();
+        ArrayList<Integer> rookRemoved = move.getRookRemoved();
         Piece pieceMoving = move.getPieceMoving();
         String pieceSymbol = pieceMoving.toString();
-        rookRemoved.clear();
         clickedButton.setText(pieceSymbol);
-        ChessButton rookAdded = move.getRookAdded();
+        ChessButton rookToAdd = buttonList.get(move.getRookAdded());
         if (pieceMoving.getColor().equals("white")) {
-            rookAdded.setText("♖");
+            rookToAdd.setText("♖");
         }
         else {
-            rookAdded.setText("♜");
+            rookToAdd.setText("♜");
         }
-        rookAdded.setFont(f);
-        rookAdded.setPieceColour(pieceMoving.getColor());
-        rookAdded.setPiece("Rook");
+        rookToAdd.setFont(f);
+        rookToAdd.setPieceColour(pieceMoving.getColor());
+        rookToAdd.setPiece("Rook");
         clickedButton.setFont(f);
         clickedButton.setPieceColour(pieceMoving.getColor());
         clickedButton.setPiece(pieceMoving.symbolToString());
+        buttonList.get(rookRemoved).clear();
     }
 
     public void Promotion(ChessButton clickedButton, Piece pieceMoving) {
