@@ -1,16 +1,12 @@
 package interface_adapter.CheckGameEnds;
 
-import interface_adapter.ViewModel;
-
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-public class CheckGameEndsViewModel extends ViewModel {
+public class CheckGameEndsViewModel {
 
     private CheckGameEndsState state = new CheckGameEndsState();
-    public CheckGameEndsViewModel() {
-        super("CheckGameEnds");
-    }
+    public CheckGameEndsViewModel() {}
 
     public void setState(CheckGameEndsState state){this.state = state;}
 

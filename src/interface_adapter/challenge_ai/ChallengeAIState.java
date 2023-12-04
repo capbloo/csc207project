@@ -7,13 +7,7 @@ public class ChallengeAIState {
 
     private String color;
 
-    public ChallengeAIState(ChallengeAIState copy){
-        this.gameID = copy.gameID;
-        this.color = copy.color;
-    }
-
     public ChallengeAIState() {}
-
     public void setColor(String color) {
         this.color = color;
     }

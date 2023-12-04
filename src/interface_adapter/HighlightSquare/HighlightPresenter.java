@@ -18,10 +18,12 @@ public class HighlightPresenter implements HighlightOutputBoundary {
     public void prepareSuccessView(HighlightOutputData response) {
         HashMap<ArrayList<Integer>, ChessButton> buttonList = response.getButtonList();
         ArrayList<ArrayList<Integer>> coordinates = response.getValidMoves();
+        highlightViewModel.getState().getBoardstate();
 
         for (ArrayList<Integer> coordinate : coordinates) {
             buttonList.get(coordinate).setHighlight();
         }
-        //highlightViewModel.firePropertyChanged();
+        highlightViewModel.firePropertyChanged();
     }
+
 }

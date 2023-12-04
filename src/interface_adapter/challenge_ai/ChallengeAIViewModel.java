@@ -1,14 +1,12 @@
 package interface_adapter.challenge_ai;
 
-import interface_adapter.ViewModel;
-
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-public class ChallengeAIViewModel extends ViewModel {
+public class ChallengeAIViewModel{
     private ChallengeAIState state = new ChallengeAIState();
 
-    public ChallengeAIViewModel() {super("ChallengeAI");}
+    public ChallengeAIViewModel() {}
 
     public ChallengeAIState getState() {
         return state;

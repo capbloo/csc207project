@@ -36,12 +36,12 @@ public class ChallengePlayerTest {
         ChallengePlayerOutputBoundary challengePlayerPresenter = new ChallengePlayerPresenter(challengePlayerViewModel);
         ChallengePlayerDataAccessInterface challengePlayerDataAccessInterface = new TestingAPIChallengeDAO();
         ChallengePlayerInputData challengePlayerInputData = new ChallengePlayerInputData("John","white");
-        ChallengePlayerDataAccessInterface2 challengePlayerDataAccessInterface2 = new TestingAPIEventStreamDAO("decline");
+        ChallengePlayerDataAccessInterface2 challengePlayerDataAccessInterface2 = new TestingAPIEventStreamDAO("declined");
 
         ChallengePlayerInteractor challengePlayerInteractor = new ChallengePlayerInteractor(challengePlayerPresenter, challengePlayerDataAccessInterface, challengePlayerDataAccessInterface2);
         challengePlayerInteractor.execute(challengePlayerInputData);
 
-        assertEquals("decline",challengePlayerViewModel.getState().getColor());
+        assertNull(challengePlayerViewModel.getState().getColor());
 
     }
 }

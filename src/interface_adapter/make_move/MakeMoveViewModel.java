@@ -1,18 +1,14 @@
 package interface_adapter.make_move;
 
 import entity.ChessButton;
-import interface_adapter.ViewModel;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-public class MakeMoveViewModel extends ViewModel {
+public class MakeMoveViewModel{
     private MakeMoveState state = new MakeMoveState();
 
-    public MakeMoveViewModel() {
-        super("MakeMove");
-    }
-
+    public MakeMoveViewModel() {}
     public void setState(MakeMoveState state) {
         this.state = state;
     }

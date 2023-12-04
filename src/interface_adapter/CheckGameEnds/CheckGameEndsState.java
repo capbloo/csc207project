@@ -12,13 +12,7 @@ public class CheckGameEndsState {
 
     private boolean stale;
 
-    public CheckGameEndsState(CheckGameEndsState copy) {
-        this.stale = copy.getstale();
-        this.win = copy.getwin();
-        this.iswhite = copy.getiswhite();
-    }
     public CheckGameEndsState() {};
-
     public void set(boolean iswhite, boolean win, boolean stale){
         this.iswhite = iswhite;
         this.win = win;

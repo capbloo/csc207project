@@ -7,16 +7,8 @@ import java.util.HashMap;
 
 public class HighlightState {
     private HashMap<ArrayList<Integer>, Piece> boardState;
-
-    public HighlightState(HighlightState copy) {
-        this.boardState = copy.getBoardstate();
-    }
-
-    public HighlightState() {
-    }
-
+    public HighlightState() {}
     public HashMap<ArrayList<Integer>, Piece> getBoardstate() {
         return boardState;
     }
-
 }
