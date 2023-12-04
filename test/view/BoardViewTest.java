@@ -4,8 +4,6 @@ import data_access.GetMoveDataAccessObject;
 import data_access.MakeMoveDataAccessObject;
 import entity.Board;
 import entity.ChessButton;
-import entity.Move;
-import entity.PieceBuilder;
 import interface_adapter.CheckGameEnds.CheckGameEndsController;
 import interface_adapter.CheckGameEnds.CheckGameEndsPresenter;
 import interface_adapter.CheckGameEnds.CheckGameEndsViewModel;
@@ -22,12 +20,12 @@ import use_case.CheckGameEnds.CheckGameEndsInteractor;
 import use_case.Get_move.GetMoveInteractor;
 import use_case.HighlightSquare.HighlightInteractor;
 import use_case.make_move.MakeMoveInteractor;
-import view.BoardView;
 
-import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import static org.junit.Assert.*;
+
 public class BoardViewTest {
     private ArrayList<Integer> coords(int x, int y) {
         ArrayList<Integer> coordinate = new ArrayList<>(2);
@@ -36,6 +34,7 @@ public class BoardViewTest {
 
         return coordinate;
     }
+
     private HashMap<ArrayList<Integer>, ChessButton> buttonList(Board board) {
         HashMap<ArrayList<Integer>, ChessButton> buttonList = new HashMap<>();
 
@@ -55,6 +54,7 @@ public class BoardViewTest {
         }
         return buttonList;
     }
+
     @org.junit.Test
     public void TestInstantiateswhite() {
         Board board = new Board();
@@ -85,8 +85,9 @@ public class BoardViewTest {
                 highlightController, highlightViewModel,
                 checkGameEndsController, checkGameEndsViewModel, "white", getMoveViewModel, getMoveController);
 
-    assertFalse(boardView == null);
+        assertFalse(boardView == null);
     }
+
     @org.junit.Test
     public void TestInstantiatesblack() {
         Board board = new Board();
@@ -119,8 +120,9 @@ public class BoardViewTest {
 
         assertFalse(boardView == null);
     }
+
     @org.junit.Test
-    public void TestInstantiateswhiteaction() {
+    public void TestHighlightFunctions() {
         Board board = new Board();
         MakeMoveViewModel makeMoveViewModel = new MakeMoveViewModel();
         MakeMovePresenter makeMovePresenter = new MakeMovePresenter(makeMoveViewModel);
@@ -149,7 +151,7 @@ public class BoardViewTest {
                 highlightController, highlightViewModel,
                 checkGameEndsController, checkGameEndsViewModel, "white", getMoveViewModel, getMoveController);
         HashMap<ArrayList<Integer>, ChessButton> buttonList = buttonList(board);
-        buttonList.get(coords(1,1)).setHighlight();
+        buttonList.get(coords(1, 1)).setHighlight();
         boardView.highlight(buttonList);
         boardView.unhighlight(buttonList);
 

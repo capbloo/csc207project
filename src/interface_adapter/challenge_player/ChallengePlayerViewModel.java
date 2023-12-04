@@ -1,14 +1,12 @@
 package interface_adapter.challenge_player;
 
-import interface_adapter.ViewModel;
-
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-public class ChallengePlayerViewModel extends ViewModel {
+public class ChallengePlayerViewModel {
     private ChallengePlayerState state = new ChallengePlayerState();
 
-    public ChallengePlayerViewModel(){super("ChallengePlayer");}
+    public ChallengePlayerViewModel(){}
 
     public ChallengePlayerState getState() {
         return state;

@@ -114,16 +114,6 @@ public class Board {
         boardstate.remove(org);
         lastmove = move;
     }
-        
-  
-  
-  
-    public ArrayList<Integer> coor(int x, int y) {
-        ArrayList<Integer> co = new ArrayList<Integer>();
-        co.add(x);
-        co.add(y);
-        return co;
-    }
 
     public boolean isCheckMate(String colorToPlay){
         if (!isCheckHelper(colorToPlay)){
