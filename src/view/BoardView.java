@@ -385,28 +385,30 @@ public class BoardView extends JFrame implements ActionListener, PropertyChangeL
                 GetMoveState state = (GetMoveState) e.getNewValue();
                 apiMove = state.getMove();
                 ChessButton destination = buttonList.get(apiMove.getDestination());
-                Piece movingPiece = state.getMove().getPieceMoving();
                 Font f = new Font("serif", Font.PLAIN, 60);
                 // check if is promotion
                 if (apiMove.getIsEnPassant()) {
-                    System.out.println("en passant test start");
                     ArrayList<Integer> enPassantCaptureLocation = apiMove.getPieceCaptureLocation();
                     buttonList.get(enPassantCaptureLocation).clear();
                     destination.setText(apiMove.getPieceMoving().toString());
+                    destination.setPiece(apiMove.getPieceMoving().symbolToString());
+                    destination.setPieceColour(apiMove.getPieceMoving().getColor());
 
-                    System.out.println("en passant test end");
                 }
                 else if (apiMove.getIsPromotion()){
                     buttonList.get(apiMove.getDestination()).setText(apiMove.getPiecePromotedTo().toString());
                     buttonList.get(apiMove.getDestination()).setFont(f);
+                    buttonList.get(apiMove.getDestination()).setPiece("Queen");
+                    buttonList.get(apiMove.getDestination()).setPieceColour(apiMove.getPiecePromotedTo().getColor());
                 }
                 // check if castle
                 else if (apiMove.getIsCastle()) {
                     Castle(buttonList.get(apiMove.getDestination()), apiMove, f);
-                    System.out.println( buttonList.get(apiMove.getRookRemoved()));
                 }
                 else {
                     destination.setText(apiMove.getPieceMoving().toString());
+                    destination.setPieceColour(apiMove.getPieceMoving().getColor());
+                    destination.setPiece(apiMove.getPieceMoving().symbolToString());
                 }
 
                 destination.setFont(f);
